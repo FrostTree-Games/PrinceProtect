@@ -11,11 +11,15 @@
 
 #include <SDL/SDL.h>
 
+#include "Entity.h"
+
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 448
 
 SDL_Surface* screen;
 SDL_Surface* buffer;
+
+Entity* testEn;
 
 int init()
 {
@@ -38,11 +42,21 @@ int init()
 	
 	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
 	
+	//remove this code later
+	testEn = malloc(sizeof(Entity));
+	testEn->playerEntity.type = PLAYER1;
+	testEn->playerEntity.x = 4;
+	testEn->playerEntity.y = 3;
+	testEn->playerEntity.width = 1;
+	testEn->playerEntity.height = 1;
+
 	return 0;
 }
 
 int deinit()
 {
+	free(testEn);
+
 	SDL_FreeSurface(buffer);
 
 	SDL_Quit();
@@ -56,9 +70,12 @@ int draw()
 
 	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
 	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
+	SDL_Rect pR = {testEn->playerEntity.x * 16, testEn->playerEntity.y * 16, testEn->playerEntity.width * 16, testEn->playerEntity.height * 16};
 	
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 255, 0));
 	
+	SDL_FillRect(buffer, &pR, SDL_MapRGB(buffer->format, 255, 0, 0));
+
 	for (i = 0; i < SCREEN_WIDTH / 16; i++)
 	{
 		SDL_FillRect(buffer, &r1, SDL_MapRGB(buffer->format, 255, 255, 255));
