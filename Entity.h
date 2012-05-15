@@ -1,5 +1,9 @@
 /*
- * blah blah blah
+ * Entity.h
+ * --------
+ * This header file contains definitions for methods used with game entities.
+ * An entity is one of a variety of structs, covered by a union.
+ * The first four bytes of an entity must always represent its enumerated type.
  */
 
 #ifndef ENTITY_H
@@ -12,12 +16,10 @@ typedef enum
 	PLAYER1,
 	PLAYER2,
 	PERMABLOCK,
-	TEMPBLOCK,
-	BULLET,
-	DUMBENEMY,
 	DELETE_ME_PLEASE
 } EntityType;
 
+// players 1 and 2 entity types
 typedef struct
 {
 	EntityType type;
@@ -30,10 +32,10 @@ typedef struct
 	unsigned char direction; //0->N, 1->E, 2->S, 3->W
 	unsigned char health;
 	unsigned char maxhealth;
-	unsigned char slot; //one or zero
-	Uint32 lastAnimUpdate;
+	Uint32 lastUpdate;
 } Player;
 
+// entity type for a wall; classy
 typedef struct
 {
 	EntityType type;
@@ -46,8 +48,9 @@ typedef struct
 // viva la crude polymorphism!
 typedef union
 {
-	Player playerEntity;
-	PermaBlock permaBlockEntity;
+	EntityType type;
+	Player player;
+	PermaBlock permaBlock;
 } Entity;
 
 /* create_entity()
@@ -66,6 +69,6 @@ void destroy_entity(Entity* entity);
  * Purpose: Updates entity logic
  * Returns: n/a
  */
-void update_entity(Uint32 currTime);
+void update_entity(Entity* entity, Uint32 currTime);
 
 #endif
