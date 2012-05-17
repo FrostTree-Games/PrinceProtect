@@ -12,6 +12,7 @@
 #include <SDL/SDL.h>
 
 #include "Entity.h"
+#include "Keyboard.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 448
@@ -90,6 +91,9 @@ int testLoop()
 				quit = 1;
 			}
 		}
+		
+		//update call
+		pollKeyboard();
 
 		draw();
 		
