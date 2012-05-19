@@ -4,6 +4,8 @@
  * This header file contains definitions for methods used with game entities.
  * An entity is one of a variety of structs, covered by a union.
  * The first four bytes of an entity must always represent its enumerated type.
+ *
+ * The master entity list cannot be guarunteed to maintain its order.
  */
 
 #ifndef ENTITY_H
@@ -53,11 +55,11 @@ typedef union
 	PermaBlock permaBlock;
 } Entity;
 
-/* initalizeEntityList()
+/* initEntityList()
  * Purpose: Allociates the entity list to RAM
  * Returns: 1 on success, 0 on failure, 2 if the list already exists
  */
-int initalizeEntityList();
+int initEntityList();
 
 /* freeEntityList()
  * Purpose: Frees the entity list from RAM
@@ -77,6 +79,12 @@ int getEntityListSize();
  */
 int getEntityListMaxSize();
 
+/* getEntityList()
+ * Purpose: returns the pointer to a list of entity pointers
+ * Returns: Entity** of entityListSize;
+ */
+Entity** getEntityList();
+
 /* create_entity()
  * Purpose: Creates a new entity on the heap according to the specified information
  * Returns: Newly-created entity pointer on success, NULL on failure
@@ -88,6 +96,18 @@ Entity* create_entity(EntityType type, int newX, int newY);
  * Returns: n/a
  */
 void destroy_entity(Entity* entity);
+
+/* pushEntity()
+ * Purpose: Puts a new entity on the master list
+ * Returns: pointer to entity; NULL if failed
+ */
+Entity* pushEntity(EntityType type, int newX, int newY);
+
+/* popEntity()
+ * Purpose: Removes a specified entity from the master list
+ * Returns: 1 on success, 0 on failure
+ */
+int popEntity(Entity* entity);
 
 /* update_entity()
  * Purpose: Updates entity logic

@@ -6,7 +6,7 @@
 #include "Entity.h"
 
 // Master list of all entities in play
-Entity* entityList = NULL; // set to NULL when uninitalized
+Entity** entityList = NULL; // set to NULL when uninitalized
 const int entityListMaxSize = 532; // the area is a 32 by 16 tile zone (plus 20 extra overhead locations)
 int entityListCurrentSize = 0;
 
@@ -24,7 +24,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.height = 1;
                 newEntity->player.health = 20;
                 newEntity->player.maxhealth = 20;
-                newEntity->player.lastUpdate = SDL_GetTicks();
+                newEntity->player.lastUpdate = 0;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -45,14 +45,14 @@ void destroy_entity(Entity* entity)
 	free(entity);
 }
 
-int initalizeEntityList()
+int initEntityList()
 {
 	if (entityList != NULL)
 	{
 		return 2;
 	}
 	
-	entityList = malloc(sizeof(Entity) * entityListMaxSize);
+	entityList = malloc(sizeof(Entity*) * entityListMaxSize);
 	
 	if (entityList == NULL)
 	{
@@ -78,11 +78,73 @@ int freeEntityList()
 	return 1;
 }
 
+int getEntityListSize()
+{
+	return entityListCurrentSize;
+}
 
+int getEntityListMaxSize()
+{
+	return entityListMaxSize;
+}
 
+Entity** getEntityList()
+{
+	return entityList;
+}
 
+Entity* pushEntity(EntityType type, int newX, int newY)
+{
+	if (entityList == NULL)
+	{
+		return NULL;
+	}
 
+	if (entityListCurrentSize >= entityListMaxSize)
+	{
+		return NULL;
+	}
 
+	Entity* newEnt = create_entity(type, newX, newY);
+	
+	if (newEnt == NULL)
+	{
+		return NULL;
+	}
+	else
+	{
+		entityList[entityListCurrentSize] = newEnt;
+		entityListCurrentSize++;
+		return newEnt;
+	}
+}
+
+int popEntity(Entity* entity)
+{
+	int i;
+
+	if (entityList == NULL)
+	{
+		return 0;
+	}
+	if (entityListCurrentSize < 1)
+	{
+		return 0;
+	}
+
+	for (i = 0; i < entityListCurrentSize; i++)
+	{
+		if (entity == entityList[i])
+		{
+			free(entity);
+			entityList[i] = entityList[entityListCurrentSize - 1];
+			entityListCurrentSize--;
+			return 1;
+		}
+	}
+	
+	return 0;
+}
 
 /* entity update functions */
 

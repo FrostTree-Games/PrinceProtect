@@ -86,7 +86,13 @@ int main(int argc, char* argv[])
 {
 	init();
 	
+	initEntityList();
+	
+	pushEntity(PLAYER1, 3, 4);
+	
 	testLoop();
+	
+	freeEntityList();
 	
 	deinit();
 
