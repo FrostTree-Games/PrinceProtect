@@ -5,6 +5,11 @@
 
 #include "Entity.h"
 
+// Master list of all entities in play
+Entity* entityList = NULL; // set to NULL when uninitalized
+const int entityListMaxSize = 532; // the area is a 32 by 16 tile zone (plus 20 extra overhead locations)
+int entityListCurrentSize = 0;
+
 Entity* create_entity(EntityType type, int newX, int newY)
 {
 	Entity* newEntity = malloc(sizeof(Entity));
@@ -39,6 +44,47 @@ void destroy_entity(Entity* entity)
 {
 	free(entity);
 }
+
+int initalizeEntityList()
+{
+	if (entityList != NULL)
+	{
+		return 2;
+	}
+	
+	entityList = malloc(sizeof(Entity) * entityListMaxSize);
+	
+	if (entityList == NULL)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+int freeEntityList()
+{
+	if (entityList == NULL)
+	{
+		return 2;
+	}
+	
+	free(entityList);
+	
+	entityList = NULL;
+	
+	return 1;
+}
+
+
+
+
+
+
+
+/* entity update functions */
 
 void update_player(Player* pl, Uint32 currTime)
 {

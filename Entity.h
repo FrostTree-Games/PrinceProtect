@@ -53,6 +53,30 @@ typedef union
 	PermaBlock permaBlock;
 } Entity;
 
+/* initalizeEntityList()
+ * Purpose: Allociates the entity list to RAM
+ * Returns: 1 on success, 0 on failure, 2 if the list already exists
+ */
+int initalizeEntityList();
+
+/* freeEntityList()
+ * Purpose: Frees the entity list from RAM
+ * Returns: 1 on success, 2 if the list doesn't exist
+ */
+int freeEntityList();
+
+/* getEntityListSize()
+ * Purpose: Gets the current size of the entity list
+ * Returns: Value between 0 and getEntityListMaxSize()
+ */
+int getEntityListSize();
+
+/* getEntityListMaxSize()
+ * Purpose: Gets the maximum size of the entity list
+ * Returns: 1 on success, 2 if the list doesn't exist
+ */
+int getEntityListMaxSize();
+
 /* create_entity()
  * Purpose: Creates a new entity on the heap according to the specified information
  * Returns: Newly-created entity pointer on success, NULL on failure
