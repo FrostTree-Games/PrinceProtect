@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 
 #include "Entity.h"
+#include "Keyboard.h"
 
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
@@ -142,7 +143,7 @@ int popEntity(Entity* entity)
 			return 1;
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -150,6 +151,29 @@ int popEntity(Entity* entity)
 
 void update_player(Player* pl, Uint32 currTime)
 {
+	int xInc = 0;
+	int yInc = 0;
+
+	if (getKey(P1_UP))
+	{
+		yInc--;
+	}
+	if (getKey(P1_DOWN))
+	{
+		yInc++;
+	}
+	if (getKey(P1_LEFT))
+	{
+		xInc--;
+	}
+	if (getKey(P1_RIGHT))
+	{
+		xInc++;
+	}
+
+	pl->x += xInc;
+	pl->y += yInc;
+
 	return;
 }
 

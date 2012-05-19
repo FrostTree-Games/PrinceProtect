@@ -56,6 +56,8 @@ int deinit()
 
 int testLoop()
 {
+	int i;
+
 	int quit = 0;
 	SDL_Event ev;
 
@@ -71,6 +73,13 @@ int testLoop()
 		
 		//update call
 		pollKeyboard();
+
+		Entity** entList = getEntityList();
+		Uint32 currTime = SDL_GetTicks();
+		for (i = 0; i < getEntityListSize(); i++)
+		{
+			update_entity(entList[i], currTime);
+		}
 
 		testDraw(buffer);
 		
@@ -89,6 +98,8 @@ int main(int argc, char* argv[])
 	initEntityList();
 	
 	pushEntity(PLAYER1, 3, 4);
+	pushEntity(PERMABLOCK, 10, 10);
+	pushEntity(PERMABLOCK, 4, 7);
 	
 	testLoop();
 	

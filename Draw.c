@@ -40,6 +40,8 @@ void testDraw(SDL_Surface* buffer)
 			case PLAYER1:
 			entRect.x = entList[i]->player.x * 16;
 			entRect.y = entList[i]->player.y * 16;
+			entRect.w = entList[i]->player.width * 16;
+			entRect.h = entList[i]->player.height * 16;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 0, 255));
 			break;
 			case PLAYER2:
@@ -47,6 +49,8 @@ void testDraw(SDL_Surface* buffer)
 			case PERMABLOCK:
 			entRect.x = entList[i]->permaBlock.x * 16;
 			entRect.y = entList[i]->permaBlock.y * 16;
+			entRect.w = entList[i]->permaBlock.width * 16;
+			entRect.h = entList[i]->permaBlock.height * 16;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
 			break;
 			default:
