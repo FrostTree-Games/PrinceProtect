@@ -67,9 +67,16 @@ int initEntityList()
 
 int freeEntityList()
 {
+	int i;
+
 	if (entityList == NULL)
 	{
 		return 2;
+	}
+	
+	for (i = 0; i < entityListCurrentSize; i++)
+	{
+		destroy_entity(entityList[i]);
 	}
 	
 	free(entityList);
@@ -190,24 +197,87 @@ int occupyingOnHere(int x, int y, Entity** list, int listMaxSize, int* returnedS
 
 void update_player(Player* pl, Uint32 currTime)
 {
+	int i;
 	int xInc = 0;
 	int yInc = 0;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+	
+	occupyingOnHere(pl->x, pl->y - 1, northList, 5, &northResultSize);
+	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
+	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
+	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
 
 	if (getKey(P1_UP))
 	{
 		yInc--;
+		
+		if (northResultSize > 0)
+		{
+			for (i = 0; i < northResultSize; i++)
+			{
+				if (northList[i]->type == PERMABLOCK)
+				{
+					yInc++;
+					break;
+				}
+			}
+		}
 	}
 	if (getKey(P1_DOWN))
 	{
 		yInc++;
+		
+		if (southResultSize > 0)
+		{
+			for (i = 0; i < southResultSize; i++)
+			{
+				if (southList[i]->type == PERMABLOCK)
+				{
+					yInc--;
+					break;
+				}
+			}
+		}
 	}
 	if (getKey(P1_LEFT))
 	{
 		xInc--;
+		
+		if (westResultSize > 0)
+		{
+			for (i = 0; i < westResultSize; i++)
+			{
+				if (westList[i]->type == PERMABLOCK)
+				{
+					xInc++;
+					break;
+				}
+			}
+		}
 	}
 	if (getKey(P1_RIGHT))
 	{
 		xInc++;
+
+		if (eastResultSize > 0)
+		{
+			for (i = 0; i < eastResultSize; i++)
+			{
+				if (eastList[i]->type == PERMABLOCK)
+				{
+					xInc--;
+					break;
+				}
+			}
+		}
 	}
 
 	pl->x += xInc;
