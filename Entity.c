@@ -21,17 +21,15 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		case PLAYER1:
 		newEntity->player.x = newX;
 		newEntity->player.y = newY;
-                newEntity->player.width = 1;
-                newEntity->player.height = 1;
-                newEntity->player.health = 20;
-                newEntity->player.maxhealth = 20;
+                newEntity->player.upKeyDown = 0;
+                newEntity->player.downKeyDown = 0;
+                newEntity->player.leftKeyDown = 0;
+                newEntity->player.rightKeyDown = 0;
                 newEntity->player.lastUpdate = 0;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
 		newEntity->permaBlock.y = newY;
-		newEntity->permaBlock.width = 1;
-		newEntity->permaBlock.height = 1;
 		break;
 		default:
 		free(newEntity);
@@ -215,10 +213,11 @@ void update_player(Player* pl, Uint32 currTime)
 	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
 
-	if (getKey(P1_UP))
+	if (getKey(P1_UP) && pl->upKeyDown == 0)
 	{
 		yInc--;
-		
+		pl->direction = 0;
+
 		if (northResultSize > 0)
 		{
 			for (i = 0; i < northResultSize; i++)
@@ -230,11 +229,19 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 			}
 		}
+		
+		pl->upKeyDown = 1;
 	}
-	if (getKey(P1_DOWN))
+	else if (!getKey(P1_UP) && pl->upKeyDown == 1)
+	{
+		pl->upKeyDown = 0;
+	}
+
+	if (getKey(P1_DOWN) && pl->downKeyDown == 0)
 	{
 		yInc++;
-		
+		pl->direction = 2;
+
 		if (southResultSize > 0)
 		{
 			for (i = 0; i < southResultSize; i++)
@@ -246,11 +253,19 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 			}
 		}
+		
+		pl->downKeyDown = 1;
 	}
-	if (getKey(P1_LEFT))
+	else if (!getKey(P1_DOWN) && pl->downKeyDown == 1)
+	{
+		pl->downKeyDown = 0;
+	}
+
+	if (getKey(P1_LEFT) && pl->leftKeyDown == 0)
 	{
 		xInc--;
-		
+		pl->direction = 3;
+
 		if (westResultSize > 0)
 		{
 			for (i = 0; i < westResultSize; i++)
@@ -262,10 +277,18 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 			}
 		}
+		
+		pl->leftKeyDown = 1;
 	}
-	if (getKey(P1_RIGHT))
+	else if (!getKey(P1_LEFT) && pl->leftKeyDown == 1)
+	{
+		pl->leftKeyDown = 0;
+	}
+
+	if (getKey(P1_RIGHT) && pl->rightKeyDown == 0)
 	{
 		xInc++;
+		pl->direction = 1;
 
 		if (eastResultSize > 0)
 		{
@@ -278,6 +301,12 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 			}
 		}
+		
+		pl->rightKeyDown = 1;
+	}
+	else if (!getKey(P1_RIGHT) && pl->rightKeyDown == 1)
+	{
+		pl->rightKeyDown = 0;
 	}
 
 	pl->x += xInc;

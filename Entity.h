@@ -27,8 +27,6 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
-	int width;
-	int height;
 } entityBase;
 
 // players 1 and 2 entity types
@@ -37,13 +35,11 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
-	int width;
-	int height;
-	float xSpeed;
-	float ySpeed;
 	unsigned char direction; //0->N, 1->E, 2->S, 3->W
-	unsigned char health;
-	unsigned char maxhealth;
+	unsigned char upKeyDown; //for checking if keys have been typed, for staggered movement
+	unsigned char downKeyDown;
+	unsigned char leftKeyDown;
+	unsigned char rightKeyDown;
 	Uint32 lastUpdate;
 } Player;
 
@@ -53,8 +49,6 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
-	int width;
-	int height;
 } PermaBlock;
 
 // viva la crude polymorphism!

@@ -108,6 +108,12 @@ int main(int argc, char* argv[])
 		pushEntity(PERMABLOCK, i, 8);
 		pushEntity(PERMABLOCK, i, 24);
 	}
+	
+	for (i = 0; i < 15; i++)
+	{
+		pushEntity(PERMABLOCK, -1, 9 + i);
+		pushEntity(PERMABLOCK, 32, 9 + i);
+	}
 
 	testLoop();
 	
