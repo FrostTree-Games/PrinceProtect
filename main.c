@@ -73,6 +73,21 @@ int testLoop()
 		
 		//update call
 		pollKeyboard();
+		
+	if (getKey(P1_A))
+	{
+		int i;
+		Entity* quickList[5];
+		int resultSize;
+		
+		occupyingOnHere(4, 7, quickList, 5, &resultSize);
+		printf("result size = %d\n", resultSize);
+		
+		for (i = 0; i < resultSize; i++)
+		{
+			printf("%d\n", quickList[i]->type);
+		}
+	}
 
 		Entity** entList = getEntityList();
 		Uint32 currTime = SDL_GetTicks();
@@ -100,7 +115,7 @@ int main(int argc, char* argv[])
 	pushEntity(PLAYER1, 3, 4);
 	pushEntity(PERMABLOCK, 10, 10);
 	pushEntity(PERMABLOCK, 4, 7);
-	
+
 	testLoop();
 	
 	freeEntityList();

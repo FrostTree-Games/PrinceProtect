@@ -4,6 +4,7 @@
  * This header file contains definitions for methods used with game entities.
  * An entity is one of a variety of structs, covered by a union.
  * The first four bytes of an entity must always represent its enumerated type.
+ * The next sixteen bytes must always be coordinates, width, and height
  *
  * The master entity list cannot be guarunteed to maintain its order.
  */
@@ -15,11 +16,20 @@
 
 typedef enum
 {
-	PLAYER1,
+	PLAYER1 = 0,
 	PLAYER2,
 	PERMABLOCK,
 	DELETE_ME_PLEASE
 } EntityType;
+
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	int width;
+	int height;
+} entityBase;
 
 // players 1 and 2 entity types
 typedef struct
@@ -51,6 +61,7 @@ typedef struct
 typedef union
 {
 	EntityType type;
+	entityBase base;
 	Player player;
 	PermaBlock permaBlock;
 } Entity;
@@ -108,6 +119,14 @@ Entity* pushEntity(EntityType type, int newX, int newY);
  * Returns: 1 on success, 0 on failure
  */
 int popEntity(Entity* entity);
+
+/* occupyingOnHere
+ * Purpose: Returns a list of the entities on a specified coordinate
+ * Returns: 1 if there are any entities, 0 if none
+ * Note: The caller of this function must allociate and specify the size of the list
+ *       to fill. This could have the program crash or cause unwarranted effects.
+ */
+int occupyingOnHere(int x, int y, Entity** list, int listMaxSize, int* returnedSize);
 
 /* update_entity()
  * Purpose: Updates entity logic

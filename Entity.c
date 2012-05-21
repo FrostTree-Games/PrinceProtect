@@ -147,6 +147,45 @@ int popEntity(Entity* entity)
 	return 0;
 }
 
+int occupyingOnHere(int x, int y, Entity** list, int listMaxSize, int* returnedSize)
+{
+	int i;
+	*returnedSize = 0;
+	
+	if (list == NULL)
+	{
+		return 0;
+	}
+	
+	Entity* en;
+	for (i = 0; i < entityListCurrentSize; i++)
+	{
+		en = entityList[i];
+		
+		if (en->base.x == x && en->base.y == y)
+		{
+			if ((*returnedSize) < listMaxSize)
+			{
+				list[(*returnedSize)] = en;
+				(*returnedSize)++;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+	}
+	
+	if ((*returnedSize) == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 /* entity update functions */
 
 void update_player(Player* pl, Uint32 currTime)
