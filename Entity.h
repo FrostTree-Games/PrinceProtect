@@ -19,9 +19,21 @@ typedef enum
 	PLAYER1 = 0,
 	PLAYER2,
 	PERMABLOCK,
+	GAMEBLOCK,
 	DELETE_ME_PLEASE
 } EntityType;
 
+//type identifier for the GameBlock
+typedef enum
+{
+	NO_BLOCK,
+	RED_BLOCK,
+	BLUE_BLOCK,
+	GREEN_BLOCK,
+	BLACK_BLOCK
+} BlockType;
+
+//entity base (for width, height and whatnot)
 typedef struct
 {
 	EntityType type;
@@ -51,6 +63,14 @@ typedef struct
 	int y;
 } PermaBlock;
 
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	BlockType bType;
+} GameBlock;
+
 // viva la crude polymorphism!
 typedef union
 {
@@ -58,6 +78,7 @@ typedef union
 	entityBase base;
 	Player player;
 	PermaBlock permaBlock;
+	GameBlock gBlock;
 } Entity;
 
 /* initEntityList()

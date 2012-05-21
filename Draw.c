@@ -6,6 +6,30 @@
 #include "Draw.h"
 #include "Entity.h"
 
+void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
+{
+	SDL_Rect entRect = {gb->x * 16, gb->y * 16, 16, 16};
+
+	switch (gb->bType)
+	{
+		case RED_BLOCK:
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 10, 10));
+		break;
+		case BLUE_BLOCK:
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 255));
+		break;
+		case GREEN_BLOCK:
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 255, 10));
+		break;
+		case BLACK_BLOCK:
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 10));
+		break;
+		default:
+		printf("No block encountered?\n");
+		break;
+	}
+}
+
 void testDraw(SDL_Surface* buffer)
 {
 	int i;
@@ -47,7 +71,10 @@ void testDraw(SDL_Surface* buffer)
 			case PERMABLOCK:
 			entRect.x = entList[i]->permaBlock.x * 16;
 			entRect.y = entList[i]->permaBlock.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 100, 100));
+			break;
+			case GAMEBLOCK:
+			drawGameBlock(buffer, (GameBlock*)entList[i]);
 			break;
 			default:
 			break;

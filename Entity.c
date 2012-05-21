@@ -31,6 +31,11 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->permaBlock.x = newX;
 		newEntity->permaBlock.y = newY;
 		break;
+		case GAMEBLOCK:
+		newEntity->gBlock.x = newX;
+		newEntity->gBlock.y = newY;
+		newEntity->gBlock.bType = GREEN_BLOCK;
+		break;
 		default:
 		free(newEntity);
 		return NULL;
@@ -76,7 +81,7 @@ int freeEntityList()
 	{
 		destroy_entity(entityList[i]);
 	}
-	
+
 	free(entityList);
 	
 	entityList = NULL;
@@ -222,7 +227,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < northResultSize; i++)
 			{
-				if (northList[i]->type == PERMABLOCK)
+				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK)
 				{
 					yInc++;
 					break;
@@ -246,7 +251,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < southResultSize; i++)
 			{
-				if (southList[i]->type == PERMABLOCK)
+				if (southList[i]->type == PERMABLOCK  || southList[i]->type == GAMEBLOCK)
 				{
 					yInc--;
 					break;
@@ -270,7 +275,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < westResultSize; i++)
 			{
-				if (westList[i]->type == PERMABLOCK)
+				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK)
 				{
 					xInc++;
 					break;
@@ -294,7 +299,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < eastResultSize; i++)
 			{
-				if (eastList[i]->type == PERMABLOCK)
+				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK)
 				{
 					xInc--;
 					break;
@@ -330,6 +335,8 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_player((Player*)entity, currTime);
 		break;
 		case PERMABLOCK:
+		break;
+		case GAMEBLOCK:
 		break;
 		default:
 		printf("unregognized entity type updated\n");

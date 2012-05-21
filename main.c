@@ -114,6 +114,15 @@ int main(int argc, char* argv[])
 		pushEntity(PERMABLOCK, -1, 9 + i);
 		pushEntity(PERMABLOCK, 32, 9 + i);
 	}
+	
+	Entity* newGameBlock = pushEntity(GAMEBLOCK, 10, 10);
+	newGameBlock->gBlock.bType = RED_BLOCK;
+
+	newGameBlock = pushEntity(GAMEBLOCK, 12, 10);
+	newGameBlock->gBlock.bType = BLUE_BLOCK;
+
+	newGameBlock = pushEntity(GAMEBLOCK, 13, 10);
+	newGameBlock->gBlock.bType = GREEN_BLOCK;
 
 	testLoop();
 	
