@@ -37,7 +37,7 @@ void testDraw(SDL_Surface* buffer)
 	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
 	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
 	
-	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 255, 0));
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 100, 100));
 
 	for (i = 0; i < SCREEN_WIDTH / 16; i++)
 	{
@@ -64,7 +64,7 @@ void testDraw(SDL_Surface* buffer)
 			case PLAYER1:
 			entRect.x = entList[i]->player.x * 16;
 			entRect.y = entList[i]->player.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 0, 255));
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 255));
 			break;
 			case PLAYER2:
 			break;

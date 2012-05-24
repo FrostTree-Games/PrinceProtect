@@ -41,20 +41,6 @@ typedef struct
 	int y;
 } entityBase;
 
-// players 1 and 2 entity types
-typedef struct
-{
-	EntityType type;
-	int x;
-	int y;
-	unsigned char direction; //0->N, 1->E, 2->S, 3->W
-	unsigned char upKeyDown; //for checking if keys have been typed, for staggered movement
-	unsigned char downKeyDown;
-	unsigned char leftKeyDown;
-	unsigned char rightKeyDown;
-	Uint32 lastUpdate;
-} Player;
-
 // entity type for a wall; classy
 typedef struct
 {
@@ -70,6 +56,22 @@ typedef struct
 	int y;
 	BlockType bType;
 } GameBlock;
+
+// players 1 and 2 entity types
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	unsigned char direction; //0->N, 1->E, 2->S, 3->W
+	unsigned char upKeyDown; //for checking if keys have been typed, for staggered movement
+	unsigned char downKeyDown;
+	unsigned char leftKeyDown;
+	unsigned char rightKeyDown;
+	unsigned char aKeyDown;
+	GameBlock* holding;
+	Uint32 lastUpdate;
+} Player;
 
 // viva la crude polymorphism!
 typedef union

@@ -25,7 +25,9 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.downKeyDown = 0;
                 newEntity->player.leftKeyDown = 0;
                 newEntity->player.rightKeyDown = 0;
+                newEntity->player.aKeyDown = 0;
                 newEntity->player.lastUpdate = 0;
+                newEntity->player.holding = NULL;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -212,11 +214,129 @@ void update_player(Player* pl, Uint32 currTime)
 	int southResultSize;
 	int eastResultSize;
 	int westResultSize;
-	
+
 	occupyingOnHere(pl->x, pl->y - 1, northList, 5, &northResultSize);
 	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
 	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	
+	if (getKey(P1_A) && !(pl->aKeyDown))
+	{
+		pl->aKeyDown = 1;
+
+		if (pl->holding == NULL)
+		{
+			if (pl->direction == 0)
+			{
+				if (northResultSize > 0)
+				{
+					for (i = 0; i < northResultSize; i++)
+					{
+						if (northList[i]->type == GAMEBLOCK)
+						{
+							pl->holding = (GameBlock*)(northList[i]);
+							northList[i]->gBlock.x = -1;
+							northList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+			if (pl->direction == 1)
+			{
+				if (eastResultSize > 0)
+				{
+					for (i = 0; i < eastResultSize; i++)
+					{
+						if (eastList[i]->type == GAMEBLOCK)
+						{
+							pl->holding = (GameBlock*)(eastList[i]);
+							eastList[i]->gBlock.x = -1;
+							eastList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+			if (pl->direction == 2)
+			{
+				if (southResultSize > 0)
+				{
+					for (i = 0; i < southResultSize; i++)
+					{
+						if (southList[i]->type == GAMEBLOCK)
+						{
+							pl->holding = (GameBlock*)(southList[i]);
+							southList[i]->gBlock.x = -1;
+							southList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+			if (pl->direction == 3)
+			{
+				if (westResultSize > 0)
+				{
+					for (i = 0; i < westResultSize; i++)
+					{
+						if (westList[i]->type == GAMEBLOCK)
+						{
+							pl->holding = (GameBlock*)(westList[i]);
+							westList[i]->gBlock.x = -1;
+							westList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			switch (pl->direction)
+			{
+				case 0:
+				if (northResultSize == 0)
+				{
+					(pl->holding)->x = pl->x;
+					(pl->holding)->y = pl->y - 1;
+					pl->holding = NULL;
+				}
+				break;
+				case 1:
+				if (eastResultSize == 0)
+				{
+					(pl->holding)->y = pl->y;
+					(pl->holding)->x = pl->x + 1;
+					pl->holding = NULL;
+				}
+				break;
+				case 2:
+				if (southResultSize == 0)
+				{
+					(pl->holding)->x = pl->x;
+					(pl->holding)->y = pl->y + 1;
+					pl->holding = NULL;
+				}
+				break;
+				case 3:
+				if (westResultSize == 0)
+				{
+					(pl->holding)->y = pl->y;
+					(pl->holding)->x = pl->x - 1;
+					pl->holding = NULL;
+				}
+				break;
+				default:
+				fprintf(stderr, "Player direction has become invalid\n");
+				break;
+			}
+		}
+	}
+	else if (!getKey(P1_A) && pl->aKeyDown)
+	{
+		pl->aKeyDown = 0;
+	}
 
 	if (getKey(P1_UP) && pl->upKeyDown == 0)
 	{
