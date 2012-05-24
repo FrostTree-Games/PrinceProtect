@@ -38,6 +38,14 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->gBlock.y = newY;
 		newEntity->gBlock.bType = GREEN_BLOCK;
 		break;
+		case ENEMY_CRAWLER:
+		newEntity->enemy.x = newX;
+		newEntity->enemy.y = newY;
+		newEntity->enemy.direction = 2;
+		newEntity->enemy.offsetX = 8;
+		newEntity->enemy.offsetY = 8;
+		newEntity->enemy.lastMovementUpdate = 0;
+		break;
 		default:
 		free(newEntity);
 		return NULL;
@@ -440,6 +448,113 @@ void update_player(Player* pl, Uint32 currTime)
 	return;
 }
 
+void update_enemy(Enemy* enemy, Uint32 currTime)
+{
+	Uint32 delta = currTime - enemy->lastMovementUpdate;
+	
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+
+	occupyingOnHere(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+	occupyingOnHere(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+	occupyingOnHere(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+	occupyingOnHere(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+
+	if (delta / 32 > 0)
+	{
+		switch (enemy->direction)
+		{
+			case 0:
+			enemy->offsetY -= 1;
+			break;
+			case 1:
+			enemy->offsetX += 1;
+			break;
+			case 2:
+			enemy->offsetY += 1;
+			break;
+			case 3:
+			enemy->offsetX -= 1;
+			break;
+			default:
+			break;
+		}
+
+		if (enemy->offsetX < 0)
+		{
+			if (westResultSize == 0)
+			{
+				enemy->offsetX = 15;
+				enemy->x -= 1;
+			}
+			else
+			{
+				enemy->offsetX = 8;
+				while (enemy->direction == 3)
+				{
+					enemy->direction = rand() % 4;
+				}
+			}
+		}
+		else if (enemy->offsetX > 15)
+		{
+			if (eastResultSize == 0)
+			{
+				enemy->offsetX = 0;
+				enemy->x += 1;
+			}
+			else
+			{
+				enemy->offsetX = 8;
+				while (enemy->direction == 1)
+				{
+					enemy->direction = rand() % 4;
+				}
+			}
+		}
+		if (enemy->offsetY < 0)
+		{
+			if (northResultSize == 0)
+			{
+				enemy->offsetY = 15;
+				enemy->y -= 1;
+			}
+			else
+			{
+				enemy->offsetY = 8;
+				while (enemy->direction == 0)
+				{
+					enemy->direction = rand() % 4;
+				}
+			}
+		}
+		else if (enemy->offsetY > 15)
+		{
+			if (southResultSize == 0)
+			{
+				enemy->offsetY = 0;
+				enemy->y += 1;
+			}
+			else
+			{
+				enemy->offsetY = 8;
+				while (enemy->direction == 2)
+				{
+					enemy->direction = rand() % 4;
+				}
+			}
+		}
+		
+		enemy->lastMovementUpdate = currTime;
+	}
+}
+
 void update_entity(Entity* entity, Uint32 currTime)
 {
 	// just in terrible, terrible, case
@@ -457,6 +572,9 @@ void update_entity(Entity* entity, Uint32 currTime)
 		case PERMABLOCK:
 		break;
 		case GAMEBLOCK:
+		break;
+		case ENEMY_CRAWLER:
+		update_enemy((Enemy*)entity, currTime);
 		break;
 		default:
 		printf("unregognized entity type updated\n");

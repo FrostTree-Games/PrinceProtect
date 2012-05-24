@@ -20,6 +20,7 @@ typedef enum
 	PLAYER2,
 	PERMABLOCK,
 	GAMEBLOCK,
+	ENEMY_CRAWLER,
 	DELETE_ME_PLEASE
 } EntityType;
 
@@ -73,6 +74,17 @@ typedef struct
 	Uint32 lastUpdate;
 } Player;
 
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	unsigned char direction;
+	int offsetX;
+	int offsetY;
+	Uint32 lastMovementUpdate;
+} Enemy;
+
 // viva la crude polymorphism!
 typedef union
 {
@@ -81,6 +93,7 @@ typedef union
 	Player player;
 	PermaBlock permaBlock;
 	GameBlock gBlock;
+	Enemy enemy;
 } Entity;
 
 /* initEntityList()

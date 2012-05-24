@@ -58,6 +58,8 @@ void testDraw(SDL_Surface* buffer)
 
 	for (i = 0; i < getEntityListSize(); i++)
 	{
+		entRect.w = 16;
+		entRect.h = 16;
 
 		switch (entList[i]->type)
 		{
@@ -75,6 +77,11 @@ void testDraw(SDL_Surface* buffer)
 			break;
 			case GAMEBLOCK:
 			drawGameBlock(buffer, (GameBlock*)entList[i]);
+			break;
+			case ENEMY_CRAWLER:
+			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
+			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 100, 5));
 			break;
 			default:
 			break;

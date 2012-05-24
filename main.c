@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <SDL/SDL.h>
 
@@ -96,6 +97,8 @@ int testLoop()
 int main(int argc, char* argv[])
 {
 	int i;
+	
+	srand(time(NULL));
 
 	init();
 
@@ -123,6 +126,8 @@ int main(int argc, char* argv[])
 
 	newGameBlock = pushEntity(GAMEBLOCK, 13, 10);
 	newGameBlock->gBlock.bType = GREEN_BLOCK;
+	
+	pushEntity(ENEMY_CRAWLER, 5, 12);
 
 	testLoop();
 	
