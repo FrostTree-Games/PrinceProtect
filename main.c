@@ -55,9 +55,104 @@ int deinit()
 	return 0;
 }
 
+// perform game logic on all the connecting game blocks
+// NOTE: this code uses a nested function, which is a feature of GCC;
+//       if you find yourself cursed with porting such code using another
+//       compiler (eg: ICC), you may need to remove the nest to a seperate 
+//       function.
+void whimsyBlocks()
+{
+	int i,j;
+	Entity* gameBlockGrid[32][16];
+	int flagMatrix[32][16];
+	int connectedBlockCounter = 0;
+	Entity** entList = getEntityList();
+	
+	void checkConnectedBlocks(int x, int y, BlockType b)
+	{
+		if (gameBlockGrid[x][y] == NULL)
+		{
+			return;
+		}
+
+		if (gameBlockGrid[x][y]->gBlock.bType != b || flagMatrix[x][y] != 1)
+		{
+			return;
+		}
+		
+		connectedBlockCounter++;
+		
+		flagMatrix[x][y] = 0;
+		checkConnectedBlocks(x + 1, y, b);
+		checkConnectedBlocks(x, y + 1, b);
+		checkConnectedBlocks(x - 1, y, b);
+		checkConnectedBlocks(x, y - 1, b);
+	}
+	
+	void clearConnectedBlocks(int x, int y, BlockType b)
+	{
+		if (gameBlockGrid[x][y] == NULL)
+		{
+			return;
+		}
+
+		if (gameBlockGrid[x][y]->gBlock.bType != b)
+		{
+			return;
+		}
+		
+		gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+		gameBlockGrid[x][y] = NULL;
+
+		clearConnectedBlocks(x + 1, y, b);
+		clearConnectedBlocks(x, y + 1, b);
+		clearConnectedBlocks(x - 1, y, b);
+		clearConnectedBlocks(x, y - 1, b);
+	}
+
+	for (i = 0; i < 32; i++)
+	{
+		for (j = 0; j < 16; j++)
+		{
+			gameBlockGrid[i][j] = NULL;
+			flagMatrix[i][j] = 0;
+		}
+	}
+
+	for (i = 0; i < getEntityListSize(); i++)
+	{
+		if (entList[i]->type == GAMEBLOCK)
+		{
+			if (entList[i]->base.x >= 0 && entList[i]->base.y >= 8 && entList[i]->base.x < 32 && entList[i]->base.y < 24)
+			{
+				gameBlockGrid[entList[i]->base.x][entList[i]->base.y] = entList[i];
+				flagMatrix[entList[i]->base.x][entList[i]->base.y] = 1;
+			}
+		}
+	}
+	
+	for (i = 0; i < 32; i++)
+	{
+		for (j = 0; j < 16; j++)
+		{
+			connectedBlockCounter = 0;
+			
+			if (gameBlockGrid[i][j] != NULL)
+			{
+				checkConnectedBlocks(i, j, gameBlockGrid[i][j]->gBlock.bType);
+				
+				if (connectedBlockCounter > 3)
+				{
+					clearConnectedBlocks(i, j, gameBlockGrid[i][j]->gBlock.bType);
+				}
+			}
+		}
+	}
+}
+
 int testLoop()
 {
-	int i;
+	int i;   //loop iterators
 
 	int quit = 0;
 	SDL_Event ev;
@@ -75,12 +170,19 @@ int testLoop()
 		//update call
 		pollKeyboard();
 
-		//test code for checking if entities are on a square
-
 		Entity** entList = getEntityList();
 		Uint32 currTime = SDL_GetTicks();
 		for (i = 0; i < getEntityListSize(); i++)
 		{
+			if (entList[i]->type == DELETE_ME_PLEASE)
+			{
+				popEntity(entList[i]);
+				i--;
+				continue;
+			}
+			
+			whimsyBlocks();
+
 			update_entity(entList[i], currTime);
 		}
 
@@ -111,13 +213,14 @@ int main(int argc, char* argv[])
 		pushEntity(PERMABLOCK, i, 8);
 		pushEntity(PERMABLOCK, i, 24);
 	}
-	
+
 	for (i = 0; i < 15; i++)
 	{
 		pushEntity(PERMABLOCK, -1, 9 + i);
 		pushEntity(PERMABLOCK, 32, 9 + i);
 	}
 	
+	/*
 	Entity* newGameBlock = pushEntity(GAMEBLOCK, 10, 10);
 	newGameBlock->gBlock.bType = RED_BLOCK;
 
@@ -125,7 +228,16 @@ int main(int argc, char* argv[])
 	newGameBlock->gBlock.bType = BLUE_BLOCK;
 
 	newGameBlock = pushEntity(GAMEBLOCK, 13, 10);
-	newGameBlock->gBlock.bType = GREEN_BLOCK;
+	newGameBlock->gBlock.bType = GREEN_BLOCK;  */
+	
+	for (i = 0; i < 14; i++)
+	{
+		Entity* newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 10);
+                newGameBlock->gBlock.bType = RED_BLOCK;
+                
+                newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 15);
+                newGameBlock->gBlock.bType = GREEN_BLOCK;
+	}
 	
 	pushEntity(ENEMY_CRAWLER, 5, 12);
 

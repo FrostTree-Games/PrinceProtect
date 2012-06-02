@@ -158,6 +158,14 @@ int popEntity(Entity* entity);
  */
 int occupyingOnHere(int x, int y, Entity** list, int listMaxSize, int* returnedSize);
 
+/* filterOccupyType
+ * Purpose: Returns a list of the entities on a specified coordinate of only one type
+ * Returns: 1 if there are any entities, 0 if none
+ * Note: The caller of this function must allociate and specify the size of the list
+ *       to fill. This could have the program crash or cause unwarranted effects.
+ */
+int filterOccupyType(int x, int y, Entity** list, int listMaxSize, int* returnedSize, EntityType type);
+
 /* update_entity()
  * Purpose: Updates entity logic
  * Returns: n/a
