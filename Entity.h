@@ -20,6 +20,7 @@ typedef enum
 	PLAYER2,
 	PERMABLOCK,
 	GAMEBLOCK,
+	ICEBLOCK,
 	ENEMY_CRAWLER,
 	DELETE_ME_PLEASE
 } EntityType;
@@ -31,7 +32,7 @@ typedef enum
 	RED_BLOCK,
 	BLUE_BLOCK,
 	GREEN_BLOCK,
-	BLACK_BLOCK
+	YELLOW_BLOCK
 } BlockType;
 
 //entity base (for width, height and whatnot)
@@ -50,6 +51,7 @@ typedef struct
 	int y;
 } PermaBlock;
 
+// a coloured game block to be placed and moved around
 typedef struct
 {
 	EntityType type;
@@ -57,6 +59,19 @@ typedef struct
 	int y;
 	BlockType bType;
 } GameBlock;
+
+// a block of ice; can be pushed by the player
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	int moving; // 0 = false, 1 = true
+	unsigned char direction; //0->N, 1->E, 2->S, 3->W
+	int offsetX;
+	int offsetY;
+	Uint32 lastMovementUpdate;
+} IceBlock;
 
 // players 1 and 2 entity types
 typedef struct
@@ -93,6 +108,7 @@ typedef union
 	Player player;
 	PermaBlock permaBlock;
 	GameBlock gBlock;
+	IceBlock iBlock;
 	Enemy enemy;
 } Entity;
 

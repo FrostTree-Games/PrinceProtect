@@ -37,6 +37,14 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->gBlock.x = newX;
 		newEntity->gBlock.y = newY;
 		newEntity->gBlock.bType = GREEN_BLOCK;
+		break;  
+		case ICEBLOCK:
+		newEntity->iBlock.x = newX;
+		newEntity->iBlock.y = newY;
+		newEntity->iBlock.moving = 0;
+		newEntity->iBlock.direction = 0;
+		newEntity->iBlock.offsetX = 8;
+		newEntity->iBlock.offsetY = 8;
 		break;
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
@@ -394,8 +402,13 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < northResultSize; i++)
 			{
-				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK)
+				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK || northList[i]->type == ICEBLOCK)
 				{
+					if (northList[i]->type == ICEBLOCK)
+					{
+						northList[i]->iBlock.moving = 1;
+						northList[i]->iBlock.direction = pl->direction;
+					}
 					yInc++;
 					break;
 				}
@@ -418,8 +431,13 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < southResultSize; i++)
 			{
-				if (southList[i]->type == PERMABLOCK  || southList[i]->type == GAMEBLOCK)
+				if (southList[i]->type == PERMABLOCK || southList[i]->type == GAMEBLOCK || southList[i]->type == ICEBLOCK)
 				{
+					if (southList[i]->type == ICEBLOCK)
+					{
+						southList[i]->iBlock.moving = 1;
+						southList[i]->iBlock.direction = pl->direction;
+					}
 					yInc--;
 					break;
 				}
@@ -442,8 +460,13 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < westResultSize; i++)
 			{
-				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK)
+				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK || westList[i]->type == ICEBLOCK)
 				{
+					if (westList[i]->type == ICEBLOCK)
+					{
+						westList[i]->iBlock.moving = 1;
+						westList[i]->iBlock.direction = pl->direction;
+					}
 					xInc++;
 					break;
 				}
@@ -466,8 +489,13 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < eastResultSize; i++)
 			{
-				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK)
+				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK || eastList[i]->type == ICEBLOCK)
 				{
+					if (eastList[i]->type == ICEBLOCK)
+					{
+						eastList[i]->iBlock.moving = 1;
+						eastList[i]->iBlock.direction = pl->direction;
+					}
 					xInc--;
 					break;
 				}
@@ -594,6 +622,101 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	}
 }
 
+void update_iceBlock(IceBlock* block, Uint32 currTime)
+{
+	Uint32 delta = currTime - block->lastMovementUpdate;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+
+	occupyingOnHere(block->x, block->y - 1, northList, 5, &northResultSize);
+	occupyingOnHere(block->x, block->y + 1, southList, 5, &southResultSize);
+	occupyingOnHere(block->x + 1, block->y, eastList, 5, &eastResultSize);
+	occupyingOnHere(block->x - 1, block->y, westList, 5, &westResultSize);
+
+	if (delta / 32 > 0 && block->moving == 1)
+	{
+		switch (block->direction)
+		{
+			case 0:
+			block->offsetY -= 8;
+			break;
+			case 1:
+			block->offsetX += 8;
+			break;
+			case 2:
+			block->offsetY += 8;
+			break;
+			case 3:
+			block->offsetX -= 8;
+			break;
+			default:
+			break;
+		}
+
+		if (block->offsetX < 0)
+		{
+			if (westResultSize == 0)
+			{
+				block->offsetX = 15;
+				block->x -= 1;
+			}
+			else
+			{
+				block->offsetX = 8;
+				block->moving = 0;
+			}
+		}
+		else if (block->offsetX > 15)
+		{
+			if (eastResultSize == 0)
+			{
+				block->offsetX = 0;
+				block->x += 1;
+			}
+			else
+			{
+				block->offsetX = 8;
+				block->moving = 0;
+			}
+		}
+		if (block->offsetY < 0)
+		{
+			if (northResultSize == 0)
+			{
+				block->offsetY = 15;
+				block->y -= 1;
+			}
+			else
+			{
+				block->offsetY = 8;
+				block->moving = 0;
+			}
+		}
+		else if (block->offsetY > 15)
+		{
+			if (southResultSize == 0)
+			{
+				block->offsetY = 0;
+				block->y += 1;
+			}
+			else
+			{
+				block->offsetY = 8;
+				block->moving = 0;
+			}
+		}
+		
+		block->lastMovementUpdate = currTime;
+	}
+}
+
 void update_entity(Entity* entity, Uint32 currTime)
 {
 	// just in terrible, terrible, case
@@ -609,8 +732,10 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_player((Player*)entity, currTime);
 		break;
 		case PERMABLOCK:
-		break;
 		case GAMEBLOCK:
+		break;
+		case ICEBLOCK:
+		update_iceBlock((IceBlock*)entity, currTime);
 		break;
 		case ENEMY_CRAWLER:
 		update_enemy((Enemy*)entity, currTime);

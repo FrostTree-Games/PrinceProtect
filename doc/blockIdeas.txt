@@ -1,0 +1,7 @@
+color   ->  effect
+----------------
+red     -> explosion (destroys nearby enemies)
+blue    -> ice blocks (slide in the direction pushed)
+yellow  -> laser shots (in various directions)
+green   -> snakes (wander around randomly and damage robots)
+

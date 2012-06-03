@@ -21,8 +21,8 @@ void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 		case GREEN_BLOCK:
 		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 255, 10));
 		break;
-		case BLACK_BLOCK:
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 10));
+		case YELLOW_BLOCK:
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
 		break;
 		default:
 		printf("No block encountered?\n");
@@ -77,6 +77,11 @@ void testDraw(SDL_Surface* buffer)
 			break;
 			case GAMEBLOCK:
 			drawGameBlock(buffer, (GameBlock*)entList[i]);
+			break;
+			case ICEBLOCK:
+			entRect.x = entList[i]->iBlock.x * 16 + entList[i]->iBlock.offsetX - 8;
+			entRect.y = entList[i]->iBlock.y * 16 + entList[i]->iBlock.offsetY - 8;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 255));
 			break;
 			case ENEMY_CRAWLER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;

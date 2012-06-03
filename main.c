@@ -220,6 +220,8 @@ int main(int argc, char* argv[])
 		pushEntity(PERMABLOCK, 32, 9 + i);
 	}
 	
+	pushEntity(ICEBLOCK, 10, 10);
+	
 	/*
 	Entity* newGameBlock = pushEntity(GAMEBLOCK, 10, 10);
 	newGameBlock->gBlock.bType = RED_BLOCK;
