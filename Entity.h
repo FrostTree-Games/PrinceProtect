@@ -21,6 +21,7 @@ typedef enum
 	PERMABLOCK,
 	GAMEBLOCK,
 	ICEBLOCK,
+	EXPLOSION,
 	ENEMY_CRAWLER,
 	DELETE_ME_PLEASE
 } EntityType;
@@ -73,6 +74,14 @@ typedef struct
 	Uint32 lastMovementUpdate;
 } IceBlock;
 
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	Uint32 startTime;
+} Explosion;
+
 // players 1 and 2 entity types
 typedef struct
 {
@@ -110,6 +119,7 @@ typedef union
 	GameBlock gBlock;
 	IceBlock iBlock;
 	Enemy enemy;
+	Explosion exp;
 } Entity;
 
 /* initEntityList()
@@ -187,5 +197,13 @@ int filterOccupyType(int x, int y, Entity** list, int listMaxSize, int* returned
  * Returns: n/a
  */
 void update_entity(Entity* entity, Uint32 currTime);
+
+// MOVE THIS TO A GAME LOGIC OBEJCT LATER
+/* [get/set]TimeSingleton(..)
+ * Purpose: Keeps a consistent time value for each iteration
+ * Returns: void, Uint32
+ */
+Uint32 getTimeSingleton();
+void setTimeSingleton(Uint32 newTime);
 
 #endif

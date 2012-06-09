@@ -74,6 +74,11 @@ void whimsyBlocks()
 		{
 			return;
 		}
+		
+		if (gameBlockGrid[x][y]->type != GAMEBLOCK)
+		{
+			return;
+		}
 
 		if (gameBlockGrid[x][y]->gBlock.bType != b || flagMatrix[x][y] != 1)
 		{
@@ -95,13 +100,52 @@ void whimsyBlocks()
 		{
 			return;
 		}
+		
+		if (gameBlockGrid[x][y]->type != GAMEBLOCK)
+		{
+			return;
+		}
 
 		if (gameBlockGrid[x][y]->gBlock.bType != b)
 		{
 			return;
 		}
 		
-		gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+		//turn the block into it's designated type
+		switch (b)
+		{
+			case RED_BLOCK:
+			gameBlockGrid[x][y]->type = EXPLOSION;
+			gameBlockGrid[x][y]->exp.startTime = getTimeSingleton();
+			if (gameBlockGrid[x-1][y] == NULL)
+			{
+				gameBlockGrid[x-1][y] = pushEntity(EXPLOSION, x-1, y);
+			}
+			if (gameBlockGrid[x+1][y] == NULL)
+			{
+				gameBlockGrid[x+1][y] = pushEntity(EXPLOSION, x+1, y);
+			}
+			if (gameBlockGrid[x][y-1] == NULL)
+			{
+				gameBlockGrid[x][y-1] = pushEntity(EXPLOSION, x, y-1);
+			}
+			if (gameBlockGrid[x][y+1] == NULL)
+			{
+				gameBlockGrid[x][y+1] = pushEntity(EXPLOSION, x, y+1);
+			}
+			break;
+			case BLUE_BLOCK:
+			gameBlockGrid[x][y]->type = ICEBLOCK;
+			gameBlockGrid[x][y]->iBlock.moving = 0;
+			gameBlockGrid[x][y]->iBlock.direction = 0;
+			gameBlockGrid[x][y]->iBlock.offsetX = 8;
+			gameBlockGrid[x][y]->iBlock.offsetY = 8;
+			break;
+			default:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			printf("Unrecognized block pattern destroyed: %d\n", b);
+			break;
+		}
 		gameBlockGrid[x][y] = NULL;
 
 		clearConnectedBlocks(x + 1, y, b);
@@ -171,7 +215,7 @@ int testLoop()
 		pollKeyboard();
 
 		Entity** entList = getEntityList();
-		Uint32 currTime = SDL_GetTicks();
+		setTimeSingleton(SDL_GetTicks());
 		for (i = 0; i < getEntityListSize(); i++)
 		{
 			if (entList[i]->type == DELETE_ME_PLEASE)
@@ -183,7 +227,7 @@ int testLoop()
 			
 			whimsyBlocks();
 
-			update_entity(entList[i], currTime);
+			update_entity(entList[i], getTimeSingleton());
 		}
 
 		testDraw(buffer);
@@ -221,17 +265,7 @@ int main(int argc, char* argv[])
 	}
 	
 	pushEntity(ICEBLOCK, 10, 10);
-	
-	/*
-	Entity* newGameBlock = pushEntity(GAMEBLOCK, 10, 10);
-	newGameBlock->gBlock.bType = RED_BLOCK;
 
-	newGameBlock = pushEntity(GAMEBLOCK, 12, 10);
-	newGameBlock->gBlock.bType = BLUE_BLOCK;
-
-	newGameBlock = pushEntity(GAMEBLOCK, 13, 10);
-	newGameBlock->gBlock.bType = GREEN_BLOCK;  */
-	
 	for (i = 0; i < 14; i++)
 	{
 		Entity* newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 10);
@@ -239,6 +273,9 @@ int main(int argc, char* argv[])
                 
                 newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 15);
                 newGameBlock->gBlock.bType = GREEN_BLOCK;
+                
+                newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 20);
+                newGameBlock->gBlock.bType = BLUE_BLOCK;
 	}
 	
 	pushEntity(ENEMY_CRAWLER, 5, 12);

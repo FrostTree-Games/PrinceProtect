@@ -11,6 +11,17 @@ Entity** entityList = NULL; // set to NULL when uninitalized
 const int entityListMaxSize = 532; // the area is a 32 by 16 tile zone (plus 20 extra overhead locations)
 int entityListCurrentSize = 0;
 
+// THESE SHOULD BE EVENTUALLY MOVED
+Uint32 timeSingleton = 0;
+Uint32 getTimeSingleton()
+{
+	return timeSingleton;
+}
+void setTimeSingleton(Uint32 newTime)
+{
+	timeSingleton = newTime;
+}
+
 Entity* create_entity(EntityType type, int newX, int newY)
 {
 	Entity* newEntity = malloc(sizeof(Entity));
@@ -45,6 +56,11 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->iBlock.direction = 0;
 		newEntity->iBlock.offsetX = 8;
 		newEntity->iBlock.offsetY = 8;
+		break;
+		case EXPLOSION:
+		newEntity->exp.x = newX;
+		newEntity->exp.y = newY;
+		newEntity->exp.startTime = getTimeSingleton();
 		break;
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
@@ -717,6 +733,34 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 	}
 }
 
+void update_explosion(Explosion* exp)
+{
+	int i;
+	Uint32 currTime = getTimeSingleton();
+	Uint32 delta = currTime - exp->startTime;
+	
+	Entity* blastList[5];
+	int blastResultSize = 0;
+	occupyingOnHere(exp->x, exp->y, blastList, 5, &blastResultSize);
+
+	for (i = 0; i < blastResultSize; i++)
+	{
+		switch (blastList[i]->type)
+		{
+			case ENEMY_CRAWLER:
+			printf("blasted an enemy at (%d, %d)\n", exp->x, exp->y);
+			break;
+			default:
+			break;
+		}
+	}
+	
+	if (delta > 750)
+	{
+		exp->type = DELETE_ME_PLEASE;
+	}
+}
+
 void update_entity(Entity* entity, Uint32 currTime)
 {
 	// just in terrible, terrible, case
@@ -736,6 +780,9 @@ void update_entity(Entity* entity, Uint32 currTime)
 		break;
 		case ICEBLOCK:
 		update_iceBlock((IceBlock*)entity, currTime);
+		break;
+		case EXPLOSION:
+		update_explosion((Explosion*)entity);
 		break;
 		case ENEMY_CRAWLER:
 		update_enemy((Enemy*)entity, currTime);

@@ -13,7 +13,7 @@ void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 	switch (gb->bType)
 	{
 		case RED_BLOCK:
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 10, 10));
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
 		break;
 		case BLUE_BLOCK:
 		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 255));
@@ -82,6 +82,13 @@ void testDraw(SDL_Surface* buffer)
 			entRect.x = entList[i]->iBlock.x * 16 + entList[i]->iBlock.offsetX - 8;
 			entRect.y = entList[i]->iBlock.y * 16 + entList[i]->iBlock.offsetY - 8;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 255));
+			break;
+			case EXPLOSION:
+			entRect.x = 2 + (entList[i]->exp.x * 16);
+			entRect.y = 2 + (entList[i]->exp.y * 16);
+			entRect.w = 12;
+			entRect.h = 12;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 40, 50));
 			break;
 			case ENEMY_CRAWLER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
