@@ -22,6 +22,7 @@ typedef enum
 	GAMEBLOCK,
 	ICEBLOCK,
 	EXPLOSION,
+	TELEBLOCK,
 	ENEMY_CRAWLER,
 	DELETE_ME_PLEASE
 } EntityType;
@@ -82,6 +83,16 @@ typedef struct
 	Uint32 startTime;
 } Explosion;
 
+typedef struct TeleBlock
+{
+	EntityType type;
+	int x;
+	int y;
+	Uint32 startTime;
+	int side; // 0 = west,  = east
+	struct TeleBlock* twin;
+} TeleBlock;
+
 // players 1 and 2 entity types
 typedef struct
 {
@@ -118,8 +129,9 @@ typedef union
 	PermaBlock permaBlock;
 	GameBlock gBlock;
 	IceBlock iBlock;
-	Enemy enemy;
 	Explosion exp;
+	TeleBlock tBlock;
+	Enemy enemy;
 } Entity;
 
 /* initEntityList()

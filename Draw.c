@@ -90,6 +90,12 @@ void testDraw(SDL_Surface* buffer)
 			entRect.h = 12;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 40, 50));
 			break;
+			case TELEBLOCK:
+			entRect.w = 4;
+			entRect.x = 6 + entList[i]->tBlock.x * 16;
+			entRect.y = entList[i]->tBlock.y * 16;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 255, 0));
+			break;
 			case ENEMY_CRAWLER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
 			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;

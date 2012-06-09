@@ -8,7 +8,7 @@
 
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
-const int entityListMaxSize = 532; // the area is a 32 by 16 tile zone (plus 20 extra overhead locations)
+const int entityListMaxSize = 552; // the area is a 32 by 16 tile zone (plus 40 extra overhead locations)
 int entityListCurrentSize = 0;
 
 // THESE SHOULD BE EVENTUALLY MOVED
@@ -20,6 +20,12 @@ Uint32 getTimeSingleton()
 void setTimeSingleton(Uint32 newTime)
 {
 	timeSingleton = newTime;
+}
+
+void pair_teleblocks(TeleBlock* placed, TeleBlock* mirror)
+{
+	placed->twin = mirror;
+	mirror->twin = placed;
 }
 
 Entity* create_entity(EntityType type, int newX, int newY)
@@ -62,6 +68,18 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->exp.y = newY;
 		newEntity->exp.startTime = getTimeSingleton();
 		break;
+		case TELEBLOCK:
+		newEntity->tBlock.x = newX;
+		newEntity->tBlock.y = newY;
+		newEntity->tBlock.startTime = getTimeSingleton();
+		if (newX < 32/2)
+		{
+			newEntity->tBlock.side = 0;
+		}
+		else
+		{
+			newEntity->tBlock.side = 1;
+		}
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
@@ -140,6 +158,43 @@ Entity** getEntityList()
 
 Entity* pushEntity(EntityType type, int newX, int newY)
 {
+	//if a TeleBlock is specified, this inline is called to create a reciporical TeleBlock
+	Entity* pushPairBlock(int newX, int newY)
+	{
+		if (entityList == NULL)
+		{
+			return NULL;
+		}
+	
+		if (entityListCurrentSize >= entityListMaxSize)
+		{
+			return NULL;
+		}
+		
+		Entity* checkList[5];
+		int checkResultSize = 0;
+		occupyingOnHere(31 - newX, newY, checkList, 5, &checkResultSize);
+
+		if (checkResultSize > 0)
+		{
+			return NULL;
+		}
+
+		Entity* newEnt = create_entity(TELEBLOCK, 31 - newX, newY);
+		
+		if (newEnt == NULL)
+		{
+			return NULL;
+		}
+		
+		entityList[entityListCurrentSize] = newEnt;
+		entityListCurrentSize++;
+		return newEnt;
+	}
+	
+	// if a teleBlock is going to be created, this pointer is used as its twin
+	Entity* potentialTwin = NULL;
+
 	if (entityList == NULL)
 	{
 		return NULL;
@@ -149,9 +204,24 @@ Entity* pushEntity(EntityType type, int newX, int newY)
 	{
 		return NULL;
 	}
+	
+	if (type == TELEBLOCK)
+	{
+		potentialTwin = pushPairBlock(newX, newY);
+		
+		if (potentialTwin == NULL)
+		{
+			return NULL;
+		}
+	}
 
 	Entity* newEnt = create_entity(type, newX, newY);
 	
+	if (type == TELEBLOCK)
+	{
+		pair_teleblocks((TeleBlock*)newEnt, (TeleBlock*)potentialTwin);
+	}
+
 	if (newEnt == NULL)
 	{
 		return NULL;
@@ -761,6 +831,33 @@ void update_explosion(Explosion* exp)
 	}
 }
 
+void update_teleblock(TeleBlock* tb)
+{
+	int i;
+	Entity* checkList[5];
+	int checkResultSize = 0;
+	occupyingOnHere(tb->x, tb->y, checkList, 5, &checkResultSize);
+
+	if (checkResultSize > 0)
+	{
+		for (i = 0; i < checkResultSize; i++)
+		{
+			if (checkList[i]->type == TELEBLOCK || checkList[i]->type == DELETE_ME_PLEASE || checkList[i]->type == EXPLOSION)
+			{
+				continue;
+			}
+			else
+			{
+				checkList[i]->base.x = tb->twin->x;
+				checkList[i]->base.y = tb->twin->y;
+				tb->twin->type = DELETE_ME_PLEASE;
+				tb->type = DELETE_ME_PLEASE;
+				break;
+			}
+		}
+	}
+}	
+
 void update_entity(Entity* entity, Uint32 currTime)
 {
 	// just in terrible, terrible, case
@@ -783,6 +880,9 @@ void update_entity(Entity* entity, Uint32 currTime)
 		break;
 		case EXPLOSION:
 		update_explosion((Explosion*)entity);
+		break;
+		case TELEBLOCK:
+		update_teleblock((TeleBlock*)entity);
 		break;
 		case ENEMY_CRAWLER:
 		update_enemy((Enemy*)entity, currTime);

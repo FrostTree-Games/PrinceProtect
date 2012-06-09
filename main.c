@@ -134,6 +134,10 @@ void whimsyBlocks()
 				gameBlockGrid[x][y+1] = pushEntity(EXPLOSION, x, y+1);
 			}
 			break;
+			case GREEN_BLOCK:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			pushEntity(TELEBLOCK, x, y);
+			break;
 			case BLUE_BLOCK:
 			gameBlockGrid[x][y]->type = ICEBLOCK;
 			gameBlockGrid[x][y]->iBlock.moving = 0;
