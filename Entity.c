@@ -300,6 +300,45 @@ int occupyingOnHere(int x, int y, Entity** list, int listMaxSize, int* returnedS
 	}
 }
 
+int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returnedSize)
+{
+	int i;
+	*returnedSize = 0;
+	
+	if (list == NULL)
+	{
+		return 0;
+	}
+	
+	Entity* en;
+	for (i = 0; i < entityListCurrentSize; i++)
+	{
+		en = entityList[i];
+		
+		if (en->base.x == x && en->base.y == y)
+		{
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK))
+			{
+				list[(*returnedSize)] = en;
+				(*returnedSize)++;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+	}
+	
+	if ((*returnedSize) == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 int filterOccupyType(int x, int y, Entity** list, int listMaxSize, int* returnedSize, EntityType type)
 {
 	int i;
@@ -614,10 +653,10 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	int eastResultSize;
 	int westResultSize;
 
-	occupyingOnHere(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
-	occupyingOnHere(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
-	occupyingOnHere(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
-	occupyingOnHere(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 
 	if (delta / 32 > 0)
 	{
@@ -721,10 +760,10 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 	int eastResultSize;
 	int westResultSize;
 
-	occupyingOnHere(block->x, block->y - 1, northList, 5, &northResultSize);
-	occupyingOnHere(block->x, block->y + 1, southList, 5, &southResultSize);
-	occupyingOnHere(block->x + 1, block->y, eastList, 5, &eastResultSize);
-	occupyingOnHere(block->x - 1, block->y, westList, 5, &westResultSize);
+	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
+	filterOccupyWalls(block->x, block->y + 1, southList, 5, &southResultSize);
+	filterOccupyWalls(block->x + 1, block->y, eastList, 5, &eastResultSize);
+	filterOccupyWalls(block->x - 1, block->y, westList, 5, &westResultSize);
 
 	if (delta / 32 > 0 && block->moving == 1)
 	{
