@@ -80,6 +80,11 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		{
 			newEntity->tBlock.side = 1;
 		}
+		break;
+		case ICECREAM:
+		newEntity->iceCream.x = newX;
+		newEntity->iceCream.y = newY;
+		break;
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
@@ -181,7 +186,7 @@ Entity* pushEntity(EntityType type, int newX, int newY)
 		}
 
 		Entity* newEnt = create_entity(TELEBLOCK, 31 - newX, newY);
-		
+
 		if (newEnt == NULL)
 		{
 			return NULL;
@@ -339,6 +344,46 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 	}
 }
 
+// je suis lazy
+int filterOccupyWallsForPlayer(int x, int y, Entity** list, int listMaxSize, int* returnedSize)
+{
+	int i;
+	*returnedSize = 0;
+	
+	if (list == NULL)
+	{
+		return 0;
+	}
+	
+	Entity* en;
+	for (i = 0; i < entityListCurrentSize; i++)
+	{
+		en = entityList[i];
+		
+		if (en->base.x == x && en->base.y == y)
+		{
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM))
+			{
+				list[(*returnedSize)] = en;
+				(*returnedSize)++;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+	}
+	
+	if ((*returnedSize) == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 int filterOccupyType(int x, int y, Entity** list, int listMaxSize, int* returnedSize, EntityType type)
 {
 	int i;
@@ -399,7 +444,7 @@ void update_player(Player* pl, Uint32 currTime)
 	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
 	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
-	
+
 	if (getKey(P1_A) && !(pl->aKeyDown))
 	{
 		pl->aKeyDown = 1;
@@ -527,7 +572,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < northResultSize; i++)
 			{
-				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK || northList[i]->type == ICEBLOCK)
+				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK || northList[i]->type == ICEBLOCK || northList[i]->type == ICECREAM)
 				{
 					if (northList[i]->type == ICEBLOCK)
 					{
@@ -556,7 +601,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < southResultSize; i++)
 			{
-				if (southList[i]->type == PERMABLOCK || southList[i]->type == GAMEBLOCK || southList[i]->type == ICEBLOCK)
+				if (southList[i]->type == PERMABLOCK || southList[i]->type == GAMEBLOCK || southList[i]->type == ICEBLOCK || southList[i]->type == ICECREAM)
 				{
 					if (southList[i]->type == ICEBLOCK)
 					{
@@ -585,7 +630,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < westResultSize; i++)
 			{
-				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK || westList[i]->type == ICEBLOCK)
+				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK || westList[i]->type == ICEBLOCK || westList[i]->type == ICECREAM)
 				{
 					if (westList[i]->type == ICEBLOCK)
 					{
@@ -614,7 +659,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			for (i = 0; i < eastResultSize; i++)
 			{
-				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK || eastList[i]->type == ICEBLOCK)
+				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK || eastList[i]->type == ICEBLOCK || eastList[i]->type == ICECREAM)
 				{
 					if (eastList[i]->type == ICEBLOCK)
 					{
@@ -925,6 +970,8 @@ void update_entity(Entity* entity, Uint32 currTime)
 		break;
 		case ENEMY_CRAWLER:
 		update_enemy((Enemy*)entity, currTime);
+		break;
+		case ICECREAM:
 		break;
 		default:
 		printf("unregognized entity type updated\n");

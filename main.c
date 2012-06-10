@@ -232,6 +232,11 @@ int testLoop()
 			whimsyBlocks();
 
 			update_entity(entList[i], getTimeSingleton());
+			
+			if (entList[i]->base.y < 5 && entList[i]->base.y > -1)
+			{
+				printf("what? %d\n", entList[i]->type);
+			}
 		}
 
 		testDraw(buffer);
@@ -272,6 +277,11 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 14; i++)
 	{
+		if (i > 4 && i < 10)
+		{
+			continue;
+		}
+
 		Entity* newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 10);
                 newGameBlock->gBlock.bType = RED_BLOCK;
                 
@@ -280,6 +290,18 @@ int main(int argc, char* argv[])
                 
                 newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 20);
                 newGameBlock->gBlock.bType = BLUE_BLOCK;
+	}
+	
+	for (i = 0; i < 2; i++)
+	{
+		pushEntity(ICECREAM, 15 + i, 10);
+		pushEntity(ICECREAM, 15 + i, 11);
+		
+		pushEntity(ICECREAM, 15 + i, 15);
+		pushEntity(ICECREAM, 15 + i, 16);
+		
+		pushEntity(ICECREAM, 15 + i, 20);
+		pushEntity(ICECREAM, 15 + i, 21);
 	}
 	
 	pushEntity(ENEMY_CRAWLER, 5, 12);

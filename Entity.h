@@ -24,6 +24,7 @@ typedef enum
 	EXPLOSION,
 	TELEBLOCK,
 	ENEMY_CRAWLER,
+	ICECREAM,
 	DELETE_ME_PLEASE
 } EntityType;
 
@@ -93,6 +94,13 @@ typedef struct TeleBlock
 	struct TeleBlock* twin;
 } TeleBlock;
 
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+} IceCream;
+
 // players 1 and 2 entity types
 typedef struct
 {
@@ -131,6 +139,7 @@ typedef union
 	IceBlock iBlock;
 	Explosion exp;
 	TeleBlock tBlock;
+	IceCream iceCream;
 	Enemy enemy;
 } Entity;
 
