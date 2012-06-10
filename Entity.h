@@ -113,6 +113,9 @@ typedef struct
 	unsigned char leftKeyDown;
 	unsigned char rightKeyDown;
 	unsigned char aKeyDown;
+	unsigned char bKeyDown;
+	Uint32 swordTimer;
+	int isThrusting; // 0 = false, 1 = true
 	GameBlock* holding;
 	Uint32 lastUpdate;
 } Player;

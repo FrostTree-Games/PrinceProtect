@@ -55,6 +55,7 @@ void testDraw(SDL_Surface* buffer)
 
 	//used for default drawing
 	SDL_Rect entRect = {0, 0, 16, 16};
+	SDL_Rect altRect = {0, 0, 4, 4};
 
 	for (i = 0; i < getEntityListSize(); i++)
 	{
@@ -67,6 +68,36 @@ void testDraw(SDL_Surface* buffer)
 			entRect.x = entList[i]->player.x * 16;
 			entRect.y = entList[i]->player.y * 16;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 255));
+			
+			//draw sword if necessary
+			if (entList[i]->player.isThrusting == 1)
+			{
+				switch (entList[i]->player.direction)
+				{
+					case 0:
+					altRect.x = (entList[i]->player.x * 16) + 4;
+                                        altRect.y = (entList[i]->player.y * 16) - 4;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+					break;
+                                        case 1:
+                                        altRect.x = (entList[i]->player.x * 16) + 16;
+                                        altRect.y = (entList[i]->player.y * 16) + 4;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+					break;
+					case 2:
+					altRect.x = (entList[i]->player.x * 16) + 4;
+                                        altRect.y = (entList[i]->player.y * 16) + 16;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+					break;
+					case 3:
+					altRect.x = (entList[i]->player.x * 16) - 4;
+                                        altRect.y = (entList[i]->player.y * 16) + 4;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+					break;
+					default:
+					break;
+				}
+			}
 			break;
 			case PLAYER2:
 			break;

@@ -45,6 +45,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.aKeyDown = 0;
                 newEntity->player.lastUpdate = 0;
                 newEntity->player.holding = NULL;
+                newEntity->player.swordTimer = 0;
+                newEntity->player.isThrusting = 0;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -444,6 +446,83 @@ void update_player(Player* pl, Uint32 currTime)
 	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
 	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	
+	if (getKey(P1_B) && !(pl->bKeyDown))
+	{
+		pl->bKeyDown = 1;
+		pl->swordTimer = currTime;
+		pl->isThrusting = 1;
+		printf("strike!\n");
+	}
+	else if (!getKey(P1_B) && pl->bKeyDown)
+	{
+		pl->bKeyDown = 0;
+	}
+	
+	if (pl->isThrusting)
+	{
+		if (currTime - pl->swordTimer > 250)
+		{
+			pl->isThrusting = 0;
+		}
+		
+		switch (pl->direction)
+		{
+			case 0:
+			if (northResultSize > 0)
+			{
+				for (i = 0; i < northResultSize; i++)
+				{
+					if (northList[i]->type == ENEMY_CRAWLER)
+					{
+						printf("Struck north baddie!\n");
+					}
+				}
+			}
+			break;
+			case 1:
+			if (eastResultSize > 0)
+			{
+				for (i = 0; i < eastResultSize; i++)
+				{
+					if (eastList[i]->type == ENEMY_CRAWLER)
+					{
+						printf("Struck east baddie!\n");
+					}
+				}
+			}
+			break;
+			case 2:
+			if (southResultSize > 0)
+			{
+				for (i = 0; i < southResultSize; i++)
+				{
+					if (southList[i]->type == ENEMY_CRAWLER)
+					{
+						printf("Struck south baddie!\n");
+					}
+				}
+			}
+			break;
+			case 3:
+			if (westResultSize > 0)
+			{
+				for (i = 0; i < westResultSize; i++)
+				{
+					if (westList[i]->type == ENEMY_CRAWLER)
+					{
+						printf("Struck west baddie!\n");
+					}
+				}
+			}
+			break;
+			default:
+			fprintf(stderr, "Bad direction for thrusting player: %d\n", pl->direction);
+			break;
+		}
+
+		return; //don't move and thrust sword at the same time
+	}
 
 	if (getKey(P1_A) && !(pl->aKeyDown))
 	{
