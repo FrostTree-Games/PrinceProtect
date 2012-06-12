@@ -94,6 +94,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.offsetX = 8;
 		newEntity->enemy.offsetY = 8;
 		newEntity->enemy.lastMovementUpdate = 0;
+		newEntity->enemy.knockBackDirection = -1;
 		break;
 		default:
 		free(newEntity);
@@ -452,7 +453,6 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->bKeyDown = 1;
 		pl->swordTimer = currTime;
 		pl->isThrusting = 1;
-		printf("strike!\n");
 	}
 	else if (!getKey(P1_B) && pl->bKeyDown)
 	{
@@ -475,7 +475,11 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					if (northList[i]->type == ENEMY_CRAWLER)
 					{
-						printf("Struck north baddie!\n");
+						northList[i]->enemy.knockBackDirection = pl->direction;
+						northList[i]->enemy.offsetX = 8;
+						northList[i]->enemy.offsetY = 8;
+						
+						pl->isThrusting = 0;
 					}
 				}
 			}
@@ -487,7 +491,11 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					if (eastList[i]->type == ENEMY_CRAWLER)
 					{
-						printf("Struck east baddie!\n");
+						eastList[i]->enemy.knockBackDirection = pl->direction;
+						eastList[i]->enemy.offsetX = 8;
+						eastList[i]->enemy.offsetY = 8;
+						
+						pl->isThrusting = 0;
 					}
 				}
 			}
@@ -499,7 +507,11 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					if (southList[i]->type == ENEMY_CRAWLER)
 					{
-						printf("Struck south baddie!\n");
+						southList[i]->enemy.knockBackDirection = pl->direction;
+						southList[i]->enemy.offsetX = 8;
+						southList[i]->enemy.offsetY = 8;
+
+						pl->isThrusting = 0;
 					}
 				}
 			}
@@ -511,7 +523,11 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					if (westList[i]->type == ENEMY_CRAWLER)
 					{
-						printf("Struck west baddie!\n");
+						westList[i]->enemy.knockBackDirection = pl->direction;
+						westList[i]->enemy.offsetX = 8;
+						westList[i]->enemy.offsetY = 8;
+						
+						pl->isThrusting = 0;
 					}
 				}
 			}
@@ -784,22 +800,45 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 
 	if (delta / 32 > 0)
 	{
-		switch (enemy->direction)
+		if (enemy->knockBackDirection == 255)
 		{
-			case 0:
-			enemy->offsetY -= 1;
-			break;
-			case 1:
-			enemy->offsetX += 1;
-			break;
-			case 2:
-			enemy->offsetY += 1;
-			break;
-			case 3:
-			enemy->offsetX -= 1;
-			break;
-			default:
-			break;
+			switch (enemy->direction)
+			{
+				case 0:
+				enemy->offsetY -= 1;
+				break;
+				case 1:
+				enemy->offsetX += 1;
+				break;
+				case 2:
+				enemy->offsetY += 1;
+				break;
+				case 3:
+				enemy->offsetX -= 1;
+				break;
+				default:
+				break;
+			}
+		}
+		else
+		{
+			switch (enemy->knockBackDirection)
+			{
+				case 0:
+				enemy->offsetY -= 8;
+				break;
+				case 1:
+				enemy->offsetX += 8;
+				break;
+				case 2:
+				enemy->offsetY += 8;
+				break;
+				case 3:
+				enemy->offsetX -= 8;
+				break;
+				default:
+				break;
+			}
 		}
 
 		if (enemy->offsetX < 0)
@@ -817,6 +856,12 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 					enemy->direction = rand() % 4;
 				}
 			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
 		}
 		else if (enemy->offsetX > 15)
 		{
@@ -833,7 +878,14 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 					enemy->direction = rand() % 4;
 				}
 			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
 		}
+
 		if (enemy->offsetY < 0)
 		{
 			if (northResultSize == 0)
@@ -848,6 +900,12 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 				{
 					enemy->direction = rand() % 4;
 				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
 			}
 		}
 		else if (enemy->offsetY > 15)
@@ -864,6 +922,12 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 				{
 					enemy->direction = rand() % 4;
 				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
 			}
 		}
 		
