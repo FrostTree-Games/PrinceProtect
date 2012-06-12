@@ -2,9 +2,34 @@
 #include <stdlib.h>
 
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 
 #include "Draw.h"
 #include "Entity.h"
+
+int pushNotificationFontSize = 14;
+TTF_Font* pushNotificationFont = NULL;
+
+int setupFonts()
+{
+	if (TTF_WasInit() != 1)
+	{
+		fprintf(stderr, "Check that SDL_ttf was initalized\n");
+		return 1;
+	}
+
+	if ((pushNotificationFont = TTF_OpenFont("ttf/push.ttf", pushNotificationFontSize)) == NULL)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+void clearFonts()
+{
+	TTF_CloseFont(pushNotificationFont);
+}
 
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 {
@@ -141,5 +166,10 @@ void testDraw(SDL_Surface* buffer)
 			break;
 		}
 	}
+
+	SDL_Surface* text_surface;
+	SDL_Color cl = {255, 255, 0, 0};
+	text_surface = TTF_RenderText_Solid(pushNotificationFont, "Hello worldface!", cl);
+	SDL_BlitSurface(text_surface, NULL, buffer, NULL);
 }
 

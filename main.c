@@ -11,6 +11,7 @@
 #include <time.h>
 
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 
 #include "Entity.h"
 #include "Keyboard.h"
@@ -39,6 +40,18 @@ int init()
 		return 1;
 	}
 	
+	if (TTF_Init() != 0)
+	{
+		perror("Error initalizing SDL_ttf.");
+		return 1;
+	}
+	
+	if (setupFonts() != 0)
+	{
+		perror("Error setting up fonts");
+		return -1;
+	}	
+	
 	buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	
 	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
@@ -49,7 +62,10 @@ int init()
 int deinit()
 {
 	SDL_FreeSurface(buffer);
+	
+	clearFonts();
 
+	TTF_Quit();
 	SDL_Quit();
 	
 	return 0;
@@ -287,7 +303,7 @@ int main(int argc, char* argv[])
                 
                 newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 15);
                 newGameBlock->gBlock.bType = GREEN_BLOCK;
-                
+
                 newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 20);
                 newGameBlock->gBlock.bType = BLUE_BLOCK;
 	}

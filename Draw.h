@@ -13,7 +13,19 @@
 #define SCREEN_HEIGHT 448
 
 #include <SDL/SDL.h>
- 
+
+/* setupFonts()
+ * Purpose: Loads the necessary TTF fonts; do this on startup
+ * Returns: 0 on success, 1 on failure
+ */
+int setupFonts();
+
+/* clearFonts
+ * Purpose: Frees the necessary fonts from memory; do this on exit
+ * Returns: n/a
+ */
+void clearFonts();
+
 /* testDrawFunction()
  * Purpose: Getting something out the door for now.
  * Returns: n/a
