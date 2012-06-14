@@ -16,6 +16,7 @@
 #include "Entity.h"
 #include "Keyboard.h"
 #include "Draw.h"
+#include "Pushdown.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 448
@@ -50,7 +51,7 @@ int init()
 	{
 		perror("Error setting up fonts");
 		return -1;
-	}	
+	}
 	
 	buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	
@@ -236,6 +237,8 @@ int testLoop()
 
 		Entity** entList = getEntityList();
 		setTimeSingleton(SDL_GetTicks());
+		updatePushMessages();
+
 		for (i = 0; i < getEntityListSize(); i++)
 		{
 			if (entList[i]->type == DELETE_ME_PLEASE)
@@ -252,6 +255,11 @@ int testLoop()
 			if (entList[i]->base.y < 5 && entList[i]->base.y > -1)
 			{
 				printf("what? %d\n", entList[i]->type);
+			}
+			
+			if (getKey(P1_SELECT))
+			{
+				pushNewMessage("icecreamicecreamicecreampenis");
 			}
 		}
 

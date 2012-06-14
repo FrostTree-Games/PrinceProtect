@@ -6,6 +6,7 @@
 
 #include "Draw.h"
 #include "Entity.h"
+#include "Pushdown.h"
 
 int pushNotificationFontSize = 14;
 TTF_Font* pushNotificationFont = NULL;
@@ -29,6 +30,29 @@ int setupFonts()
 void clearFonts()
 {
 	TTF_CloseFont(pushNotificationFont);
+}
+
+void drawLatestPushDown(SDL_Surface* buffer)
+{
+	PushMessage* latestMessage = getCurrentMessage();
+	if (latestMessage == NULL)
+	{
+		return;
+	}
+
+	SDL_Surface* text_surface;
+	SDL_Color cl = {255, 255, 0, 0};
+	text_surface = TTF_RenderText_Solid(pushNotificationFont, latestMessage->message, cl);
+	
+	SDL_Rect msgPos = {(buffer->w - text_surface->w)/2, 30, 0, 0};
+	
+	if (getTimeSingleton() - latestMessage->startTime < 2000)
+	{
+		msgPos.y = (Sint16)(30 * (getTimeSingleton() - latestMessage->startTime)/2000.0);
+	}
+
+	SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
+	SDL_FreeSurface(text_surface);
 }
 
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
@@ -166,10 +190,7 @@ void testDraw(SDL_Surface* buffer)
 			break;
 		}
 	}
-
-	SDL_Surface* text_surface;
-	SDL_Color cl = {255, 255, 0, 0};
-	text_surface = TTF_RenderText_Solid(pushNotificationFont, "Hello worldface!", cl);
-	SDL_BlitSurface(text_surface, NULL, buffer, NULL);
+	
+	drawLatestPushDown(buffer);
 }
 
