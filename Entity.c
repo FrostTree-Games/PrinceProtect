@@ -95,6 +95,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.offsetY = 8;
 		newEntity->enemy.lastMovementUpdate = 0;
 		newEntity->enemy.knockBackDirection = -1;
+		newEntity->enemy.cream = NULL;
 		break;
 		default:
 		free(newEntity);
@@ -782,21 +783,36 @@ void update_player(Player* pl, Uint32 currTime)
 
 void update_enemy(Enemy* enemy, Uint32 currTime)
 {
+	int i;
 	Uint32 delta = currTime - enemy->lastMovementUpdate;
 
 	Entity* northList[5];
 	Entity* southList[5];
 	Entity* eastList[5];
 	Entity* westList[5];
+	Entity* currList[5];
 	int northResultSize;
 	int southResultSize;
 	int eastResultSize;
 	int westResultSize;
+	int currListSize;
 
 	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
 	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
 	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
+
+	for (i = 0; i < currListSize; i++)
+	{
+		if (currList[i]->type == ICECREAM && enemy->cream == NULL)
+		{
+			printf("here!\n");
+			enemy->cream = (IceCream*)currList[i];
+			enemy->cream->x = -5;
+			enemy->cream->y = -5;
+		}
+	}
 
 	if (delta / 32 > 0)
 	{

@@ -185,6 +185,11 @@ void testDraw(SDL_Surface* buffer)
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
 			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 100, 5));
+			if (entList[i]->enemy.cream != NULL)
+			{
+				entRect.y -= 16;
+				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
+			}
 			break;
 			default:
 			break;

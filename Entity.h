@@ -130,6 +130,7 @@ typedef struct
 	int offsetY;
 	Uint32 lastMovementUpdate;
 	unsigned char knockBackDirection; // 255->no knock back, 0->N, 1->E, 2->S, 3->W
+	IceCream* cream;
 } Enemy;
 
 // viva la crude polymorphism!
