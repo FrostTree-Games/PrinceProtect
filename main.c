@@ -80,13 +80,18 @@ int deinit()
 void whimsyBlocks()
 {
 	int i,j;
-	Entity* gameBlockGrid[32][16];
-	int flagMatrix[32][16];
+	Entity* gameBlockGrid[32][28];
+	int flagMatrix[32][28];
 	int connectedBlockCounter = 0;
 	Entity** entList = getEntityList();
 	
 	void checkConnectedBlocks(int x, int y, BlockType b)
 	{
+		if (x > 31 || y > 16 || x < 0 || y < 0)
+		{
+			return;
+		}
+
 		if (gameBlockGrid[x][y] == NULL)
 		{
 			return;
@@ -113,6 +118,11 @@ void whimsyBlocks()
 	
 	void clearConnectedBlocks(int x, int y, BlockType b)
 	{
+		if (x > 31 || y > 16 || x < 0 || y < 0)
+		{
+			return;
+		}
+
 		if (gameBlockGrid[x][y] == NULL)
 		{
 			return;
@@ -177,7 +187,7 @@ void whimsyBlocks()
 
 	for (i = 0; i < 32; i++)
 	{
-		for (j = 0; j < 16; j++)
+		for (j = 0; j < 28; j++)
 		{
 			gameBlockGrid[i][j] = NULL;
 			flagMatrix[i][j] = 0;
@@ -188,7 +198,7 @@ void whimsyBlocks()
 	{
 		if (entList[i]->type == GAMEBLOCK)
 		{
-			if (entList[i]->base.x >= 0 && entList[i]->base.y >= 8 && entList[i]->base.x < 32 && entList[i]->base.y < 24)
+			if (entList[i]->base.x >= 0 && entList[i]->base.y >= 8 && entList[i]->base.x < 32 && entList[i]->base.y < 26)
 			{
 				gameBlockGrid[entList[i]->base.x][entList[i]->base.y] = entList[i];
 				flagMatrix[entList[i]->base.x][entList[i]->base.y] = 1;
@@ -198,7 +208,7 @@ void whimsyBlocks()
 	
 	for (i = 0; i < 32; i++)
 	{
-		for (j = 0; j < 16; j++)
+		for (j = 0; j < 28; j++)
 		{
 			connectedBlockCounter = 0;
 			
@@ -259,7 +269,7 @@ int testLoop()
 			
 			if (getKey(P1_SELECT))
 			{
-				pushNewMessage("icecreamicecreamicecreampenis");
+				pushNewMessage("Test Push Message");
 			}
 		}
 
@@ -328,7 +338,7 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 15 + i, 21);
 	}
 	
-	pushEntity(ENEMY_CRAWLER, 5, 12);
+	pushEntity(ENEMY_SHOOTER, 5, 12);
 
 	testLoop();
 	

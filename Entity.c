@@ -70,6 +70,13 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->exp.y = newY;
 		newEntity->exp.startTime = getTimeSingleton();
 		break;
+		case LASER:
+		newEntity->laser.x = newX;
+		newEntity->laser.y = newY;
+		newEntity->laser.direction = 0;
+		newEntity->laser.offsetX = 8;
+		newEntity->laser.offsetY = 8;
+		break;
 		case TELEBLOCK:
 		newEntity->tBlock.x = newX;
 		newEntity->tBlock.y = newY;
@@ -88,6 +95,16 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->iceCream.y = newY;
 		break;
 		case ENEMY_CRAWLER:
+		newEntity->enemy.x = newX;
+		newEntity->enemy.y = newY;
+		newEntity->enemy.direction = 2;
+		newEntity->enemy.offsetX = 8;
+		newEntity->enemy.offsetY = 8;
+		newEntity->enemy.lastMovementUpdate = 0;
+		newEntity->enemy.knockBackDirection = -1;
+		newEntity->enemy.cream = NULL;
+		break;
+		case ENEMY_SHOOTER:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
 		newEntity->enemy.direction = 2;
@@ -807,7 +824,6 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	{
 		if (currList[i]->type == ICECREAM && enemy->cream == NULL)
 		{
-			printf("here!\n");
 			enemy->cream = (IceCream*)currList[i];
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
@@ -951,6 +967,239 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	}
 }
 
+void update_shooter(Enemy* enemy, Uint32 currTime)
+{
+	int i;
+	Uint32 delta = currTime - enemy->lastMovementUpdate;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	Entity* currList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+	int currListSize;
+
+	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
+
+	for (i = 0; i < currListSize; i++)
+	{
+		if (currList[i]->type == ICECREAM && enemy->cream == NULL)
+		{
+			enemy->cream = (IceCream*)currList[i];
+			enemy->cream->x = -5;
+			enemy->cream->y = -5;
+		}
+	}
+
+	if (delta / 32 > 0)
+	{
+		if ((enemy->direction == 0 || enemy->direction == 2) && enemy->offsetY == 8 && enemy->direction < 4)
+		{
+			if (rand() % 3 == 0)
+			{
+				while (enemy->direction == 0 || enemy->direction == 2)
+				{
+					enemy->direction = rand() % 5;
+				}
+			}
+		}
+		else if ((enemy->direction == 1 || enemy->direction == 3) && enemy->offsetX == 8 && enemy->direction < 4)
+		{
+			if (rand() % 3 == 0)
+			{
+				while (enemy->direction == 1 || enemy->direction == 3)
+				{
+					enemy->direction = rand() % 5;
+				}
+			}
+		}
+
+		if (enemy->knockBackDirection == 255)
+		{
+			switch (enemy->direction)
+			{
+				case 0:
+				enemy->offsetY -= 4;
+				break;
+				case 1:
+				enemy->offsetX += 4;
+				break;
+				case 2:
+				enemy->offsetY += 4;
+				break;
+				case 3:
+				enemy->offsetX -= 4;
+				break;
+				case 4:
+				{
+					if (abs(enemy->offsetX) - 8 < 4)
+					{
+						enemy->offsetX = 8;
+					}	
+					else if (enemy->offsetX > 8)
+					{
+						enemy->offsetX -= 4;
+					}
+					else if (enemy->offsetX < 8)
+					{
+						enemy->offsetX += 4;
+					}
+	
+					if (abs(enemy->offsetY) - 8 < 4)
+					{
+						enemy->offsetY = 8;
+					}
+					else if (enemy->offsetY > 8)
+					{
+						enemy->offsetY -= 4;
+					}
+					else if (enemy->offsetY < 8)
+					{
+						enemy->offsetY += 4;
+					}
+				}
+				default:
+				break;
+			}
+		}
+		else
+		{
+			switch (enemy->knockBackDirection)
+			{
+				case 0:
+				enemy->offsetY -= 8;
+				break;
+				case 1:
+				enemy->offsetX += 8;
+				break;
+				case 2:
+				enemy->offsetY += 8;
+				break;
+				case 3:
+				enemy->offsetX -= 8;
+				break;
+				default:
+				break;
+			}
+		}
+
+		if (enemy->offsetX < 0)
+		{
+			if (westResultSize == 0)
+			{
+				enemy->offsetX = 15;
+				enemy->x -= 1;
+			}
+			else
+			{
+				enemy->offsetX = 8;
+				while (enemy->direction == 3)
+				{
+					enemy->direction = rand() % 5;
+				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+		else if (enemy->offsetX > 15)
+		{
+			if (eastResultSize == 0)
+			{
+				enemy->offsetX = 0;
+				enemy->x += 1;
+			}
+			else
+			{
+				enemy->offsetX = 8;
+				while (enemy->direction == 1)
+				{
+					enemy->direction = rand() % 5;
+				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+
+		if (enemy->offsetY < 0)
+		{
+			if (northResultSize == 0)
+			{
+				enemy->offsetY = 15;
+				enemy->y -= 1;  
+			}
+			else
+			{
+				enemy->offsetY = 8;
+				while (enemy->direction == 0)
+				{
+					enemy->direction = rand() % 5;
+				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+		else if (enemy->offsetY > 15)
+		{
+			if (southResultSize == 0)
+			{
+				enemy->offsetY = 0;
+				enemy->y += 1;      
+			}
+			else
+			{
+				enemy->offsetY = 8;
+				while (enemy->direction == 2)
+				{
+					enemy->direction = rand() % 5;
+				}
+			}
+
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+		
+		if (enemy->direction == 4 && enemy->knockBackDirection == 255)
+		{
+			if (rand() % 10 == 0)
+			{
+				enemy->direction = rand() % 4;
+				
+				Entity* newLaser = pushEntity(LASER, enemy->x, enemy->y - 1);
+				
+				while (newLaser->laser.direction == enemy->direction)
+				{
+					newLaser->laser.direction = rand() % 4;
+				}
+			}
+		}
+		
+		enemy->lastMovementUpdate = currTime;
+	}
+}
+
 void update_iceBlock(IceBlock* block, Uint32 currTime)
 {
 	Uint32 delta = currTime - block->lastMovementUpdate;
@@ -1046,6 +1295,101 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 	}
 }
 
+void update_laser(Laser* block, Uint32 currTime)
+{
+	Uint32 delta = currTime - block->lastMovementUpdate;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+
+	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
+	filterOccupyWalls(block->x, block->y + 1, southList, 5, &southResultSize);
+	filterOccupyWalls(block->x + 1, block->y, eastList, 5, &eastResultSize);
+	filterOccupyWalls(block->x - 1, block->y, westList, 5, &westResultSize);
+
+	if (delta / 32 > 0)
+	{
+		switch (block->direction)
+		{
+			case 0:
+			block->offsetY -= 8;
+			break;
+			case 1:
+			block->offsetX += 8;
+			break;
+			case 2:
+			block->offsetY += 8;
+			break;
+			case 3:
+			block->offsetX -= 8;
+			break;
+			default:
+			break;
+		}
+
+		if (block->offsetX < 0)
+		{
+			if (westResultSize == 0)
+			{
+				block->offsetX = 15;
+				block->x -= 1;
+			}
+			else
+			{
+				block->offsetX = 8;
+				block->type = DELETE_ME_PLEASE;
+			}
+		}
+		else if (block->offsetX > 15)
+		{
+			if (eastResultSize == 0)
+			{
+				block->offsetX = 0;
+				block->x += 1;
+			}
+			else
+			{
+				block->offsetX = 8;
+				block->type = DELETE_ME_PLEASE;
+			}
+		}
+		if (block->offsetY < 0)
+		{
+			if (northResultSize == 0)
+			{
+				block->offsetY = 15;
+				block->y -= 1;
+			}
+			else
+			{
+				block->offsetY = 8;
+				block->type = DELETE_ME_PLEASE;
+			}
+		}
+		else if (block->offsetY > 15)
+		{
+			if (southResultSize == 0)
+			{
+				block->offsetY = 0;
+				block->y += 1;
+			}
+			else
+			{
+				block->offsetY = 8;
+				block->type = DELETE_ME_PLEASE;
+			}
+		}
+		
+		block->lastMovementUpdate = currTime;
+	}
+}
+
 void update_explosion(Explosion* exp)
 {
 	int i;
@@ -1124,11 +1468,17 @@ void update_entity(Entity* entity, Uint32 currTime)
 		case EXPLOSION:
 		update_explosion((Explosion*)entity);
 		break;
+		case LASER:
+		update_laser((Laser*) entity, currTime);
+		break;
 		case TELEBLOCK:
 		update_teleblock((TeleBlock*)entity);
 		break;
 		case ENEMY_CRAWLER:
 		update_enemy((Enemy*)entity, currTime);
+		break;
+		case ENEMY_SHOOTER:
+		update_shooter((Enemy*)entity, currTime);
 		break;
 		case ICECREAM:
 		break;

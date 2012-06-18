@@ -170,6 +170,13 @@ void testDraw(SDL_Surface* buffer)
 			entRect.h = 12;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 40, 50));
 			break;
+			case LASER:
+			entRect.x = 2 + (entList[i]->laser.x * 16) + entList[i]->laser.offsetX - 8;
+			entRect.y = 6 + (entList[i]->laser.y * 16) + entList[i]->laser.offsetY - 8;
+			entRect.w = 12;
+			entRect.h = 12;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 50));
+			break;
 			case TELEBLOCK:
 			entRect.w = 4;
 			entRect.x = 6 + entList[i]->tBlock.x * 16;
@@ -185,6 +192,16 @@ void testDraw(SDL_Surface* buffer)
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
 			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 100, 5));
+			if (entList[i]->enemy.cream != NULL)
+			{
+				entRect.y -= 16;
+				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
+			}
+			break;
+			case ENEMY_SHOOTER:
+			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
+			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 255, 75));
 			if (entList[i]->enemy.cream != NULL)
 			{
 				entRect.y -= 16;

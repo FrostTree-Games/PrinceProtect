@@ -22,8 +22,10 @@ typedef enum
 	GAMEBLOCK,
 	ICEBLOCK,
 	EXPLOSION,
+	LASER,
 	TELEBLOCK,
 	ENEMY_CRAWLER,
+	ENEMY_SHOOTER,
 	ICECREAM,
 	DELETE_ME_PLEASE
 } EntityType;
@@ -76,6 +78,18 @@ typedef struct
 	Uint32 lastMovementUpdate;
 } IceBlock;
 
+// a laser projectile
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	unsigned char direction; //0->N, 1->E, 2->S, 3->W
+	int offsetX;
+	int offsetY;
+	Uint32 lastMovementUpdate;
+} Laser;
+
 typedef struct
 {
 	EntityType type;
@@ -125,7 +139,7 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
-	unsigned char direction;
+	unsigned char direction; //4 = still
 	int offsetX;
 	int offsetY;
 	Uint32 lastMovementUpdate;
@@ -143,6 +157,7 @@ typedef union
 	GameBlock gBlock;
 	IceBlock iBlock;
 	Explosion exp;
+	Laser laser;
 	TeleBlock tBlock;
 	IceCream iceCream;
 	Enemy enemy;
