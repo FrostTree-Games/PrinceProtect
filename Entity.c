@@ -108,7 +108,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		case ENEMY_SHOOTER:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
-		newEntity->enemy.direction = 2;
+		newEntity->enemy.direction = rand() % 5;
 		newEntity->enemy.offsetX = 8;
 		newEntity->enemy.offsetY = 8;
 		newEntity->enemy.lastMovementUpdate = 0;
@@ -1004,17 +1004,28 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	{
 		if ((enemy->direction == 0 || enemy->direction == 2) && enemy->offsetY == 8 && enemy->direction < 4)
 		{
-			if (rand() % 3 == 0)
+			if (rand() % 4 <= 1)
 			{
-				while (enemy->direction == 0 || enemy->direction == 2)
+				if (enemy->direction == 0)
 				{
-					enemy->direction = rand() % 5;
+					while (enemy->direction == 0)
+					{
+						enemy->direction = rand() % 5;
+					}
+				}
+				
+				if (enemy->direction == 2)
+				{
+					while (enemy->direction == 2)
+					{
+						enemy->direction = rand() % 5;
+					}
 				}
 			}
 		}
 		else if ((enemy->direction == 1 || enemy->direction == 3) && enemy->offsetX == 8 && enemy->direction < 4)
 		{
-			if (rand() % 3 == 0)
+			if (rand() % 4 <= 1)
 			{
 				while (enemy->direction == 1 || enemy->direction == 3)
 				{
@@ -1044,7 +1055,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					if (abs(enemy->offsetX) - 8 < 4)
 					{
 						enemy->offsetX = 8;
-					}	
+					}
 					else if (enemy->offsetX > 8)
 					{
 						enemy->offsetX -= 4;
@@ -1053,7 +1064,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					{
 						enemy->offsetX += 4;
 					}
-	
+
 					if (abs(enemy->offsetY) - 8 < 4)
 					{
 						enemy->offsetY = 8;
@@ -1332,6 +1343,12 @@ void update_laser(Laser* block, Uint32 currTime)
 		{
 			modPlayerHealth(2, -1);
 
+			block->type = DELETE_ME_PLEASE;
+			return;
+		}
+		
+		if (currList[i]->type == PERMABLOCK || currList[i]->type == GAMEBLOCK )
+		{
 			block->type = DELETE_ME_PLEASE;
 			return;
 		}

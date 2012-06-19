@@ -88,7 +88,7 @@ void whimsyBlocks()
 	
 	void checkConnectedBlocks(int x, int y, BlockType b)
 	{
-		if (x > 31 || y > 16 || x < 0 || y < 0)
+		if (x > 31 || y > 27 || x < 0 || y < 0)
 		{
 			return;
 		}
@@ -119,7 +119,7 @@ void whimsyBlocks()
 	
 	void clearConnectedBlocks(int x, int y, BlockType b)
 	{
-		if (x > 31 || y > 16 || x < 0 || y < 0)
+		if (x > 31 || y > 27 || x < 0 || y < 0)
 		{
 			return;
 		}
@@ -286,7 +286,7 @@ int testLoop()
 
 int main(int argc, char* argv[])
 {
-	int i;
+	int i,j;
 	
 	srand(time(NULL));
 
@@ -300,6 +300,15 @@ int main(int argc, char* argv[])
 	{
 		pushEntity(PERMABLOCK, i, 8);
 		pushEntity(PERMABLOCK, i, 24);
+		
+		if (i % 3 != 0)
+		{
+			for (j = 0; j < i % 3; j++)
+			{
+				pushEntity(PERMABLOCK, i, 8 + j + 1);
+				pushEntity(PERMABLOCK, i, 24 - j - 1);
+			}
+		}
 	}
 
 	for (i = 0; i < 15; i++)
@@ -307,8 +316,6 @@ int main(int argc, char* argv[])
 		pushEntity(PERMABLOCK, -1, 9 + i);
 		pushEntity(PERMABLOCK, 32, 9 + i);
 	}
-	
-	pushEntity(ICEBLOCK, 10, 10);
 
 	for (i = 0; i < 14; i++)
 	{
@@ -317,13 +324,13 @@ int main(int argc, char* argv[])
 			continue;
 		}
 
-		Entity* newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 10);
+		Entity* newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 13);
                 newGameBlock->gBlock.bType = RED_BLOCK;
-                
+
                 newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 15);
                 newGameBlock->gBlock.bType = GREEN_BLOCK;
 
-                newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 20);
+                newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 17);
                 newGameBlock->gBlock.bType = BLUE_BLOCK;
 	}
 	
@@ -331,17 +338,15 @@ int main(int argc, char* argv[])
 	{
 		pushEntity(ICECREAM, 15 + i, 10);
 		pushEntity(ICECREAM, 15 + i, 11);
-		
-		pushEntity(ICECREAM, 15 + i, 15);
-		pushEntity(ICECREAM, 15 + i, 16);
-		
+
 		pushEntity(ICECREAM, 15 + i, 20);
 		pushEntity(ICECREAM, 15 + i, 21);
 	}
 	
-	pushEntity(ENEMY_SHOOTER, 5, 12);
-	pushEntity(ENEMY_SHOOTER, 7, 12);
-	pushEntity(ENEMY_SHOOTER, 11, 12);
+	pushEntity(ENEMY_SHOOTER, 15, 15);
+	pushEntity(ENEMY_SHOOTER, 15, 16);
+	pushEntity(ENEMY_SHOOTER, 16, 15);
+	pushEntity(ENEMY_SHOOTER, 16, 16);
 	
 	clearResetGame();
 
