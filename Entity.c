@@ -5,6 +5,7 @@
 
 #include "Entity.h"
 #include "Keyboard.h"
+#include "GameLogic.h"
 
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
@@ -1290,28 +1291,51 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 				block->moving = 0;
 			}
 		}
-		
+
 		block->lastMovementUpdate = currTime;
 	}
 }
 
 void update_laser(Laser* block, Uint32 currTime)
 {
+	int i;
 	Uint32 delta = currTime - block->lastMovementUpdate;
 
 	Entity* northList[5];
 	Entity* southList[5];
 	Entity* eastList[5];
 	Entity* westList[5];
+	Entity* currList[5];
 	int northResultSize;
 	int southResultSize;
 	int eastResultSize;
 	int westResultSize;
+	int currResultSize;
 
 	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
 	filterOccupyWalls(block->x, block->y + 1, southList, 5, &southResultSize);
 	filterOccupyWalls(block->x + 1, block->y, eastList, 5, &eastResultSize);
 	filterOccupyWalls(block->x - 1, block->y, westList, 5, &westResultSize);
+	occupyingOnHere(block->x, block->y, currList, 5, &currResultSize);
+
+	for (i = 0; i < currResultSize; i++)
+	{
+		if (currList[i]->type == PLAYER1)
+		{
+			modPlayerHealth(1, -1);
+
+			block->type = DELETE_ME_PLEASE;
+			return;
+		}
+		
+		if (currList[i]->type == PLAYER2)
+		{
+			modPlayerHealth(2, -1);
+
+			block->type = DELETE_ME_PLEASE;
+			return;
+		}
+	}
 
 	if (delta / 32 > 0)
 	{

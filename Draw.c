@@ -7,6 +7,7 @@
 #include "Draw.h"
 #include "Entity.h"
 #include "Pushdown.h"
+#include "GameLogic.h"
 
 int pushNotificationFontSize = 14;
 TTF_Font* pushNotificationFont = NULL;
@@ -53,6 +54,21 @@ void drawLatestPushDown(SDL_Surface* buffer)
 
 	SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
 	SDL_FreeSurface(text_surface);
+}
+
+void drawHealthScores(SDL_Surface* buffer)
+{
+	char p1HealthText[50];
+	sprintf(p1HealthText, "P1 HP: %d/%d", getPlayerHealth(1), getPlayerMaxHealth(1));
+
+	SDL_Surface* health_surface;
+	SDL_Color cl = {255, 200, 25, 0};
+	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+	
+	SDL_Rect p1HpPos = {10, 10, 0, 0};
+	
+	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
+	SDL_FreeSurface(health_surface);
 }
 
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
@@ -212,6 +228,8 @@ void testDraw(SDL_Surface* buffer)
 			break;
 		}
 	}
+	
+	drawHealthScores(buffer);
 	
 	drawLatestPushDown(buffer);
 }

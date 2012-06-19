@@ -17,6 +17,7 @@
 #include "Keyboard.h"
 #include "Draw.h"
 #include "Pushdown.h"
+#include "GameLogic.h"
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 448
@@ -339,6 +340,10 @@ int main(int argc, char* argv[])
 	}
 	
 	pushEntity(ENEMY_SHOOTER, 5, 12);
+	pushEntity(ENEMY_SHOOTER, 7, 12);
+	pushEntity(ENEMY_SHOOTER, 11, 12);
+	
+	clearResetGame();
 
 	testLoop();
 	
