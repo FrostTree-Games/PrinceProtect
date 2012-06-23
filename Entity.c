@@ -830,6 +830,11 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	if(enemy->health < 1)
 	{
 		enemy->type = DELETE_ME_PLEASE;
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->x = enemy->x;
+			enemy->cream->y = enemy->y;
+		}
 		return;
 	}
 
@@ -1005,6 +1010,11 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	if(enemy->health < 1)
 	{
 		enemy->type = DELETE_ME_PLEASE;
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->x = enemy->x;
+			enemy->cream->y = enemy->y;
+		}
 		return;
 	}
 
@@ -1020,6 +1030,10 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 
 	if (delta / 32 > 0)
 	{
+		if (enemy->x < 0)
+		{
+			//
+		}	
 		if ((enemy->direction == 0 || enemy->direction == 2) && enemy->offsetY == 8 && enemy->direction < 4)
 		{
 			if (rand() % 4 <= 1)
@@ -1376,6 +1390,14 @@ void update_laser(Laser* block, Uint32 currTime)
 		
 		if (currList[i]->type == PERMABLOCK || currList[i]->type == GAMEBLOCK )
 		{
+			block->type = DELETE_ME_PLEASE;
+			return;
+		}
+		
+		if (currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER)
+		{
+			currList[i]->enemy.health -= 1;
+
 			block->type = DELETE_ME_PLEASE;
 			return;
 		}

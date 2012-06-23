@@ -59,7 +59,7 @@ void drawLatestPushDown(SDL_Surface* buffer)
 void drawHealthScores(SDL_Surface* buffer)
 {
 	char p1HealthText[50];
-	sprintf(p1HealthText, "P1 HP: %d/%d", getPlayerHealth(1), getPlayerMaxHealth(1));
+	sprintf(p1HealthText, "P1 HP: %.2d/%.2d", getPlayerHealth(1), getPlayerMaxHealth(1));
 
 	SDL_Surface* health_surface;
 	SDL_Color cl = {255, 200, 25, 0};

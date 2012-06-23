@@ -17,9 +17,39 @@ int player2MaxHealth = 10;
 
 int gameScore = 0;
 
+Uint32 lastUpdateTime = 0;
+
 unsigned int xrand(void)
 {
 	return rand () * (RAND_MAX + 1) + rand ();
+}
+
+void updateGameLogic()
+{
+	if (lastUpdateTime == 0)
+	{
+		lastUpdateTime = getTimeSingleton();
+		return;
+	}
+	
+	if (lastUpdateTime - getTimeSingleton() > 1000)
+	{
+		unsigned int val = xrand() % 10000;
+		
+		if (getEntityListSize() < 180)
+		{
+			if (val / 10 == 2)
+			{
+				Enemy* en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, xrand() % 11 + 9);
+				en->direction = 1;
+			}
+			else if (val / 10 == 1)
+			{
+				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, xrand() % 9 + 11);
+				en->direction = 1;
+			}
+		}
+	}
 }
 
 int clearResetGame()

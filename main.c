@@ -245,6 +245,8 @@ int testLoop()
 		
 		//update call
 		pollKeyboard();
+		
+		updateGameLogic();
 
 		Entity** entList = getEntityList();
 		setTimeSingleton(SDL_GetTicks());
@@ -258,7 +260,7 @@ int testLoop()
 				i--;
 				continue;
 			}
-			
+
 			whimsyBlocks();
 
 			update_entity(entList[i], getTimeSingleton());
@@ -299,7 +301,7 @@ int main(int argc, char* argv[])
 	for (i = 0; i < 32; i++)
 	{
 		pushEntity(PERMABLOCK, i, 8);
-		pushEntity(PERMABLOCK, i, 24);
+		pushEntity(PERMABLOCK, i, 20);
 	}
 
 	for (i = 0; i < 15; i++)
@@ -307,42 +309,37 @@ int main(int argc, char* argv[])
 		pushEntity(PERMABLOCK, -1, 9 + i);
 		pushEntity(PERMABLOCK, 32, 9 + i);
 	}
+	
+	for (i = 9; i < 24; i++)
+	{
+		pushEntity(PERMABLOCK, 20, i);
+	}
 
 	for (i = 0; i < 14; i++)
 	{
-		if (i > 4 && i < 10)
+		if (i > 3)
 		{
 			continue;
 		}
 
-		Entity* newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 13);
+		Entity* newGameBlock = pushEntity(GAMEBLOCK, 3 + 2*i, 13);
                 newGameBlock->gBlock.bType = RED_BLOCK;
 
-                newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 15);
+                newGameBlock = pushEntity(GAMEBLOCK, 3 + 2*i, 15);
                 newGameBlock->gBlock.bType = GREEN_BLOCK;
 
-                newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 17);
+                newGameBlock = pushEntity(GAMEBLOCK, 3 + 2*i, 17);
                 newGameBlock->gBlock.bType = BLUE_BLOCK;
 	}
 
 	for (i = 0; i < 2; i++)
 	{
-		pushEntity(ICECREAM, 15 + i, 10);
-		pushEntity(ICECREAM, 15 + i, 11);
+		pushEntity(ICECREAM, 17 + i, 10);
+		pushEntity(ICECREAM, 17 + i, 11);
 
-		pushEntity(ICECREAM, 15 + i, 20);
-		pushEntity(ICECREAM, 15 + i, 21);
+		pushEntity(ICECREAM, 17 + i, 17);
+		pushEntity(ICECREAM, 17 + i, 18);
 	}
-	
-	pushEntity(ENEMY_SHOOTER, 15, 15);
-	pushEntity(ENEMY_SHOOTER, 15, 16);
-	pushEntity(ENEMY_SHOOTER, 16, 15);
-	pushEntity(ENEMY_SHOOTER, 16, 16);
-	
-	pushEntity(ENEMY_CRAWLER, 15, 18);
-	pushEntity(ENEMY_CRAWLER, 15, 19);
-	pushEntity(ENEMY_CRAWLER, 16, 19);
-	pushEntity(ENEMY_CRAWLER, 16, 19);
 
 	clearResetGame();
 
