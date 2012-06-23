@@ -7,6 +7,12 @@
  
  #include <SDL/SDL.h>
  
+/* xrand()
+ * Purpose: Less-biased alternative to rand()
+ * Returns: Random unsigned integer
+ */
+unsigned int xrand();
+ 
 /* clearResetGame()
  * Purpose: Sets the game logic to a clean, uninitalized state
  * Returns: 0 on success, 1 on some sort of error

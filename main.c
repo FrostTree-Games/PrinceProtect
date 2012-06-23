@@ -300,15 +300,6 @@ int main(int argc, char* argv[])
 	{
 		pushEntity(PERMABLOCK, i, 8);
 		pushEntity(PERMABLOCK, i, 24);
-		
-		if (i % 3 != 0)
-		{
-			for (j = 0; j < i % 3; j++)
-			{
-				pushEntity(PERMABLOCK, i, 8 + j + 1);
-				pushEntity(PERMABLOCK, i, 24 - j - 1);
-			}
-		}
 	}
 
 	for (i = 0; i < 15; i++)
@@ -333,7 +324,7 @@ int main(int argc, char* argv[])
                 newGameBlock = pushEntity(GAMEBLOCK, 1 + 2*i, 17);
                 newGameBlock->gBlock.bType = BLUE_BLOCK;
 	}
-	
+
 	for (i = 0; i < 2; i++)
 	{
 		pushEntity(ICECREAM, 15 + i, 10);
@@ -348,6 +339,11 @@ int main(int argc, char* argv[])
 	pushEntity(ENEMY_SHOOTER, 16, 15);
 	pushEntity(ENEMY_SHOOTER, 16, 16);
 	
+	pushEntity(ENEMY_CRAWLER, 15, 18);
+	pushEntity(ENEMY_CRAWLER, 15, 19);
+	pushEntity(ENEMY_CRAWLER, 16, 19);
+	pushEntity(ENEMY_CRAWLER, 16, 19);
+
 	clearResetGame();
 
 	testLoop();

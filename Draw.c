@@ -133,7 +133,7 @@ void testDraw(SDL_Surface* buffer)
 			entRect.x = entList[i]->player.x * 16;
 			entRect.y = entList[i]->player.y * 16;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 255));
-			
+
 			//draw sword if necessary
 			if (entList[i]->player.isThrusting == 1)
 			{
@@ -160,6 +160,31 @@ void testDraw(SDL_Surface* buffer)
                                         SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 					break;
 					default:
+					break;
+				}
+			}
+			
+			entRect.x = (entList[i]->player.x * 16);
+			entRect.y = (entList[i]->player.y * 16) - 8;
+			
+			if (entList[i]->player.holding != NULL)
+			{
+				switch (entList[i]->player.holding->bType)
+				{
+					case RED_BLOCK:
+					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
+					break;
+					case BLUE_BLOCK:
+					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 255));
+					break;
+					case GREEN_BLOCK:
+					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 255, 10));
+					break;
+					case YELLOW_BLOCK:
+					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
+					break;
+					default:
+					printf("No block encountered?\n");
 					break;
 				}
 			}

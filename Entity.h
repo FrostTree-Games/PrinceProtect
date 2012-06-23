@@ -139,9 +139,10 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
-	unsigned char direction; //4 = still
+	int direction; //4 = still
 	int offsetX;
 	int offsetY;
+	int health;
 	Uint32 lastMovementUpdate;
 	unsigned char knockBackDirection; // 255->no knock back, 0->N, 1->E, 2->S, 3->W
 	IceCream* cream;

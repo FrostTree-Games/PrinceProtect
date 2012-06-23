@@ -6,6 +6,8 @@
 #include "GameLogic.h"
 #include "Entity.h"
 
+#define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
+
 int gameState = 0;
 
 int player1Health = 0;
@@ -14,6 +16,11 @@ int player1MaxHealth = 10;
 int player2MaxHealth = 10;
 
 int gameScore = 0;
+
+unsigned int xrand(void)
+{
+	return rand () * (RAND_MAX + 1) + rand ();
+}
 
 int clearResetGame()
 {

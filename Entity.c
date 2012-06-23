@@ -98,12 +98,13 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
-		newEntity->enemy.direction = 2;
+		newEntity->enemy.direction = rand() % 4;
 		newEntity->enemy.offsetX = 8;
 		newEntity->enemy.offsetY = 8;
 		newEntity->enemy.lastMovementUpdate = 0;
 		newEntity->enemy.knockBackDirection = -1;
 		newEntity->enemy.cream = NULL;
+		newEntity->enemy.health = 3;
 		break;
 		case ENEMY_SHOOTER:
 		newEntity->enemy.x = newX;
@@ -114,6 +115,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.lastMovementUpdate = 0;
 		newEntity->enemy.knockBackDirection = -1;
 		newEntity->enemy.cream = NULL;
+		newEntity->enemy.health = 5;
 		break;
 		default:
 		free(newEntity);
@@ -331,20 +333,20 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 {
 	int i;
 	*returnedSize = 0;
-	
+
 	if (list == NULL)
 	{
 		return 0;
 	}
-	
+
 	Entity* en;
 	for (i = 0; i < entityListCurrentSize; i++)
 	{
 		en = entityList[i];
-		
+
 		if (en->base.x == x && en->base.y == y)
 		{
-			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK))
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -355,7 +357,7 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 			}
 		}
 	}
-	
+
 	if ((*returnedSize) == 0)
 	{
 		return 0;
@@ -492,11 +494,12 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < northResultSize; i++)
 				{
-					if (northList[i]->type == ENEMY_CRAWLER)
+					if (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER)
 					{
 						northList[i]->enemy.knockBackDirection = pl->direction;
 						northList[i]->enemy.offsetX = 8;
 						northList[i]->enemy.offsetY = 8;
+						northList[i]->enemy.health -= 1;
 						
 						pl->isThrusting = 0;
 					}
@@ -508,11 +511,12 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < eastResultSize; i++)
 				{
-					if (eastList[i]->type == ENEMY_CRAWLER)
+					if (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER)
 					{
 						eastList[i]->enemy.knockBackDirection = pl->direction;
 						eastList[i]->enemy.offsetX = 8;
 						eastList[i]->enemy.offsetY = 8;
+						eastList[i]->enemy.health -= 1;
 						
 						pl->isThrusting = 0;
 					}
@@ -524,11 +528,12 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < southResultSize; i++)
 				{
-					if (southList[i]->type == ENEMY_CRAWLER)
+					if (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER)
 					{
 						southList[i]->enemy.knockBackDirection = pl->direction;
 						southList[i]->enemy.offsetX = 8;
 						southList[i]->enemy.offsetY = 8;
+						southList[i]->enemy.health -= 1;
 
 						pl->isThrusting = 0;
 					}
@@ -540,11 +545,12 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < westResultSize; i++)
 				{
-					if (westList[i]->type == ENEMY_CRAWLER)
+					if (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER)
 					{
 						westList[i]->enemy.knockBackDirection = pl->direction;
 						westList[i]->enemy.offsetX = 8;
 						westList[i]->enemy.offsetY = 8;
+						westList[i]->enemy.health -= 1;
 						
 						pl->isThrusting = 0;
 					}
@@ -820,6 +826,12 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
+	
+	if(enemy->health < 1)
+	{
+		enemy->type = DELETE_ME_PLEASE;
+		return;
+	}
 
 	for (i = 0; i < currListSize; i++)
 	{
@@ -989,6 +1001,12 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
+	
+	if(enemy->health < 1)
+	{
+		enemy->type = DELETE_ME_PLEASE;
+		return;
+	}
 
 	for (i = 0; i < currListSize; i++)
 	{
@@ -1013,8 +1031,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 						enemy->direction = rand() % 5;
 					}
 				}
-				
-				if (enemy->direction == 2)
+				else if (enemy->direction == 2)
 				{
 					while (enemy->direction == 2)
 					{
@@ -1027,9 +1044,19 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (rand() % 4 <= 1)
 			{
-				while (enemy->direction == 1 || enemy->direction == 3)
+				if (enemy->direction == 1)
 				{
-					enemy->direction = rand() % 5;
+					while (enemy->direction == 1)
+					{
+						enemy->direction = rand() % 5;
+					}
+				}
+				else if (enemy->direction == 3)
+				{
+					while (enemy->direction == 3)
+					{
+						enemy->direction = rand() % 5;
+					}
 				}
 			}
 		}
@@ -1107,7 +1134,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (westResultSize == 0)
 			{
-				enemy->offsetX = 15;
+				enemy->offsetX = 16;
 				enemy->x -= 1;
 			}
 			else
@@ -1118,14 +1145,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					enemy->direction = rand() % 5;
 				}
 			}
-			
+
 			if (enemy->knockBackDirection < 255)
 			{
 				enemy->direction = enemy->knockBackDirection;
 				enemy->knockBackDirection = 255;
 			}
 		}
-		else if (enemy->offsetX > 15)
+		else if (enemy->offsetX > 16)
 		{
 			if (eastResultSize == 0)
 			{
@@ -1140,7 +1167,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					enemy->direction = rand() % 5;
 				}
 			}
-			
+
 			if (enemy->knockBackDirection < 255)
 			{
 				enemy->direction = enemy->knockBackDirection;
@@ -1152,8 +1179,8 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (northResultSize == 0)
 			{
-				enemy->offsetY = 15;
-				enemy->y -= 1;  
+				enemy->offsetY = 16;
+				enemy->y -= 1;
 			}
 			else
 			{
@@ -1163,19 +1190,19 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					enemy->direction = rand() % 5;
 				}
 			}
-			
+
 			if (enemy->knockBackDirection < 255)
 			{
 				enemy->direction = enemy->knockBackDirection;
 				enemy->knockBackDirection = 255;
 			}
 		}
-		else if (enemy->offsetY > 15)
+		else if (enemy->offsetY > 16)
 		{
 			if (southResultSize == 0)
 			{
 				enemy->offsetY = 0;
-				enemy->y += 1;      
+				enemy->y += 1;
 			}
 			else
 			{
@@ -1446,7 +1473,8 @@ void update_explosion(Explosion* exp)
 		switch (blastList[i]->type)
 		{
 			case ENEMY_CRAWLER:
-			printf("blasted an enemy at (%d, %d)\n", exp->x, exp->y);
+			case ENEMY_SHOOTER:
+			blastList[i]->enemy.health -= 5;
 			break;
 			default:
 			break;
