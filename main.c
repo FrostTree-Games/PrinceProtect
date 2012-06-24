@@ -172,6 +172,7 @@ void whimsyBlocks()
 			gameBlockGrid[x][y]->iBlock.direction = 0;
 			gameBlockGrid[x][y]->iBlock.offsetX = 8;
 			gameBlockGrid[x][y]->iBlock.offsetY = 8;
+			gameBlockGrid[x][y]->iBlock.health = 3;
 			break;
 			default:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
@@ -288,7 +289,7 @@ int testLoop()
 
 int main(int argc, char* argv[])
 {
-	int i,j;
+	int i;
 	
 	srand(time(NULL));
 
@@ -308,11 +309,6 @@ int main(int argc, char* argv[])
 	{
 		pushEntity(PERMABLOCK, -1, 9 + i);
 		pushEntity(PERMABLOCK, 32, 9 + i);
-	}
-	
-	for (i = 9; i < 24; i++)
-	{
-		pushEntity(PERMABLOCK, 20, i);
 	}
 
 	for (i = 0; i < 14; i++)

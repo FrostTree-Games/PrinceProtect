@@ -67,6 +67,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->iBlock.direction = 0;
 		newEntity->iBlock.offsetX = 8;
 		newEntity->iBlock.offsetY = 8;
+		newEntity->iBlock.health = 3;
 		break;
 		case EXPLOSION:
 		newEntity->exp.x = newX;
@@ -484,7 +485,7 @@ void update_player(Player* pl, Uint32 currTime)
 	
 	if (pl->isThrusting)
 	{
-		if (currTime - pl->swordTimer > 250)
+		if (currTime - pl->swordTimer > 150)
 		{
 			pl->isThrusting = 0;
 		}
@@ -505,6 +506,15 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
+					
+					if (northList[i]->type == ICEBLOCK)
+					{
+						northList[i]->iBlock.moving = 1;
+						northList[i]->iBlock.direction = pl->direction;
+						northList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
 				}
 			}
 			break;
@@ -519,6 +529,15 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->enemy.offsetX = 8;
 						eastList[i]->enemy.offsetY = 8;
 						eastList[i]->enemy.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+					
+					if (eastList[i]->type == ICEBLOCK)
+					{
+						eastList[i]->iBlock.moving = 1;
+						eastList[i]->iBlock.direction = pl->direction;
+						eastList[i]->iBlock.health -= 1;
 						
 						pl->isThrusting = 0;
 					}
@@ -539,6 +558,15 @@ void update_player(Player* pl, Uint32 currTime)
 
 						pl->isThrusting = 0;
 					}
+					
+					if (southList[i]->type == ICEBLOCK)
+					{
+						southList[i]->iBlock.moving = 1;
+						southList[i]->iBlock.direction = pl->direction;
+						southList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
 				}
 			}
 			break;
@@ -553,6 +581,15 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->enemy.offsetX = 8;
 						westList[i]->enemy.offsetY = 8;
 						westList[i]->enemy.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+
+					if (westList[i]->type == ICEBLOCK)
+					{
+						westList[i]->iBlock.moving = 1;
+						westList[i]->iBlock.direction = pl->direction;
+						westList[i]->iBlock.health -= 1;
 						
 						pl->isThrusting = 0;
 					}
@@ -696,11 +733,6 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK || northList[i]->type == ICEBLOCK || northList[i]->type == ICECREAM)
 				{
-					if (northList[i]->type == ICEBLOCK)
-					{
-						northList[i]->iBlock.moving = 1;
-						northList[i]->iBlock.direction = pl->direction;
-					}
 					yInc++;
 					break;
 				}
@@ -725,11 +757,6 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				if (southList[i]->type == PERMABLOCK || southList[i]->type == GAMEBLOCK || southList[i]->type == ICEBLOCK || southList[i]->type == ICECREAM)
 				{
-					if (southList[i]->type == ICEBLOCK)
-					{
-						southList[i]->iBlock.moving = 1;
-						southList[i]->iBlock.direction = pl->direction;
-					}
 					yInc--;
 					break;
 				}
@@ -754,11 +781,6 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK || westList[i]->type == ICEBLOCK || westList[i]->type == ICECREAM)
 				{
-					if (westList[i]->type == ICEBLOCK)
-					{
-						westList[i]->iBlock.moving = 1;
-						westList[i]->iBlock.direction = pl->direction;
-					}
 					xInc++;
 					break;
 				}
@@ -783,11 +805,6 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK || eastList[i]->type == ICEBLOCK || eastList[i]->type == ICECREAM)
 				{
-					if (eastList[i]->type == ICEBLOCK)
-					{
-						eastList[i]->iBlock.moving = 1;
-						eastList[i]->iBlock.direction = pl->direction;
-					}
 					xInc--;
 					break;
 				}
@@ -1267,6 +1284,12 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 	int southResultSize;
 	int eastResultSize;
 	int westResultSize;
+	
+	if (block->health < 1)
+	{
+		block->type = DELETE_ME_PLEASE;
+		return;
+	}
 
 	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
 	filterOccupyWalls(block->x, block->y + 1, southList, 5, &southResultSize);

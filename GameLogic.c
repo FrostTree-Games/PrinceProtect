@@ -6,6 +6,10 @@
 #include "GameLogic.h"
 #include "Entity.h"
 
+#define MAX_ONSCREEN_GAMEBLOCKS 300
+#define MAX_ONSCREEN_ENEMIES 300
+#define MAX_ONSCREEN_ICECREAM 30
+
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
 
 int gameState = 0;
@@ -16,6 +20,8 @@ int player1MaxHealth = 10;
 int player2MaxHealth = 10;
 
 int gameScore = 0;
+int waveNumber = 0;
+int betweenWaves = 0; //0 = not between waves; 1 = between waves
 
 Uint32 lastUpdateTime = 0;
 
@@ -26,6 +32,38 @@ unsigned int xrand(void)
 
 void updateGameLogic()
 {
+	int i;
+
+	GameBlock* onScreenGameBlocks[MAX_ONSCREEN_GAMEBLOCKS];
+	Enemy* onScreenEnemies[MAX_ONSCREEN_ENEMIES];
+	IceCream* onScreenIceCream[MAX_ONSCREEN_ICECREAM];
+	int gameBlockCount = 0;
+	int enemyCount = 0;
+	int iceCreamCount = 0;
+	
+	Entity** entList = getEntityList();
+	
+	for (i = 0; i < getEntityListSize(); i++)
+	{
+		if (enemyCount < MAX_ONSCREEN_ENEMIES && (entList[i]->type == ENEMY_SHOOTER || entList[i]->type == ENEMY_CRAWLER))
+		{
+			onScreenEnemies[enemyCount] = (Enemy*)(entList[i]);
+			enemyCount++;
+		}
+		if (iceCreamCount < MAX_ONSCREEN_ICECREAM && entList[i]->type == ICECREAM)
+		{
+			onScreenIceCream[iceCreamCount] = (IceCream*)(entList[i]);
+			iceCreamCount++;
+		}
+		if (gameBlockCount < MAX_ONSCREEN_GAMEBLOCKS && entList[i]->type == GAMEBLOCK)
+		{
+			onScreenGameBlocks[gameBlockCount] = (GameBlock*)(entList[i]);
+			gameBlockCount++;
+		}
+		
+		//
+	}
+
 	if (lastUpdateTime == 0)
 	{
 		lastUpdateTime = getTimeSingleton();
@@ -35,8 +73,8 @@ void updateGameLogic()
 	if (lastUpdateTime - getTimeSingleton() > 1000)
 	{
 		unsigned int val = xrand() % 10000;
-		
-		if (getEntityListSize() < 180)
+
+		if (enemyCount < 9)
 		{
 			if (val / 10 == 2)
 			{
@@ -48,7 +86,11 @@ void updateGameLogic()
 				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, 0, xrand() % 9 + 11);
 				en->direction = 1;
 			}
-			else if(val / 20 < 3)
+		}
+		
+		if (gameBlockCount < 20)
+		{
+			if(val / 20 < 3)
 			{
 				int i;
 				int xSpot = -1;
@@ -56,7 +98,7 @@ void updateGameLogic()
 				
 				for (i = 0; i < 5; i++)
 				{
-					xSpot = (xrand() % 13) + 2;
+					xSpot = (xrand() % 28) + 2;
 					ySpot = (xrand() % 11) + 9;
 					Entity* checkList[5];
 					int checkResultSize = 0;
@@ -85,8 +127,6 @@ void updateGameLogic()
 						break;
 					}
 				}
-				
-
 			}
 		}
 	}

@@ -138,6 +138,8 @@ void testDraw(SDL_Surface* buffer)
 			case PLAYER1:
 			entRect.x = entList[i]->player.x * 16;
 			entRect.y = entList[i]->player.y * 16;
+			altRect.w = 8;
+			altRect.h = 8;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 255));
 
 			//draw sword if necessary
@@ -147,7 +149,7 @@ void testDraw(SDL_Surface* buffer)
 				{
 					case 0:
 					altRect.x = (entList[i]->player.x * 16) + 4;
-                                        altRect.y = (entList[i]->player.y * 16) - 4;
+                                        altRect.y = (entList[i]->player.y * 16) - 8;
                                         SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 					break;
                                         case 1:
@@ -161,7 +163,7 @@ void testDraw(SDL_Surface* buffer)
                                         SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 					break;
 					case 3:
-					altRect.x = (entList[i]->player.x * 16) - 4;
+					altRect.x = (entList[i]->player.x * 16) - 8;
                                         altRect.y = (entList[i]->player.y * 16) + 4;
                                         SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 					break;
