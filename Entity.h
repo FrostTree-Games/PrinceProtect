@@ -64,6 +64,7 @@ typedef struct
 	int y;
 	int height;
 	Uint32 lastUpdateTime;
+	Uint32 startTime;
 	BlockType bType;
 } GameBlock;
 

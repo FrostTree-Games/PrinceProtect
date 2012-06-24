@@ -75,6 +75,15 @@ void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 {
 	SDL_Rect entRect = {gb->x * 16, gb->y * 16 - (int)(((float)gb->height/100) * (gb->y * 16)), 16, 16};
 	
+	// this creates flickering for the last second of the Gameblock's life
+	if (getTimeSingleton() - gb->startTime > 9 * 1000)
+	{
+		if ( ((getTimeSingleton() - gb->startTime - (9 * 1000)) / 100) % 2 == 0)
+		{
+			return;
+		}
+	}
+
 	if (gb->height > 0)
 	{
 		SDL_Rect shadowRect= {(gb->x * 16) + 4, (gb->y * 16) + 4, 8, 8};

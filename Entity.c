@@ -59,6 +59,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->gBlock.bType = GREEN_BLOCK;
 		newEntity->gBlock.height = 100;
 		newEntity->gBlock.lastUpdateTime = 0;
+		newEntity->gBlock.startTime = getTimeSingleton();
 		break;  
 		case ICEBLOCK:
 		newEntity->iBlock.x = newX;
@@ -471,6 +472,12 @@ void update_player(Player* pl, Uint32 currTime)
 	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
 	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	
+	//this is a quick way of preventing block timeout
+	if (pl->holding != NULL)
+	{
+		pl->holding->startTime = getTimeSingleton();
+	}
 	
 	if (getKey(P1_B) && !(pl->bKeyDown))
 	{
@@ -1563,6 +1570,12 @@ void update_teleblock(TeleBlock* tb)
 
 void update_gameBlock(GameBlock* gb, Uint32 currTime)
 {
+	if (currTime - gb->startTime > 10 * 1000)
+	{
+		gb->type = DELETE_ME_PLEASE;
+		return;
+	}
+
 	if (gb->lastUpdateTime == 0)
 	{
 		gb->lastUpdateTime = currTime;
@@ -1599,6 +1612,7 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_player((Player*)entity, currTime);
 		break;
 		case PERMABLOCK:
+		break;
 		case GAMEBLOCK:
 		update_gameBlock((GameBlock*)entity, currTime);
 		break;
