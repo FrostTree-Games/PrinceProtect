@@ -62,6 +62,8 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
+	int height;
+	Uint32 lastUpdateTime;
 	BlockType bType;
 } GameBlock;
 

@@ -76,7 +76,7 @@ int deinit()
 // perform game logic on all the connecting game blocks
 // NOTE: this code uses a nested function, which is a feature of GCC;
 //       if you find yourself cursed with porting such code using another
-//       compiler (eg: ICC), you may need to remove the nest to a seperate 
+//       compiler (eg: ICC), you may need to remove the nest to a seperate
 //       function.
 void whimsyBlocks()
 {
@@ -197,7 +197,7 @@ void whimsyBlocks()
 
 	for (i = 0; i < getEntityListSize(); i++)
 	{
-		if (entList[i]->type == GAMEBLOCK)
+		if (entList[i]->type == GAMEBLOCK && entList[i]->gBlock.height == 0)
 		{
 			if (entList[i]->base.x >= 0 && entList[i]->base.y >= 8 && entList[i]->base.x < 32 && entList[i]->base.y < 26)
 			{

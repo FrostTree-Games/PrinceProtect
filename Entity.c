@@ -57,6 +57,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->gBlock.x = newX;
 		newEntity->gBlock.y = newY;
 		newEntity->gBlock.bType = GREEN_BLOCK;
+		newEntity->gBlock.height = 100;
+		newEntity->gBlock.lastUpdateTime = 0;
 		break;  
 		case ICEBLOCK:
 		newEntity->iBlock.x = newX;
@@ -577,7 +579,7 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					for (i = 0; i < northResultSize; i++)
 					{
-						if (northList[i]->type == GAMEBLOCK)
+						if (northList[i]->type == GAMEBLOCK && northList[i]->gBlock.height == 0)
 						{
 							pl->holding = (GameBlock*)(northList[i]);
 							northList[i]->gBlock.x = -1;
@@ -593,7 +595,7 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					for (i = 0; i < eastResultSize; i++)
 					{
-						if (eastList[i]->type == GAMEBLOCK)
+						if (eastList[i]->type == GAMEBLOCK && eastList[i]->gBlock.height == 0)
 						{
 							pl->holding = (GameBlock*)(eastList[i]);
 							eastList[i]->gBlock.x = -1;
@@ -609,7 +611,7 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					for (i = 0; i < southResultSize; i++)
 					{
-						if (southList[i]->type == GAMEBLOCK)
+						if (southList[i]->type == GAMEBLOCK && southList[i]->gBlock.height == 0)
 						{
 							pl->holding = (GameBlock*)(southList[i]);
 							southList[i]->gBlock.x = -1;
@@ -625,7 +627,7 @@ void update_player(Player* pl, Uint32 currTime)
 				{
 					for (i = 0; i < westResultSize; i++)
 					{
-						if (westList[i]->type == GAMEBLOCK)
+						if (westList[i]->type == GAMEBLOCK && westList[i]->gBlock.height == 0)
 						{
 							pl->holding = (GameBlock*)(westList[i]);
 							westList[i]->gBlock.x = -1;
@@ -1534,7 +1536,30 @@ void update_teleblock(TeleBlock* tb)
 			}
 		}
 	}
-}	
+}
+
+void update_gameBlock(GameBlock* gb, Uint32 currTime)
+{
+	if (gb->lastUpdateTime == 0)
+	{
+		gb->lastUpdateTime = currTime;
+		return;
+	}
+
+	if (currTime - gb->lastUpdateTime > 10)
+	{
+		if (gb->height > 0)
+		{
+			gb->height -= 2;
+		}
+		else if (gb->height < 0)
+		{
+			gb->height = 0;
+		}	
+
+		gb->lastUpdateTime = currTime;
+	}
+}
 
 void update_entity(Entity* entity, Uint32 currTime)
 {
@@ -1552,6 +1577,7 @@ void update_entity(Entity* entity, Uint32 currTime)
 		break;
 		case PERMABLOCK:
 		case GAMEBLOCK:
+		update_gameBlock((GameBlock*)entity, currTime);
 		break;
 		case ICEBLOCK:
 		update_iceBlock((IceBlock*)entity, currTime);

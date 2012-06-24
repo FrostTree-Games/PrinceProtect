@@ -45,7 +45,7 @@ void updateGameLogic()
 			}
 			else if (val / 10 == 1)
 			{
-				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, xrand() % 9 + 11);
+				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, 0, xrand() % 9 + 11);
 				en->direction = 1;
 			}
 		}

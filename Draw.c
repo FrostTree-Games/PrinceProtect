@@ -73,7 +73,13 @@ void drawHealthScores(SDL_Surface* buffer)
 
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 {
-	SDL_Rect entRect = {gb->x * 16, gb->y * 16, 16, 16};
+	SDL_Rect entRect = {gb->x * 16, gb->y * 16 - (int)(((float)gb->height/100) * (gb->y * 16)), 16, 16};
+	
+	if (gb->height > 0)
+	{
+		SDL_Rect shadowRect= {(gb->x * 16) + 4, (gb->y * 16) + 4, 8, 8};
+		SDL_FillRect(buffer, &shadowRect, SDL_MapRGB(buffer->format, 5, 5, 5));
+	}
 
 	switch (gb->bType)
 	{
