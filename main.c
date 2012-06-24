@@ -77,7 +77,7 @@ int deinit()
 // NOTE: this code uses a nested function, which is a feature of GCC;
 //       if you find yourself cursed with porting such code using another
 //       compiler (eg: ICC), you may need to remove the nest to a seperate
-//       function.
+//       function. My deepest apologies. I love you.
 void whimsyBlocks()
 {
 	int i,j;

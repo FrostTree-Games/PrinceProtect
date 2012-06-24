@@ -48,6 +48,46 @@ void updateGameLogic()
 				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, 0, xrand() % 9 + 11);
 				en->direction = 1;
 			}
+			else if(val / 20 < 3)
+			{
+				int i;
+				int xSpot = -1;
+				int ySpot = -1;
+				
+				for (i = 0; i < 5; i++)
+				{
+					xSpot = (xrand() % 13) + 2;
+					ySpot = (xrand() % 11) + 9;
+					Entity* checkList[5];
+					int checkResultSize = 0;
+					occupyingOnHere(xSpot, ySpot, checkList, 5, &checkResultSize);
+					
+					if (checkResultSize == 0)
+					{
+						Entity* newBlock;
+						switch (xrand() % 3)
+						{
+							case 0:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = RED_BLOCK;
+					                break;
+							case 1:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = BLUE_BLOCK;
+					                break;
+							case 2:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = GREEN_BLOCK;
+					                break;
+							default:
+							break;
+						}
+						break;
+					}
+				}
+				
+
+			}
 		}
 	}
 }
