@@ -213,7 +213,7 @@ Entity* pushEntity(EntityType type, int newX, int newY)
 			return NULL;
 		}
 
-		Entity* newEnt = create_entity(TELEBLOCK, 31 - newX, newY);
+		Entity* newEnt = create_entity(TELEBLOCK, 17 - newX, newY);
 
 		if (newEnt == NULL)
 		{

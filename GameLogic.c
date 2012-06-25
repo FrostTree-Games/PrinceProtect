@@ -90,7 +90,7 @@ void updateGameLogic()
 		
 		if (gameBlockCount < 20)
 		{
-			if(val / 20 < 5)
+			if(val / 20 < 7)
 			{
 				int i;
 				int xSpot = -1;
