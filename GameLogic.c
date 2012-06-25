@@ -78,19 +78,19 @@ void updateGameLogic()
 		{
 			if (val / 10 == 2)
 			{
-				Enemy* en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, xrand() % 11 + 9);
+				Enemy* en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, xrand() % 6 + 6);
 				en->direction = 1;
 			}
 			else if (val / 10 == 1)
 			{
-				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, 0, xrand() % 9 + 11);
+				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, 0, xrand() % 6 + 6);
 				en->direction = 1;
 			}
 		}
 		
 		if (gameBlockCount < 20)
 		{
-			if(val / 20 < 3)
+			if(val / 20 < 5)
 			{
 				int i;
 				int xSpot = -1;
@@ -99,7 +99,7 @@ void updateGameLogic()
 				for (i = 0; i < 5; i++)
 				{
 					xSpot = (xrand() % 28) + 2;
-					ySpot = (xrand() % 11) + 9;
+					ySpot = (xrand() % 6) + 6;
 					Entity* checkList[5];
 					int checkResultSize = 0;
 					occupyingOnHere(xSpot, ySpot, checkList, 5, &checkResultSize);

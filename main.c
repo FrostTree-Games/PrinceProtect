@@ -19,8 +19,8 @@
 #include "Pushdown.h"
 #include "GameLogic.h"
 
-#define SCREEN_WIDTH 512
-#define SCREEN_HEIGHT 448
+#define SCREEN_WIDTH 288
+#define SCREEN_HEIGHT 240
 
 SDL_Surface* screen;
 SDL_Surface* buffer;
@@ -297,44 +297,27 @@ int main(int argc, char* argv[])
 
 	initEntityList();
 
-	pushEntity(PLAYER1, 3, 19);
+	pushEntity(PLAYER1, 3, 11);
 
 	for (i = 0; i < 32; i++)
 	{
-		pushEntity(PERMABLOCK, i, 8);
-		pushEntity(PERMABLOCK, i, 20);
+		pushEntity(PERMABLOCK, i, 5);
+		pushEntity(PERMABLOCK, i, 12);
 	}
 
 	for (i = 0; i < 15; i++)
 	{
-		pushEntity(PERMABLOCK, -1, 9 + i);
-		pushEntity(PERMABLOCK, 32, 9 + i);
-	}
-
-	for (i = 0; i < 14; i++)
-	{
-		if (i > 3)
-		{
-			continue;
-		}
-
-		Entity* newGameBlock = pushEntity(GAMEBLOCK, 3 + 2*i, 13);
-                newGameBlock->gBlock.bType = RED_BLOCK;
-
-                newGameBlock = pushEntity(GAMEBLOCK, 3 + 2*i, 15);
-                newGameBlock->gBlock.bType = GREEN_BLOCK;
-
-                newGameBlock = pushEntity(GAMEBLOCK, 3 + 2*i, 17);
-                newGameBlock->gBlock.bType = BLUE_BLOCK;
+		pushEntity(PERMABLOCK, -1, 5 + i);
+		pushEntity(PERMABLOCK, 19, 5 + i);
 	}
 
 	for (i = 0; i < 2; i++)
 	{
-		pushEntity(ICECREAM, 17 + i, 10);
-		pushEntity(ICECREAM, 17 + i, 11);
+		pushEntity(ICECREAM, 8 + i, 6);
+		pushEntity(ICECREAM, 8 + i, 7);
 
-		pushEntity(ICECREAM, 17 + i, 17);
-		pushEntity(ICECREAM, 17 + i, 18);
+		pushEntity(ICECREAM, 8 + i, 10);
+		pushEntity(ICECREAM, 8 + i, 11);
 	}
 
 	clearResetGame();

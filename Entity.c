@@ -1570,7 +1570,7 @@ void update_teleblock(TeleBlock* tb)
 
 void update_gameBlock(GameBlock* gb, Uint32 currTime)
 {
-	if (currTime - gb->startTime > 10 * 1000)
+	if (currTime - gb->startTime > 30 * 1000)
 	{
 		gb->type = DELETE_ME_PLEASE;
 		return;
