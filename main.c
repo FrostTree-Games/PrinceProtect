@@ -88,7 +88,7 @@ void whimsyBlocks()
 	
 	void checkConnectedBlocks(int x, int y, BlockType b)
 	{
-		if (x > 31 || y > 27 || x < 0 || y < 0)
+		if (x > 18 || y > 11 || x < 0 || y < 0)
 		{
 			return;
 		}
@@ -119,7 +119,7 @@ void whimsyBlocks()
 	
 	void clearConnectedBlocks(int x, int y, BlockType b)
 	{
-		if (x > 31 || y > 27 || x < 0 || y < 0)
+		if (x < 0 || y < 0 || x > 18 || y > 11)
 		{
 			return;
 		}
@@ -200,14 +200,14 @@ void whimsyBlocks()
 	{
 		if (entList[i]->type == GAMEBLOCK && entList[i]->gBlock.height == 0)
 		{
-			if (entList[i]->base.x >= 0 && entList[i]->base.y >= 8 && entList[i]->base.x < 32 && entList[i]->base.y < 26)
+			if (entList[i]->base.x >= 0 && entList[i]->base.y >= 0 && entList[i]->base.x < 32 && entList[i]->base.y < 26)
 			{
 				gameBlockGrid[entList[i]->base.x][entList[i]->base.y] = entList[i];
 				flagMatrix[entList[i]->base.x][entList[i]->base.y] = 1;
 			}
 		}
 	}
-	
+
 	for (i = 0; i < 32; i++)
 	{
 		for (j = 0; j < 28; j++)
@@ -318,6 +318,12 @@ int main(int argc, char* argv[])
 
 		pushEntity(ICECREAM, 8 + i, 10);
 		pushEntity(ICECREAM, 8 + i, 11);
+	}
+	
+	for (i = 0; i < 4; i++)
+	{
+		Entity* en = pushEntity(GAMEBLOCK, 2 + i*2, 8);
+		en->gBlock.bType = RED_BLOCK;
 	}
 
 	clearResetGame();

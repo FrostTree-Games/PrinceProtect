@@ -9,7 +9,7 @@
 #include "Pushdown.h"
 #include "GameLogic.h"
 
-int pushNotificationFontSize = 14;
+int pushNotificationFontSize = 20;
 TTF_Font* pushNotificationFont = NULL;
 
 int setupFonts()
@@ -20,7 +20,7 @@ int setupFonts()
 		return 1;
 	}
 
-	if ((pushNotificationFont = TTF_OpenFont("ttf/push.ttf", pushNotificationFontSize)) == NULL)
+	if ((pushNotificationFont = TTF_OpenFont("ttf/slkscr.ttf", pushNotificationFontSize)) == NULL)
 	{
 		return 1;
 	}
@@ -62,10 +62,10 @@ void drawHealthScores(SDL_Surface* buffer)
 	sprintf(p1HealthText, "P1 HP: %.2d/%.2d", getPlayerHealth(1), getPlayerMaxHealth(1));
 
 	SDL_Surface* health_surface;
-	SDL_Color cl = {255, 200, 25, 0};
+	SDL_Color cl = {25, 0, 0, 0};
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
 	
-	SDL_Rect p1HpPos = {10, 10, 0, 0};
+	SDL_Rect p1HpPos = {10, 5, 0, 0};
 	
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 	SDL_FreeSurface(health_surface);
