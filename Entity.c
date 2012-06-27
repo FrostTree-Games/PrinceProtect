@@ -109,6 +109,9 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.knockBackDirection = -1;
 		newEntity->enemy.cream = NULL;
 		newEntity->enemy.health = 3;
+		newEntity->enemy.AISlot1 = 0;
+		newEntity->enemy.AISlot2 = 0;
+		newEntity->enemy.AISlot3 = 0;
 		break;
 		case ENEMY_SHOOTER:
 		newEntity->enemy.x = newX;
@@ -120,6 +123,9 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.knockBackDirection = -1;
 		newEntity->enemy.cream = NULL;
 		newEntity->enemy.health = 5;
+		newEntity->enemy.AISlot1 = 0;
+		newEntity->enemy.AISlot2 = 0;
+		newEntity->enemy.AISlot3 = 0;
 		break;
 		default:
 		free(newEntity);
@@ -1013,6 +1019,85 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 
 void update_shooter(Enemy* enemy, Uint32 currTime)
 {
+	int newDir(Enemy* en)
+	{
+		if (en->x < 0)
+		{
+			return 1;
+		}
+		else if (en->x > 17)
+		{
+			return 3;
+		}
+		
+		if (en->y == 6)
+		{
+			if (xrand() % 3 == 1)
+			{
+				return 2;
+			}
+		}
+		if (en->y == 12)
+		{
+			if (xrand() % 3 == 1)
+			{
+				return 0;
+			}
+		}
+		
+		if (rand() % 3 == 0)
+		{
+			return 4;
+		}
+		
+		if ( (en->x <= 8 && en->cream == NULL) || (en->x > 8 && en->cream != NULL) )
+		{
+			int randNumber = xrand() % 10;
+
+			if (randNumber < 2)
+			{
+				return 3;
+			}
+			else if (randNumber < 4)
+			{
+				return 0;
+			}
+			else if (randNumber < 6)
+			{
+				return 2;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else if ( (en->x <= 8 && en->cream != NULL) || (en->x > 8 && en->cream == NULL) )
+		{
+			int randNumber = xrand() % 10;
+
+			if (randNumber < 2)
+			{
+				return 1;
+			}
+			else if (randNumber < 4)
+			{
+				return 0;
+			}
+			else if (randNumber < 6)
+			{
+				return 2;
+			}
+			else
+			{
+				return 3;
+			}
+		}
+		else
+		{
+			return 4;
+		}	
+	}
+
 	int i;
 	Uint32 delta = currTime - enemy->lastMovementUpdate;
 
@@ -1068,14 +1153,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				{
 					while (enemy->direction == 0)
 					{
-						enemy->direction = rand() % 5;
+						enemy->direction = newDir(enemy) % 5;
 					}
 				}
 				else if (enemy->direction == 2)
 				{
 					while (enemy->direction == 2)
 					{
-						enemy->direction = rand() % 5;
+						enemy->direction = newDir(enemy) % 5;
 					}
 				}
 			}
@@ -1088,14 +1173,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				{
 					while (enemy->direction == 1)
 					{
-						enemy->direction = rand() % 5;
+						enemy->direction = newDir(enemy) % 5;
 					}
 				}
 				else if (enemy->direction == 3)
 				{
 					while (enemy->direction == 3)
 					{
-						enemy->direction = rand() % 5;
+						enemy->direction = newDir(enemy) % 5;
 					}
 				}
 			}
@@ -1182,7 +1267,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				enemy->offsetX = 8;
 				while (enemy->direction == 3)
 				{
-					enemy->direction = rand() % 5;
+					enemy->direction = newDir(enemy) % 5;
 				}
 			}
 
@@ -1204,7 +1289,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				enemy->offsetX = 8;
 				while (enemy->direction == 1)
 				{
-					enemy->direction = rand() % 5;
+					enemy->direction = newDir(enemy) % 5;
 				}
 			}
 
@@ -1227,7 +1312,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				enemy->offsetY = 8;
 				while (enemy->direction == 0)
 				{
-					enemy->direction = rand() % 5;
+					enemy->direction = newDir(enemy) % 5;
 				}
 			}
 
@@ -1249,7 +1334,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				enemy->offsetY = 8;
 				while (enemy->direction == 2)
 				{
-					enemy->direction = rand() % 5;
+					enemy->direction = newDir(enemy) % 5;
 				}
 			}
 
@@ -1264,7 +1349,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (rand() % 10 == 0)
 			{
-				enemy->direction = rand() % 4;
+				enemy->direction = newDir(enemy);
 				
 				Entity* newLaser = pushEntity(LASER, enemy->x, enemy->y - 1);
 				

@@ -51,3 +51,9 @@ int getScore();
  * Returns: N/A
  */
 void addScore(int delta);
+
+/* getIceCreamCount()
+ * Purpose: Gets the current number of ice creams in the game
+ * Returns: integer representing ice cream
+ */
+int getIceCreamCount();

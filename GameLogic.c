@@ -19,6 +19,8 @@ int player2Health = 0;
 int player1MaxHealth = 10;
 int player2MaxHealth = 10;
 
+int numberOfIceCreams = 0;
+
 int gameScore = 0;
 int waveNumber = 0;
 int betweenWaves = 0; //0 = not between waves; 1 = between waves
@@ -130,6 +132,8 @@ void updateGameLogic()
 			}
 		}
 	}
+	
+	numberOfIceCreams = iceCreamCount;
 }
 
 int clearResetGame()
@@ -232,6 +236,11 @@ void modPlayermaxHealth(int playerNo, int delta)
 	{
 		player2MaxHealth = 0;
 	}
+}
+
+int getIceCreamCount()
+{
+	return numberOfIceCreams;
 }
 
 

@@ -58,16 +58,23 @@ void drawLatestPushDown(SDL_Surface* buffer)
 
 void drawHealthScores(SDL_Surface* buffer)
 {
+	SDL_Color cl = {25, 0, 0, 0};
+
 	char p1HealthText[50];
 	sprintf(p1HealthText, "P1 HP: %.2d/%.2d", getPlayerHealth(1), getPlayerMaxHealth(1));
 
 	SDL_Surface* health_surface;
-	SDL_Color cl = {25, 0, 0, 0};
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
 	
 	SDL_Rect p1HpPos = {10, 5, 0, 0};
-	
+
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
+	SDL_FreeSurface(health_surface);
+
+	sprintf(p1HealthText, "ICECREAM: %d", getIceCreamCount());
+	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+	SDL_Rect iceCreamNumbers = {10, 25, 0, 0};
+	SDL_BlitSurface(health_surface, NULL, buffer, &iceCreamNumbers);
 	SDL_FreeSurface(health_surface);
 }
 

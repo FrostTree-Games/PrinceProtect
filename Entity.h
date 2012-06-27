@@ -150,6 +150,9 @@ typedef struct
 	Uint32 lastMovementUpdate;
 	unsigned char knockBackDirection; // 255->no knock back, 0->N, 1->E, 2->S, 3->W
 	IceCream* cream;
+	int AISlot1;
+	int AISlot2;
+	int AISlot3;
 } Enemy;
 
 // viva la crude polymorphism!
