@@ -33,7 +33,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 {
 	Entity* newEntity = malloc(sizeof(Entity));
 	newEntity->type = type;
-	
+
 	switch (type)
 	{
 		case PLAYER1:
@@ -869,6 +869,29 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 		}
 		return;
 	}
+	
+	if (enemy->x < 0)
+	{
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->type = DELETE_ME_PLEASE;
+			enemy->cream = NULL;
+
+			enemy->type = DELETE_ME_PLEASE;
+			return;
+		}
+	}
+	else if (enemy->x > 17)
+	{
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->type = DELETE_ME_PLEASE;
+			enemy->cream = NULL;
+
+			enemy->type = DELETE_ME_PLEASE;
+			return;
+		}
+	}
 
 	for (i = 0; i < currListSize; i++)
 	{
@@ -1023,11 +1046,26 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	{
 		if (en->x < 0)
 		{
+			if (en->cream != NULL)
+			{
+				en->cream->type = DELETE_ME_PLEASE;
+				en->cream = NULL;
+				
+				en->type = DELETE_ME_PLEASE;
+				return 3;
+			}
 			return 1;
 		}
 		else if (en->x > 17)
 		{
-			return 3;
+			if (en->cream != NULL)
+			{
+				en->cream->type = DELETE_ME_PLEASE;
+				en->cream = NULL;
+				
+				en->type = DELETE_ME_PLEASE;
+				return 1;
+			}
 		}
 		
 		if (en->y == 6)
@@ -1095,7 +1133,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		else
 		{
 			return 4;
-		}	
+		}
 	}
 
 	int i;
@@ -1149,40 +1187,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (rand() % 4 <= 1)
 			{
-				if (enemy->direction == 0)
-				{
-					while (enemy->direction == 0)
-					{
-						enemy->direction = newDir(enemy) % 5;
-					}
-				}
-				else if (enemy->direction == 2)
-				{
-					while (enemy->direction == 2)
-					{
-						enemy->direction = newDir(enemy) % 5;
-					}
-				}
+				enemy->direction = newDir(enemy) % 5;
 			}
 		}
 		else if ((enemy->direction == 1 || enemy->direction == 3) && enemy->offsetX == 8 && enemy->direction < 4)
 		{
 			if (rand() % 4 <= 1)
 			{
-				if (enemy->direction == 1)
-				{
-					while (enemy->direction == 1)
-					{
-						enemy->direction = newDir(enemy) % 5;
-					}
-				}
-				else if (enemy->direction == 3)
-				{
-					while (enemy->direction == 3)
-					{
-						enemy->direction = newDir(enemy) % 5;
-					}
-				}
+				enemy->direction = newDir(enemy) % 5;
 			}
 		}
 
@@ -1265,10 +1277,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			else
 			{
 				enemy->offsetX = 8;
-				while (enemy->direction == 3)
-				{
-					enemy->direction = newDir(enemy) % 5;
-				}
+				enemy->direction = newDir(enemy) % 5;
 			}
 
 			if (enemy->knockBackDirection < 255)
@@ -1287,10 +1296,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			else
 			{
 				enemy->offsetX = 8;
-				while (enemy->direction == 1)
-				{
-					enemy->direction = newDir(enemy) % 5;
-				}
+				enemy->direction = newDir(enemy) % 5;
 			}
 
 			if (enemy->knockBackDirection < 255)
@@ -1310,10 +1316,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			else
 			{
 				enemy->offsetY = 8;
-				while (enemy->direction == 0)
-				{
-					enemy->direction = newDir(enemy) % 5;
-				}
+				enemy->direction = newDir(enemy) % 5;
 			}
 
 			if (enemy->knockBackDirection < 255)
@@ -1332,10 +1335,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			else
 			{
 				enemy->offsetY = 8;
-				while (enemy->direction == 2)
-				{
-					enemy->direction = newDir(enemy) % 5;
-				}
+				enemy->direction = newDir(enemy) % 5;
 			}
 
 			if (enemy->knockBackDirection < 255)
@@ -1351,11 +1351,30 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			{
 				enemy->direction = newDir(enemy);
 				
-				Entity* newLaser = pushEntity(LASER, enemy->x, enemy->y - 1);
+				Entity* newLaser = pushEntity(LASER, enemy->x, enemy->y);
 				
-				while (newLaser->laser.direction == enemy->direction)
+				newLaser->laser.direction = xrand() % 4;
+				
+				switch (newLaser->laser.direction)
 				{
-					newLaser->laser.direction = rand() % 4;
+					case 0:
+					newLaser->laser.y -= 1;
+					newLaser->laser.offsetY = 16;
+					break;
+					case 1:
+					newLaser->laser.x += 1;
+					newLaser->laser.offsetX = 0;
+					break;
+					case 2:
+					newLaser->laser.y += 1;
+					newLaser->laser.offsetY = 0;
+					break;
+					case 3:
+					newLaser->laser.x -= 1;
+					newLaser->laser.offsetX = 16;
+					break;
+					default:
+					break;
 				}
 			}
 		}
@@ -1553,7 +1572,7 @@ void update_laser(Laser* block, Uint32 currTime)
 				block->type = DELETE_ME_PLEASE;
 			}
 		}
-		else if (block->offsetX > 15)
+		else if (block->offsetX > 16)
 		{
 			if (eastResultSize == 0)
 			{
@@ -1579,7 +1598,7 @@ void update_laser(Laser* block, Uint32 currTime)
 				block->type = DELETE_ME_PLEASE;
 			}
 		}
-		else if (block->offsetY > 15)
+		else if (block->offsetY > 16)
 		{
 			if (southResultSize == 0)
 			{

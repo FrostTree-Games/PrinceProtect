@@ -299,7 +299,7 @@ int main(int argc, char* argv[])
 
 	pushEntity(PLAYER1, 3, 11);
 
-	for (i = 0; i < 32; i++)
+	for (i = -2; i < 21; i++)
 	{
 		pushEntity(PERMABLOCK, i, 5);
 		pushEntity(PERMABLOCK, i, 12);
@@ -307,8 +307,8 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 15; i++)
 	{
-		pushEntity(PERMABLOCK, -1, 5 + i);
-		pushEntity(PERMABLOCK, 19, 5 + i);
+		pushEntity(PERMABLOCK, -2, 5 + i);
+		pushEntity(PERMABLOCK, 20, 5 + i);
 	}
 
 	for (i = 0; i < 2; i++)
@@ -320,11 +320,7 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 8 + i, 11);
 	}
 	
-	for (i = 0; i < 4; i++)
-	{
-		Entity* en = pushEntity(GAMEBLOCK, 2 + i*2, 8);
-		en->gBlock.bType = RED_BLOCK;
-	}
+	pushEntity(ENEMY_SHOOTER, 2, 8);
 
 	clearResetGame();
 

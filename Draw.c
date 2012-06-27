@@ -237,7 +237,7 @@ void testDraw(SDL_Surface* buffer)
 			break;
 			case LASER:
 			entRect.x = 2 + (entList[i]->laser.x * 16) + entList[i]->laser.offsetX - 8;
-			entRect.y = 6 + (entList[i]->laser.y * 16) + entList[i]->laser.offsetY - 8;
+			entRect.y = 2 + (entList[i]->laser.y * 16) + entList[i]->laser.offsetY - 8;
 			entRect.w = 12;
 			entRect.h = 12;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 50));
