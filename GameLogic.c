@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 
 #include "GameLogic.h"
+#include "Pushdown.h"
 #include "Entity.h"
 
 #define MAX_ONSCREEN_GAMEBLOCKS 300
@@ -133,6 +134,10 @@ void updateGameLogic()
 		}
 	}
 	
+	if (iceCreamCount < numberOfIceCreams && iceCreamCount > 0)
+	{
+		pushNewMessage("ICE CREAM LOST!");
+	}
 	numberOfIceCreams = iceCreamCount;
 }
 

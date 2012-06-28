@@ -47,12 +47,23 @@ void drawLatestPushDown(SDL_Surface* buffer)
 	
 	SDL_Rect msgPos = {(buffer->w - text_surface->w)/2, 30, 0, 0};
 	
-	if (getTimeSingleton() - latestMessage->startTime < 2000)
+	if (getTimeSingleton() - latestMessage->startTime < 500)
 	{
-		msgPos.y = (Sint16)(30 * (getTimeSingleton() - latestMessage->startTime)/2000.0);
+		msgPos.y = (Sint16)(30 * (getTimeSingleton() - latestMessage->startTime)/500.0);
+	}
+	
+	if (getTimeSingleton() - latestMessage->startTime >= 1000)
+	{
+		if ( ((getTimeSingleton() - latestMessage->startTime)/250) % 2 == 0)
+		{
+			SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
+		}
+	}
+	else
+	{
+		SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
 	}
 
-	SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
 	SDL_FreeSurface(text_surface);
 }
 
