@@ -26,6 +26,7 @@ typedef enum
 	TELEBLOCK,
 	ENEMY_CRAWLER,
 	ENEMY_SHOOTER,
+	ENEMY_BOXERGREG,
 	ICECREAM,
 	DELETE_ME_PLEASE
 } EntityType;
@@ -150,9 +151,10 @@ typedef struct
 	Uint32 lastMovementUpdate;
 	unsigned char knockBackDirection; // 255->no knock back, 0->N, 1->E, 2->S, 3->W
 	IceCream* cream;
-	int AISlot1;
-	int AISlot2;
+	int AISlot1; //boxerGreg: 0 -> not punching, 1 -> punching, 2 -> blocking
+	int AISlot2; //boxerGreg: direction currently standing
 	int AISlot3;
+	Uint32 timer;
 } Enemy;
 
 // viva la crude polymorphism!

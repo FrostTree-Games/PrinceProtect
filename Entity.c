@@ -112,6 +112,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.AISlot1 = 0;
 		newEntity->enemy.AISlot2 = 0;
 		newEntity->enemy.AISlot3 = 0;
+		newEntity->enemy.timer = 0;
 		break;
 		case ENEMY_SHOOTER:
 		newEntity->enemy.x = newX;
@@ -123,6 +124,20 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.knockBackDirection = -1;
 		newEntity->enemy.cream = NULL;
 		newEntity->enemy.health = 5;
+		newEntity->enemy.AISlot1 = 0;
+		newEntity->enemy.AISlot2 = 0;
+		newEntity->enemy.AISlot3 = 0;
+		break;
+		case ENEMY_BOXERGREG:
+		newEntity->enemy.x = newX;
+		newEntity->enemy.y = newY;
+		newEntity->enemy.direction = rand() % 5;
+		newEntity->enemy.offsetX = 8;
+		newEntity->enemy.offsetY = 8;
+		newEntity->enemy.lastMovementUpdate = 0;
+		newEntity->enemy.knockBackDirection = -1;
+		newEntity->enemy.cream = NULL;
+		newEntity->enemy.health = 4;
 		newEntity->enemy.AISlot1 = 0;
 		newEntity->enemy.AISlot2 = 0;
 		newEntity->enemy.AISlot3 = 0;
@@ -356,7 +371,7 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 
 		if (en->base.x == x && en->base.y == y)
 		{
-			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER))
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER || en->type == PLAYER1 || en->type == PLAYER2))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -502,7 +517,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			pl->isThrusting = 0;
 		}
-		
+
 		switch (pl->direction)
 		{
 			case 0:
@@ -510,7 +525,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < northResultSize; i++)
 				{
-					if (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER)
+					if (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG)
 					{
 						northList[i]->enemy.knockBackDirection = pl->direction;
 						northList[i]->enemy.offsetX = 8;
@@ -536,7 +551,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < eastResultSize; i++)
 				{
-					if (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER)
+					if (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG)
 					{
 						eastList[i]->enemy.knockBackDirection = pl->direction;
 						eastList[i]->enemy.offsetX = 8;
@@ -562,7 +577,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < southResultSize; i++)
 				{
-					if (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER)
+					if (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_BOXERGREG)
 					{
 						southList[i]->enemy.knockBackDirection = pl->direction;
 						southList[i]->enemy.offsetX = 8;
@@ -588,7 +603,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < westResultSize; i++)
 				{
-					if (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER)
+					if (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG)
 					{
 						westList[i]->enemy.knockBackDirection = pl->direction;
 						westList[i]->enemy.offsetX = 8;
@@ -1066,6 +1081,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				en->type = DELETE_ME_PLEASE;
 				return 1;
 			}
+			return 3;
 		}
 		
 		if (en->y == 6)
@@ -1383,6 +1399,380 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	}
 }
 
+void update_boxergreg(Enemy* enemy, Uint32 currTime)
+{
+	int newDir(Enemy* en)
+	{
+		if (en->x < 0)
+		{
+			if (en->cream != NULL)
+			{
+				en->cream->type = DELETE_ME_PLEASE;
+				en->cream = NULL;
+				
+				en->type = DELETE_ME_PLEASE;
+				return 3;
+			}
+			return 1;
+		}
+		else if (en->x > 17)
+		{
+			if (en->cream != NULL)
+			{
+				en->cream->type = DELETE_ME_PLEASE;
+				en->cream = NULL;
+				
+				en->type = DELETE_ME_PLEASE;
+				return 1;
+			}
+			return 3;
+		}
+		
+		if (en->y == 6)
+		{
+			if (xrand() % 3 == 1)
+			{
+				return 2;
+			}
+		}
+		if (en->y == 12)
+		{
+			if (xrand() % 3 == 1)
+			{
+				return 0;
+			}
+		}
+		
+		if (rand() % 4 < 3)
+		{
+			if (en->direction != 4)
+			{
+				en->AISlot2 = en->direction;
+			}
+			return 4;
+		}
+		
+		if ( (en->x <= 8 && en->cream == NULL) || (en->x > 8 && en->cream != NULL) )
+		{
+			int randNumber = xrand() % 10;
+
+			if (randNumber < 2)
+			{
+				return 3;
+			}
+			else if (randNumber < 4)
+			{
+				return 0;
+			}
+			else if (randNumber < 6)
+			{
+				return 2;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else if ( (en->x <= 8 && en->cream != NULL) || (en->x > 8 && en->cream == NULL) )
+		{
+			int randNumber = xrand() % 10;
+
+			if (randNumber < 2)
+			{
+				return 1;
+			}
+			else if (randNumber < 4)
+			{
+				return 0;
+			}
+			else if (randNumber < 6)
+			{
+				return 2;
+			}
+			else
+			{
+				return 3;
+			}
+		}
+		else
+		{
+			return 4;
+		}
+	}
+
+	int i;
+	Uint32 delta = currTime - enemy->lastMovementUpdate;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	Entity* currList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+	int currListSize;
+
+	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
+	
+	if(enemy->health < 1)
+	{
+		enemy->type = DELETE_ME_PLEASE;
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->x = enemy->x;
+			enemy->cream->y = enemy->y;
+		}
+		return;
+	}
+	
+	if (enemy->x < 0)
+	{
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->type = DELETE_ME_PLEASE;
+			enemy->cream = NULL;
+
+			enemy->type = DELETE_ME_PLEASE;
+			return;
+		}
+	}
+	else if (enemy->x > 17)
+	{
+		if (enemy->cream != NULL)
+		{
+			enemy->cream->type = DELETE_ME_PLEASE;
+			enemy->cream = NULL;
+
+			enemy->type = DELETE_ME_PLEASE;
+			return;
+		}
+	}
+
+	for (i = 0; i < currListSize; i++)
+	{
+		if (currList[i]->type == ICECREAM && enemy->cream == NULL  && enemy->AISlot1 == 0)
+		{
+			enemy->cream = (IceCream*)currList[i];
+			enemy->cream->x = -5;
+			enemy->cream->y = -5;
+		}
+	}
+
+	if (delta / 32 > 0)
+	{
+		if (enemy->offsetX == 8 && enemy->offsetY == 8 && enemy->AISlot1 == 0)
+		{
+			enemy->direction = newDir(enemy);
+		}
+
+		if (enemy->knockBackDirection == 255)
+		{
+			switch (enemy->direction)
+			{
+				case 0:
+				enemy->offsetY -= 1;
+				break;
+				case 1:
+				enemy->offsetX += 1;
+				break;
+				case 2:
+				enemy->offsetY += 1;
+				break;
+				case 3:
+				enemy->offsetX -= 1;
+				break;
+				default:
+				break;
+			}
+		}
+		else
+		{
+			switch (enemy->knockBackDirection)
+			{
+				case 0:
+				enemy->offsetY -= 8;
+				break;
+				case 1:
+				enemy->offsetX += 8;
+				break;
+				case 2:
+				enemy->offsetY += 8;
+				break;
+				case 3:
+				enemy->offsetX -= 8;
+				break;
+				default:
+				break;
+			}
+		}
+
+		if (enemy->offsetX < 0)
+		{
+			if (westResultSize == 0)
+			{
+				enemy->offsetX = 16;
+				enemy->x -= 1;
+			}
+			else
+			{
+				enemy->offsetX = 8;
+				while (enemy->direction == 3)
+				{
+					enemy->direction = newDir(enemy);
+				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+		else if (enemy->offsetX > 16)
+		{
+			if (eastResultSize == 0)
+			{
+				enemy->offsetX = 0;
+				enemy->x += 1;
+			}
+			else
+			{
+				enemy->offsetX = 8;
+				while (enemy->direction == 1)
+				{
+					enemy->direction = newDir(enemy);
+				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+
+		if (enemy->offsetY < 0)
+		{
+			if (northResultSize == 0)
+			{
+				enemy->offsetY = 16;
+				enemy->y -= 1;
+			}
+			else
+			{
+				enemy->offsetY = 8;
+				while (enemy->direction == 0)
+				{
+					enemy->direction = newDir(enemy);
+				}
+			}
+			
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+		else if (enemy->offsetY > 16)
+		{
+			if (southResultSize == 0)
+			{
+				enemy->offsetY = 0;
+				enemy->y += 1;
+			}
+			else
+			{
+				enemy->offsetY = 8;
+				while (enemy->direction == 2)
+				{
+					enemy->direction = newDir(enemy);
+				}
+			}
+
+			if (enemy->knockBackDirection < 255)
+			{
+				enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;
+			}
+		}
+		
+		if (enemy->direction == 4 && enemy->knockBackDirection == 255)
+		{
+			if (enemy->AISlot1 == 1)
+			{
+				switch(enemy->AISlot2)
+				{
+					case 0:
+					for (i = 0; i < northResultSize; i++)
+					{
+						if (northList[i]->type == PLAYER1)
+						{
+							modPlayerHealth(1, -1);
+							printf("Pow north!");
+						}
+					}
+					break;
+					case 1:
+					for (i = 0; i < eastResultSize; i++)
+					{
+						if (eastList[i]->type == PLAYER1)
+						{
+							modPlayerHealth(1, -1);
+							printf("Pow east!");
+						}
+					}
+					break;
+					case 2:
+					for (i = 0; i < southResultSize; i++)
+					{
+						if (southList[i]->type == PLAYER1)
+						{
+							modPlayerHealth(1, -1);
+							printf("Pow south!");
+						}
+					}
+					break;
+					case 3:
+					for (i = 0; i < westResultSize; i++)
+					{
+						if (westList[i]->type == PLAYER1)
+						{
+							modPlayerHealth(1, -1);
+							printf("Pow west!");
+						}
+					}
+					break;
+					default:
+					printf("Boxer Greg tried to punch in a bad direction!\n");
+					break;
+				}
+				
+				if (currTime - enemy->timer > 250)
+				{
+					enemy->AISlot1 = 0;
+				}
+			}
+			else if (enemy->AISlot1 == 0 && xrand() % 10 < 3)
+			{
+				enemy->AISlot1 = 1;
+				enemy->timer = currTime;
+			}
+			else if (enemy->AISlot1 == 0 && xrand() % 20 == 0)
+			{
+				enemy->direction = newDir(enemy) % 4;
+			}
+		}
+
+		enemy->lastMovementUpdate = currTime;
+	}
+}
+
 void update_iceBlock(IceBlock* block, Uint32 currTime)
 {
 	Uint32 delta = currTime - block->lastMovementUpdate;
@@ -1632,13 +2022,14 @@ void update_explosion(Explosion* exp)
 		{
 			case ENEMY_CRAWLER:
 			case ENEMY_SHOOTER:
+			case ENEMY_BOXERGREG:
 			blastList[i]->enemy.health -= 5;
 			break;
 			default:
 			break;
 		}
 	}
-	
+
 	if (delta > 750)
 	{
 		exp->type = DELETE_ME_PLEASE;
@@ -1713,30 +2104,33 @@ void update_entity(Entity* entity, Uint32 currTime)
 	{
 		case PLAYER1:
 		case PLAYER2:
-		update_player((Player*)entity, currTime);
+		update_player( (Player*)entity, currTime);
 		break;
 		case PERMABLOCK:
 		break;
 		case GAMEBLOCK:
-		update_gameBlock((GameBlock*)entity, currTime);
+		update_gameBlock( (GameBlock*)entity, currTime);
 		break;
 		case ICEBLOCK:
-		update_iceBlock((IceBlock*)entity, currTime);
+		update_iceBlock( (IceBlock*)entity, currTime);
 		break;
 		case EXPLOSION:
-		update_explosion((Explosion*)entity);
+		update_explosion( (Explosion*)entity);
 		break;
 		case LASER:
-		update_laser((Laser*) entity, currTime);
+		update_laser( (Laser*)entity, currTime);
 		break;
 		case TELEBLOCK:
-		update_teleblock((TeleBlock*)entity);
+		update_teleblock( (TeleBlock*)entity);
 		break;
 		case ENEMY_CRAWLER:
-		update_enemy((Enemy*)entity, currTime);
+		update_enemy( (Enemy*)entity, currTime);
 		break;
 		case ENEMY_SHOOTER:
-		update_shooter((Enemy*)entity, currTime);
+		update_shooter( (Enemy*)entity, currTime);
+		break;
+		case ENEMY_BOXERGREG:
+		update_boxergreg( (Enemy*)entity, currTime);
 		break;
 		case ICECREAM:
 		break;

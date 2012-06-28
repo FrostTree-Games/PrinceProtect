@@ -46,7 +46,7 @@ void drawLatestPushDown(SDL_Surface* buffer)
 	text_surface = TTF_RenderText_Solid(pushNotificationFont, latestMessage->message, cl);
 	
 	SDL_Rect msgPos = {(buffer->w - text_surface->w)/2, 30, 0, 0};
-	
+
 	if (getTimeSingleton() - latestMessage->startTime < 500)
 	{
 		msgPos.y = (Sint16)(30 * (getTimeSingleton() - latestMessage->startTime)/500.0);
@@ -282,6 +282,46 @@ void testDraw(SDL_Surface* buffer)
 			{
 				entRect.y -= 16;
 				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
+			}
+			break;
+			case ENEMY_BOXERGREG:
+			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
+			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 170, 170, 190));
+			if (entList[i]->enemy.cream != NULL)
+			{
+				entRect.y -= 16;
+				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
+			}
+			
+			//draw sword if necessary
+			if (entList[i]->enemy.AISlot1 == 1)
+			{
+				switch (entList[i]->enemy.AISlot2)
+				{
+					case 0:
+					altRect.x = (entList[i]->enemy.x * 16) + 4;
+                                        altRect.y = (entList[i]->enemy.y * 16) - 8;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
+					break;
+                                        case 1:
+                                        altRect.x = (entList[i]->enemy.x * 16) + 16;
+                                        altRect.y = (entList[i]->enemy.y * 16) + 4;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
+					break;
+					case 2:
+					altRect.x = (entList[i]->enemy.x * 16) + 4;
+                                        altRect.y = (entList[i]->enemy.y * 16) + 16;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
+					break;
+					case 3:
+					altRect.x = (entList[i]->enemy.x * 16) - 8;
+                                        altRect.y = (entList[i]->enemy.y * 16) + 4;
+                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
+					break;
+					default:
+					break;
+				}
 			}
 			break;
 			default:

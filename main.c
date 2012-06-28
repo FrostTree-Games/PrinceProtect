@@ -320,7 +320,7 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 8 + i, 11);
 	}
 	
-	pushEntity(ENEMY_SHOOTER, 2, 8);
+	pushEntity(ENEMY_BOXERGREG, 2, 8);
 
 	clearResetGame();
 
