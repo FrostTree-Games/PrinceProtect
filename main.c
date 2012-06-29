@@ -19,8 +19,8 @@
 #include "Pushdown.h"
 #include "GameLogic.h"
 
-#define SCREEN_WIDTH 288
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 272
 
 SDL_Surface* screen;
 SDL_Surface* buffer;
@@ -88,7 +88,7 @@ void whimsyBlocks()
 	
 	void checkConnectedBlocks(int x, int y, BlockType b)
 	{
-		if (x > 18 || y > 11 || x < 0 || y < 0)
+		if (x > BOARD_WIDTH || y > BOARD_HEIGHT || x < 0 || y < 0)
 		{
 			return;
 		}
@@ -121,7 +121,7 @@ void whimsyBlocks()
 	{
 		int i;
 
-		if (x < 0 || y < 0 || x > 18 || y > 11)
+		if (x < 0 || y < 0 || x > BOARD_WIDTH || y > BOARD_HEIGHT)
 		{
 			return;
 		}
@@ -306,13 +306,13 @@ int main(int argc, char* argv[])
 
 	pushEntity(PLAYER1, 3, 11);
 
-	for (i = -2; i < 21; i++)
+	for (i = -2; i < BOARD_WIDTH + 3; i++)
 	{
-		pushEntity(PERMABLOCK, i, 5);
-		pushEntity(PERMABLOCK, i, 12);
+		pushEntity(PERMABLOCK, i, BOARD_TOP_WALL);
+		pushEntity(PERMABLOCK, i, BOARD_BOTTOM_WALL);
 	}
 
-	for (i = 0; i < 15; i++)
+	for (i = 0; i < BOARD_HEIGHT + 2; i++)
 	{
 		pushEntity(PERMABLOCK, -2, 5 + i);
 		pushEntity(PERMABLOCK, 20, 5 + i);
@@ -320,21 +320,12 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 2; i++)
 	{
-		pushEntity(ICECREAM, 8 + i, 6);
-		pushEntity(ICECREAM, 8 + i, 7);
+		pushEntity(ICECREAM, 10 + i, 6);
+		pushEntity(ICECREAM, 10 + i, 7);
 
-		pushEntity(ICECREAM, 8 + i, 10);
-		pushEntity(ICECREAM, 8 + i, 11);
+		pushEntity(ICECREAM, 10 + i, 10);
+		pushEntity(ICECREAM, 10 + i, 11);
 	}
-	
-	/*
-	for (i = 0; i < 4; i++)
-	{
-		Entity* yBlock = pushEntity(GAMEBLOCK, 2 + 2*i, 8);
-		yBlock->gBlock.bType = YELLOW_BLOCK;
-	}     */
-	
-	pushEntity(ENEMY_BOXERGREG, 2, 8);
 
 	clearResetGame();
 

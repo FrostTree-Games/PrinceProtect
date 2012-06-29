@@ -229,14 +229,14 @@ Entity* pushEntity(EntityType type, int newX, int newY)
 		
 		Entity* checkList[5];
 		int checkResultSize = 0;
-		occupyingOnHere(31 - newX, newY, checkList, 5, &checkResultSize);
+		occupyingOnHere(BOARD_WIDTH - newX, newY, checkList, 5, &checkResultSize);
 
 		if (checkResultSize > 0)
 		{
 			return NULL;
 		}
 
-		Entity* newEnt = create_entity(TELEBLOCK, 17 - newX, newY);
+		Entity* newEnt = create_entity(TELEBLOCK, BOARD_WIDTH - newX, newY);
 
 		if (newEnt == NULL)
 		{
@@ -514,7 +514,7 @@ void update_player(Player* pl, Uint32 currTime)
 			}
 			break;
 			case 1:
-			if (eastResultSize == 0)
+			if (eastResultSize == 0 && pl->x + 1 < BOARD_WIDTH)
 			{
 				pl->x += 1;
 			}
@@ -526,7 +526,7 @@ void update_player(Player* pl, Uint32 currTime)
 			}
 			break;
 			case 3:
-			if (westResultSize == 0)
+			if (westResultSize == 0 && pl->x - 1 >= 0)
 			{
 				pl->x -= 1;
 			}
@@ -1109,9 +1109,12 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				en->type = DELETE_ME_PLEASE;
 				return 3;
 			}
-			return 1;
+			else
+			{
+				return 1;
+			}
 		}
-		else if (en->x > 17)
+		else if (en->x >= BOARD_WIDTH)
 		{
 			if (en->cream != NULL)
 			{
@@ -1121,17 +1124,20 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				en->type = DELETE_ME_PLEASE;
 				return 1;
 			}
-			return 3;
+			else
+			{
+				return 3;
+			}
 		}
 		
-		if (en->y == 6)
+		if (en->y == BOARD_TOP_WALL + 1)
 		{
 			if (xrand() % 3 == 1)
 			{
 				return 2;
 			}
 		}
-		if (en->y == 12)
+		if (en->y == BOARD_BOTTOM_WALL - 1)
 		{
 			if (xrand() % 3 == 1)
 			{
@@ -1455,7 +1461,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			}
 			return 1;
 		}
-		else if (en->x > 17)
+		else if (en->x >= BOARD_WIDTH)
 		{
 			if (en->cream != NULL)
 			{
@@ -1468,14 +1474,14 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			return 3;
 		}
 		
-		if (en->y == 6)
+		if (en->y == BOARD_TOP_WALL + 1)
 		{
 			if (xrand() % 3 == 1)
 			{
 				return 2;
 			}
 		}
-		if (en->y == 12)
+		if (en->y == BOARD_BOTTOM_WALL - 1)
 		{
 			if (xrand() % 3 == 1)
 			{
@@ -1582,7 +1588,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			return;
 		}
 	}
-	else if (enemy->x > 17)
+	else if (enemy->x >= BOARD_WIDTH)
 	{
 		if (enemy->cream != NULL)
 		{

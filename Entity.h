@@ -12,6 +12,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#define BOARD_WIDTH 20
+#define BOARD_HEIGHT 13
+#define BOARD_TOP_WALL 5
+#define BOARD_BOTTOM_WALL 14
+
 #include <SDL/SDL.h>
 
 typedef enum
