@@ -110,7 +110,7 @@ void updateGameLogic()
 					if (checkResultSize == 0)
 					{
 						Entity* newBlock;
-						switch (xrand() % 3)
+						switch (xrand() % 4)
 						{
 							case 0:
 							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
@@ -123,6 +123,10 @@ void updateGameLogic()
 							case 2:
 							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
 					                newBlock->gBlock.bType = GREEN_BLOCK;
+					                break;
+							case 3:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = YELLOW_BLOCK;
 					                break;
 							default:
 							break;

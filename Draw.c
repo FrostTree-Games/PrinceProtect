@@ -251,7 +251,18 @@ void testDraw(SDL_Surface* buffer)
 			entRect.y = 2 + (entList[i]->laser.y * 16) + entList[i]->laser.offsetY - 8;
 			entRect.w = 12;
 			entRect.h = 12;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 50));
+			if (entList[i]->laser.allegiance == 0)
+			{
+				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 50));
+			}
+			else if (entList[i]->laser.allegiance == 1)
+			{
+				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 210, 255, 50));
+			}
+			else
+			{
+				printf("Illegal laser allegiance: %d\n", entList[i]->laser.allegiance);
+			}
 			break;
 			case TELEBLOCK:
 			entRect.w = 4;

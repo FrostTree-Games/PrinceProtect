@@ -119,6 +119,8 @@ void whimsyBlocks()
 	
 	void clearConnectedBlocks(int x, int y, BlockType b)
 	{
+		int i;
+
 		if (x < 0 || y < 0 || x > 18 || y > 11)
 		{
 			return;
@@ -173,6 +175,16 @@ void whimsyBlocks()
 			gameBlockGrid[x][y]->iBlock.offsetX = 8;
 			gameBlockGrid[x][y]->iBlock.offsetY = 8;
 			gameBlockGrid[x][y]->iBlock.health = 3;
+			break;
+			case YELLOW_BLOCK:
+			for (i = 0; i < 4; i++)
+			{
+				Entity* offShoot = pushEntity(LASER, x, y);
+				offShoot->laser.direction = i;
+				offShoot->laser.allegiance = 1;
+			}
+			
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
 			break;
 			default:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
@@ -270,11 +282,6 @@ int testLoop()
 			{
 				printf("what? %d\n", entList[i]->type);
 			}
-			
-			if (getKey(P1_SELECT))
-			{
-				pushNewMessage("Test Push Message");
-			}
 		}
 
 		testDraw(buffer);
@@ -320,7 +327,13 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 8 + i, 11);
 	}
 	
-	pushEntity(ENEMY_BOXERGREG, 2, 8);
+	for (i = 0; i < 4; i++)
+	{
+		Entity* yBlock = pushEntity(GAMEBLOCK, 2 + 2*i, 8);
+		yBlock->gBlock.bType = YELLOW_BLOCK;
+	}
+	
+	//pushEntity(ENEMY_BOXERGREG, 2, 8);
 
 	clearResetGame();
 

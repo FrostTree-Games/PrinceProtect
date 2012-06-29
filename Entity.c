@@ -81,6 +81,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->laser.direction = 0;
 		newEntity->laser.offsetX = 8;
 		newEntity->laser.offsetY = 8;
+		newEntity->laser.allegiance = 0;
 		break;
 		case TELEBLOCK:
 		newEntity->tBlock.x = newX;
@@ -1898,31 +1899,36 @@ void update_laser(Laser* block, Uint32 currTime)
 
 	for (i = 0; i < currResultSize; i++)
 	{
-		if (currList[i]->type == PLAYER1)
+		if (((currList[i]->type == PLAYER1) || (currList[i]->type == PLAYER2)) && block->allegiance == 0)
 		{
 			modPlayerHealth(1, -1);
 
 			block->type = DELETE_ME_PLEASE;
 			return;
 		}
-		
-		if (currList[i]->type == PLAYER2)
-		{
-			modPlayerHealth(2, -1);
 
-			block->type = DELETE_ME_PLEASE;
-			return;
-		}
-		
-		if (currList[i]->type == PERMABLOCK || currList[i]->type == GAMEBLOCK )
+		if (currList[i]->type == EXPLOSION && block->allegiance == 0)
 		{
 			block->type = DELETE_ME_PLEASE;
 			return;
 		}
 		
-		if (currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER)
+		if (currList[i]->type == LASER && (currList[i]->laser.direction % 2 == block->direction % 2) && currList[i]->laser.allegiance != block->allegiance)
 		{
-			currList[i]->enemy.health -= 1;
+			currList[i]->type = DELETE_ME_PLEASE;
+			block->type = DELETE_ME_PLEASE;
+			return;
+		}
+
+		if (currList[i]->type == PERMABLOCK || currList[i]->type == GAMEBLOCK || currList[i]->type == ICEBLOCK || currList[i]->type == ICECREAM)
+		{
+			block->type = DELETE_ME_PLEASE;
+			return;
+		}
+		
+		if ((block->allegiance == 1) && (currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_SHOOTER))
+		{
+			currList[i]->enemy.health -= 3;
 
 			block->type = DELETE_ME_PLEASE;
 			return;
@@ -1951,55 +1957,23 @@ void update_laser(Laser* block, Uint32 currTime)
 
 		if (block->offsetX < 0)
 		{
-			if (westResultSize == 0)
-			{
-				block->offsetX = 15;
-				block->x -= 1;
-			}
-			else
-			{
-				block->offsetX = 8;
-				block->type = DELETE_ME_PLEASE;
-			}
+			block->offsetX = 15;
+			block->x -= 1;
 		}
 		else if (block->offsetX > 16)
 		{
-			if (eastResultSize == 0)
-			{
-				block->offsetX = 0;
-				block->x += 1;
-			}
-			else
-			{
-				block->offsetX = 8;
-				block->type = DELETE_ME_PLEASE;
-			}
+			block->offsetX = 0;
+			block->x += 1;
 		}
 		if (block->offsetY < 0)
 		{
-			if (northResultSize == 0)
-			{
-				block->offsetY = 15;
-				block->y -= 1;
-			}
-			else
-			{
-				block->offsetY = 8;
-				block->type = DELETE_ME_PLEASE;
-			}
+			block->offsetY = 15;
+			block->y -= 1;
 		}
 		else if (block->offsetY > 16)
 		{
-			if (southResultSize == 0)
-			{
-				block->offsetY = 0;
-				block->y += 1;
-			}
-			else
-			{
-				block->offsetY = 8;
-				block->type = DELETE_ME_PLEASE;
-			}
+			block->offsetY = 0;
+			block->y += 1;
 		}
 		
 		block->lastMovementUpdate = currTime;
