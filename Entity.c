@@ -1751,44 +1751,56 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					case 0:
 					for (i = 0; i < northResultSize; i++)
 					{
-						if (northList[i]->type == PLAYER1)
+						if (northList[i]->type == PLAYER1 || northList[i]->type == PLAYER2)
 						{
-							modPlayerHealth(1, -1);
-							northList[i]->player.knockBackDirection = enemy->AISlot2;
-							printf("Pow north!");
+							if (northList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(1, -1);
+								northList[i]->player.knockBackDirection = enemy->AISlot2;
+								printf("Pow north!");
+							}
 						}
 					}
 					break;
 					case 1:
 					for (i = 0; i < eastResultSize; i++)
 					{
-						if (eastList[i]->type == PLAYER1)
+						if (eastList[i]->type == PLAYER1 || eastList[i]->type == PLAYER2)
 						{
-							modPlayerHealth(1, -1);
-							eastList[i]->player.knockBackDirection = enemy->AISlot2;
-							printf("Pow east!");
+							if (eastList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(1, -1);
+								eastList[i]->player.knockBackDirection = enemy->AISlot2;
+								printf("Pow east!");
+							}
 						}
 					}
 					break;
 					case 2:
 					for (i = 0; i < southResultSize; i++)
 					{
-						if (southList[i]->type == PLAYER1)
+						if (southList[i]->type == PLAYER1 || southList[i]->type == PLAYER2)
 						{
-							modPlayerHealth(1, -1);
-							southList[i]->player.knockBackDirection = enemy->AISlot2;
-							printf("Pow south!");
+							if (southList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(1, -1);
+								southList[i]->player.knockBackDirection = enemy->AISlot2;
+								printf("Pow south!");
+							}
 						}
 					}
 					break;
 					case 3:
 					for (i = 0; i < westResultSize; i++)
 					{
-						if (westList[i]->type == PLAYER1)
+						if (westList[i]->type == PLAYER1 || westList[i]->type == PLAYER2)
 						{
-							modPlayerHealth(1, -1);
-							westList[i]->player.knockBackDirection = enemy->AISlot2;
-							printf("Pow west!");
+							if (westList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(1, -1);
+								westList[i]->player.knockBackDirection = enemy->AISlot2;
+								printf("Pow west!");
+							}
 						}
 					}
 					break;
