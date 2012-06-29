@@ -48,6 +48,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.holding = NULL;
                 newEntity->player.swordTimer = 0;
                 newEntity->player.isThrusting = 0;
+                newEntity->player.knockBackDirection = 255;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -501,6 +502,44 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->holding->startTime = getTimeSingleton();
 	}
 	
+	// if the player gets completely knocked back, then he/she cannot do logic for that iteration
+	if (pl->knockBackDirection != 255)
+	{
+		switch(pl->knockBackDirection)
+		{
+			case 0:
+			if (northResultSize == 0)
+			{
+				pl->y -= 1;
+			}
+			break;
+			case 1:
+			if (eastResultSize == 0)
+			{
+				pl->x += 1;
+			}
+			break;
+			case 2:
+			if (southResultSize == 0)
+			{
+				pl->y += 1;
+			}
+			break;
+			case 3:
+			if (westResultSize == 0)
+			{
+				pl->x -= 1;
+			}
+			break;
+			default:
+			printf("Player knock back all odd! value:%d\n", pl->knockBackDirection);
+			break;
+		}
+
+		pl->knockBackDirection = 255;
+		return;
+	}
+	
 	if (getKey(P1_B) && !(pl->bKeyDown))
 	{
 		pl->bKeyDown = 1;
@@ -511,7 +550,7 @@ void update_player(Player* pl, Uint32 currTime)
 	{
 		pl->bKeyDown = 0;
 	}
-	
+
 	if (pl->isThrusting)
 	{
 		if (currTime - pl->swordTimer > 150)
@@ -1715,6 +1754,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 						if (northList[i]->type == PLAYER1)
 						{
 							modPlayerHealth(1, -1);
+							northList[i]->player.knockBackDirection = enemy->AISlot2;
 							printf("Pow north!");
 						}
 					}
@@ -1725,6 +1765,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 						if (eastList[i]->type == PLAYER1)
 						{
 							modPlayerHealth(1, -1);
+							eastList[i]->player.knockBackDirection = enemy->AISlot2;
 							printf("Pow east!");
 						}
 					}
@@ -1735,6 +1776,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 						if (southList[i]->type == PLAYER1)
 						{
 							modPlayerHealth(1, -1);
+							southList[i]->player.knockBackDirection = enemy->AISlot2;
 							printf("Pow south!");
 						}
 					}
@@ -1745,6 +1787,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 						if (westList[i]->type == PLAYER1)
 						{
 							modPlayerHealth(1, -1);
+							westList[i]->player.knockBackDirection = enemy->AISlot2;
 							printf("Pow west!");
 						}
 					}

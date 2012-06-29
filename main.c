@@ -327,13 +327,14 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 8 + i, 11);
 	}
 	
+	/*
 	for (i = 0; i < 4; i++)
 	{
 		Entity* yBlock = pushEntity(GAMEBLOCK, 2 + 2*i, 8);
 		yBlock->gBlock.bType = YELLOW_BLOCK;
-	}
+	}     */
 	
-	//pushEntity(ENEMY_BOXERGREG, 2, 8);
+	pushEntity(ENEMY_BOXERGREG, 2, 8);
 
 	clearResetGame();
 
