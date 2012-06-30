@@ -583,6 +583,13 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
+					
+					if (northList[i]->type == GAMEBLOCK)
+					{
+						northList[i]->type = DELETE_ME_PLEASE;
+						
+						pl->isThrusting = 0;
+					}
 				}
 			}
 			break;
@@ -606,6 +613,13 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->iBlock.moving = 1;
 						eastList[i]->iBlock.direction = pl->direction;
 						eastList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+					
+					if (eastList[i]->type == GAMEBLOCK)
+					{
+						eastList[i]->type = DELETE_ME_PLEASE;
 						
 						pl->isThrusting = 0;
 					}
@@ -635,6 +649,13 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
+					
+					if (southList[i]->type == GAMEBLOCK)
+					{
+						southList[i]->type = DELETE_ME_PLEASE;
+						
+						pl->isThrusting = 0;
+					}
 				}
 			}
 			break;
@@ -658,6 +679,13 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->iBlock.moving = 1;
 						westList[i]->iBlock.direction = pl->direction;
 						westList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+					
+					if (westList[i]->type == GAMEBLOCK)
+					{
+						westList[i]->type = DELETE_ME_PLEASE;
 						
 						pl->isThrusting = 0;
 					}
@@ -936,7 +964,7 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			return;
 		}
 	}
-	else if (enemy->x > 17)
+	else if (enemy->x > BOARD_WIDTH)
 	{
 		if (enemy->cream != NULL)
 		{
@@ -2100,7 +2128,58 @@ void update_teleblock(TeleBlock* tb)
 
 void update_gameBlock(GameBlock* gb, Uint32 currTime)
 {
-	if (currTime - gb->startTime > 30 * 1000)
+	int i;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+	
+	int sameColouredNeighbour = 0;
+
+	filterOccupyType(gb->x, gb->y - 1, northList, 5, &northResultSize, GAMEBLOCK);
+	filterOccupyType(gb->x, gb->y + 1, southList, 5, &southResultSize, GAMEBLOCK);
+	filterOccupyType(gb->x + 1, gb->y, eastList, 5, &eastResultSize, GAMEBLOCK);
+	filterOccupyType(gb->x - 1, gb->y, westList, 5, &westResultSize, GAMEBLOCK);
+	
+	for (i = 0; i < northResultSize; i++)
+	{
+		if (northList[i]->gBlock.bType == gb->bType)
+		{
+			sameColouredNeighbour++;
+		}
+	}
+	for (i = 0; i < eastResultSize; i++)
+	{
+		if (eastList[i]->gBlock.bType == gb->bType)
+		{
+			sameColouredNeighbour++;
+		}
+	}
+	for (i = 0; i < southResultSize; i++)
+	{
+		if (southList[i]->gBlock.bType == gb->bType)
+		{
+			sameColouredNeighbour++;
+		}
+	}
+	for (i = 0; i < westResultSize; i++)
+	{
+		if (westList[i]->gBlock.bType == gb->bType)
+		{
+			sameColouredNeighbour++;
+		}
+	}
+
+	if (sameColouredNeighbour > 0)
+	{
+		gb->startTime = currTime;
+	}
+	else if (currTime - gb->startTime > 30 * 1000)
 	{
 		gb->type = DELETE_ME_PLEASE;
 		return;

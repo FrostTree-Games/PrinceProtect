@@ -11,6 +11,9 @@
 #define MAX_ONSCREEN_ENEMIES 300
 #define MAX_ONSCREEN_ICECREAM 30
 
+#define BETWEEN_WAVE_DELAY 3000
+#define INITAL_SECONDS_BETWEEN_ROBOTS 1500
+
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
 
 int gameState = 0;
@@ -25,6 +28,8 @@ int numberOfIceCreams = 0;
 int gameScore = 0;
 int waveNumber = 0;
 int betweenWaves = 0; //0 = not between waves; 1 = between waves
+Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
+Uint32 sinceLastEnemyOutput = 0;
 
 Uint32 lastUpdateTime = 0;
 
@@ -79,15 +84,12 @@ void updateGameLogic()
 
 		if (enemyCount < 9)
 		{
-			if (val / 10 == 2)
+			if (getTimeSingleton() - sinceLastEnemyOutput > enemyPushInterval)
 			{
 				Enemy* en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
 				en->direction = 1;
-			}
-			else if (val / 10 == 1)
-			{
-				Enemy* en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
-				en->direction = 1;
+				
+				sinceLastEnemyOutput = getTimeSingleton();
 			}
 		}
 		
@@ -98,7 +100,7 @@ void updateGameLogic()
 				int i;
 				int xSpot = -1;
 				int ySpot = -1;
-				
+
 				for (i = 0; i < 5; i++)
 				{
 					xSpot = (xrand() % (BOARD_WIDTH - 4)) + 2;
@@ -136,6 +138,8 @@ void updateGameLogic()
 				}
 			}
 		}
+		
+		lastUpdateTime = getTimeSingleton();
 	}
 	
 	if (iceCreamCount < numberOfIceCreams && iceCreamCount > 0)
