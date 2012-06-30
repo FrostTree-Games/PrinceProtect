@@ -315,7 +315,7 @@ int main(int argc, char* argv[])
 	for (i = 0; i < BOARD_HEIGHT + 2; i++)
 	{
 		pushEntity(PERMABLOCK, -2, 5 + i);
-		pushEntity(PERMABLOCK, 20, 5 + i);
+		pushEntity(PERMABLOCK, BOARD_WIDTH + 1, 5 + i);
 	}
 
 	for (i = 0; i < 2; i++)

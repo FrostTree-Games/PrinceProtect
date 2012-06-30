@@ -583,13 +583,13 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
-					
-					if (northList[i]->type == GAMEBLOCK)
+
+					/*if (northList[i]->type == GAMEBLOCK)
 					{
 						northList[i]->type = DELETE_ME_PLEASE;
 						
 						pl->isThrusting = 0;
-					}
+					} */
 				}
 			}
 			break;
@@ -617,12 +617,12 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->isThrusting = 0;
 					}
 					
-					if (eastList[i]->type == GAMEBLOCK)
+					/*if (eastList[i]->type == GAMEBLOCK)
 					{
 						eastList[i]->type = DELETE_ME_PLEASE;
 						
 						pl->isThrusting = 0;
-					}
+					} */
 				}
 			}
 			break;
@@ -650,12 +650,12 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->isThrusting = 0;
 					}
 					
-					if (southList[i]->type == GAMEBLOCK)
+					/*if (southList[i]->type == GAMEBLOCK)
 					{
 						southList[i]->type = DELETE_ME_PLEASE;
 						
 						pl->isThrusting = 0;
-					}
+					}  */
 				}
 			}
 			break;
@@ -683,12 +683,12 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->isThrusting = 0;
 					}
 					
-					if (westList[i]->type == GAMEBLOCK)
+					/*if (westList[i]->type == GAMEBLOCK)
 					{
 						westList[i]->type = DELETE_ME_PLEASE;
 						
 						pl->isThrusting = 0;
-					}
+					}  */
 				}
 			}
 			break;
@@ -964,7 +964,7 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			return;
 		}
 	}
-	else if (enemy->x > BOARD_WIDTH)
+	else if (enemy->x > BOARD_WIDTH - 1)
 	{
 		if (enemy->cream != NULL)
 		{
