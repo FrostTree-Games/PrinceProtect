@@ -106,6 +106,12 @@ void updateWave()
 				Enemy* en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
 				en->direction = 1;
 				
+				if (xrand() % 2 == 0)
+				{
+					en->x += BOARD_WIDTH + 1;
+					en->direction = 3;
+				}
+
 				sinceLastEnemyOutput = getTimeSingleton();
 				enemiesLeftToPush--;
 			}
