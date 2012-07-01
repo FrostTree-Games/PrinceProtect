@@ -320,11 +320,11 @@ int main(int argc, char* argv[])
 
 	for (i = 0; i < 2; i++)
 	{
-		pushEntity(ICECREAM, 10 + i, 6);
-		pushEntity(ICECREAM, 10 + i, 7);
+		pushEntity(ICECREAM, 9 + i, 7);
+		pushEntity(ICECREAM, 9 + i, 8);
 
-		pushEntity(ICECREAM, 10 + i, 10);
-		pushEntity(ICECREAM, 10 + i, 11);
+		pushEntity(ICECREAM, 9 + i, 11);
+		pushEntity(ICECREAM, 9 + i, 12);
 	}
 
 	clearResetGame();
