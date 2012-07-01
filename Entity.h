@@ -86,6 +86,7 @@ typedef struct
 	int offsetY;
 	Uint32 lastMovementUpdate;
 	int health; //from 0 to 3; 3 is a perfect iceberg; 0 will mark the iceberg for deletion
+	Uint32 startTime; //icebergs slowly melt and lose health
 } IceBlock;
 
 // a laser projectile

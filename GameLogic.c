@@ -12,7 +12,7 @@
 #define MAX_ONSCREEN_ICECREAM 30
 
 #define BETWEEN_WAVE_DELAY 3000
-#define INITAL_SECONDS_BETWEEN_ROBOTS 3000
+#define INITAL_SECONDS_BETWEEN_ROBOTS 4000
 #define REST_PERIOD_LENGTH 5000
 
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
@@ -56,7 +56,7 @@ void updateRestPeriod()
 	{
 		waveNumber++;
 		restPeriod = 0;
-		enemiesLeftToPush = 20;
+		enemiesLeftToPush = 10;
 		char msg[49];
 		sprintf(msg, "WAVE %.2d", waveNumber);
 		pushNewMessage(msg);
@@ -103,7 +103,44 @@ void updateWave()
 		{
 			if (getTimeSingleton() - sinceLastEnemyOutput > enemyPushInterval)
 			{
-				Enemy* en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+				Enemy* en;
+				int enemyMod = 0;
+				
+				if (waveNumber > 2)
+				{
+					unsigned int highDifVal = val % 100;
+					if (highDifVal < 10)
+					{
+						enemyMod = 2;
+					}
+					else if (highDifVal < 40)
+					{
+						enemyMod = 1;
+					}
+				}
+				else if (waveNumber > 1)
+				{
+					unsigned int medDifVal = val % 100;
+					
+					if (medDifVal < 30)
+					{
+						enemyMod = 1;
+					}
+				}
+
+				switch (enemyMod)
+				{
+					case 2:
+					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
+					break;
+					case 1:
+					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
+					break;
+					case 0:
+					default:
+					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+					break;
+				}
 				en->direction = 1;
 				
 				if (xrand() % 2 == 0)

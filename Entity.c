@@ -70,6 +70,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->iBlock.offsetX = 8;
 		newEntity->iBlock.offsetY = 8;
 		newEntity->iBlock.health = 3;
+		newEntity->iBlock.startTime = getTimeSingleton();
 		break;
 		case EXPLOSION:
 		newEntity->exp.x = newX;
