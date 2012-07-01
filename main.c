@@ -259,11 +259,11 @@ int testLoop()
 		//update call
 		pollKeyboard();
 		
+		updatePushMessages();
 		updateGameLogic();
 
 		Entity** entList = getEntityList();
 		setTimeSingleton(SDL_GetTicks());
-		updatePushMessages();
 
 		for (i = 0; i < getEntityListSize(); i++)
 		{
@@ -328,6 +328,8 @@ int main(int argc, char* argv[])
 	}
 
 	clearResetGame();
+	
+	beginGame();
 
 	testLoop();
 	

@@ -19,6 +19,12 @@ unsigned int xrand();
  */
 int clearResetGame();
 
+/* beginGame()
+ * Purpose: Starts a clean, uninitalized game
+ * Returns: 0 on success, 1 on some sort of error
+ */
+int beginGame();
+
 /* updateGameLogic()
  * Purpose: Performs any necessary game logic as needed
  * Returns: N/A

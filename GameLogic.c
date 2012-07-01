@@ -13,9 +13,13 @@
 
 #define BETWEEN_WAVE_DELAY 3000
 #define INITAL_SECONDS_BETWEEN_ROBOTS 3000
+#define REST_PERIOD_LENGTH 5000
 
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
 
+//game states:
+// 0 -> no game running
+// 1 -> regular game play
 int gameState = 0;
 
 int player1Health = 0;
@@ -27,9 +31,11 @@ int numberOfIceCreams = 0;
 
 int gameScore = 0;
 int waveNumber = 0;
-int betweenWaves = 0; //0 = not between waves; 1 = between waves
+int restPeriod = 0; //0 = not between waves; 1 = between waves
+Uint32 restPeriodStart = 0;
 Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 Uint32 sinceLastEnemyOutput = 0;
+int enemiesLeftToPush = 0;
 
 Uint32 lastUpdateTime = 0;
 
@@ -38,7 +44,26 @@ unsigned int xrand(void)
 	return rand () * (RAND_MAX + 1) + rand ();
 }
 
-void updateGameLogic()
+void updateRestPeriod()
+{
+	if (restPeriodStart == 0)
+	{
+		restPeriodStart = getTimeSingleton();
+		return;
+	}
+	
+	if (getTimeSingleton() - restPeriodStart > REST_PERIOD_LENGTH)
+	{
+		waveNumber++;
+		restPeriod = 0;
+		enemiesLeftToPush = 20;
+		char msg[49];
+		sprintf(msg, "WAVE %.2d", waveNumber);
+		pushNewMessage(msg);
+	}
+}
+
+void updateWave()
 {
 	int i;
 
@@ -68,21 +93,13 @@ void updateGameLogic()
 			onScreenGameBlocks[gameBlockCount] = (GameBlock*)(entList[i]);
 			gameBlockCount++;
 		}
-		
-		//
 	}
 
-	if (lastUpdateTime == 0)
-	{
-		lastUpdateTime = getTimeSingleton();
-		return;
-	}
-	
 	if (lastUpdateTime - getTimeSingleton() > 1000)
 	{
 		unsigned int val = xrand() % 10000;
 
-		if (enemyCount < 9)
+		if (enemyCount < 5 && enemiesLeftToPush > 0)
 		{
 			if (getTimeSingleton() - sinceLastEnemyOutput > enemyPushInterval)
 			{
@@ -90,9 +107,10 @@ void updateGameLogic()
 				en->direction = 1;
 				
 				sinceLastEnemyOutput = getTimeSingleton();
+				enemiesLeftToPush--;
 			}
 		}
-		
+
 		if (gameBlockCount < 20)
 		{
 			if(val / 20 < 7)
@@ -142,11 +160,40 @@ void updateGameLogic()
 		lastUpdateTime = getTimeSingleton();
 	}
 	
+	if (enemiesLeftToPush == 0 && enemyCount == 0)
+	{
+		restPeriod = 1;
+		restPeriodStart = getTimeSingleton();
+	}
+
 	if (iceCreamCount < numberOfIceCreams && iceCreamCount > 0)
 	{
 		pushNewMessage("ICE CREAM LOST!");
 	}
 	numberOfIceCreams = iceCreamCount;
+}
+
+void updateGameLogic()
+{
+	if (gameState == 0)
+	{
+		return;
+	}
+	
+	if (lastUpdateTime == 0)
+	{
+		lastUpdateTime = getTimeSingleton();
+		return;
+	}
+
+	if (restPeriod == 0)
+	{
+		updateWave();
+	}
+	else if (restPeriod == 1)
+	{
+		updateRestPeriod();
+	}
 }
 
 int clearResetGame()
@@ -158,6 +205,22 @@ int clearResetGame()
 	
 	gameScore = 0;
 	
+	waveNumber = 0;
+	
+	return 0;
+}
+
+int beginGame()
+{
+	if (gameState != 0)
+	{
+		return 1;
+	}
+
+	gameState = 1;
+	
+	restPeriod = 1;
+
 	return 0;
 }
 
