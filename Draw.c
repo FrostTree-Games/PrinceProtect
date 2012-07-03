@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#include <SDL/SDL_image.h>
 
 #include "Draw.h"
 #include "Entity.h"
@@ -12,11 +13,19 @@
 int pushNotificationFontSize = 20;
 TTF_Font* pushNotificationFont = NULL;
 
-int setupFonts()
+SDL_Surface* tileSheet;
+
+int setupAssets()
 {
 	if (TTF_WasInit() != 1)
 	{
 		fprintf(stderr, "Check that SDL_ttf was initalized\n");
+		return 1;
+	}
+	
+	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
+	{
+		fprintf(stderr, "Check that SDL_image was initalized\n");
 		return 1;
 	}
 
@@ -24,13 +33,20 @@ int setupFonts()
 	{
 		return 1;
 	}
+	
+	if ((tileSheet = IMG_Load("gfx/sheet.png")) == NULL)
+	{
+		return 1;
+	}
 
 	return 0;
 }
 
-void clearFonts()
+void clearAssets()
 {
 	TTF_CloseFont(pushNotificationFont);
+	
+	SDL_FreeSurface(tileSheet);
 }
 
 void drawLatestPushDown(SDL_Surface* buffer)
@@ -69,7 +85,7 @@ void drawLatestPushDown(SDL_Surface* buffer)
 
 void drawHealthScores(SDL_Surface* buffer)
 {
-	SDL_Color cl = {25, 0, 0, 0};
+	SDL_Color cl = {255, 255, 255, 0};
 
 	char p1HealthText[50];
 	sprintf(p1HealthText, "P1 HP: %.2d/%.2d", getPlayerHealth(1), getPlayerMaxHealth(1));
@@ -91,9 +107,10 @@ void drawHealthScores(SDL_Surface* buffer)
 
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 {
+	SDL_Rect tileRect = {0, 0, 16, 16};
 	SDL_Rect entRect = {gb->x * 16, gb->y * 16 - (int)(((float)gb->height/100) * (gb->y * 16)), 16, 16};
 	
-	// this creates flickering for the last second of the Gameblock's life
+	// this creates flickering for the last few second of the Gameblock's life
 	if (getTimeSingleton() - gb->startTime > 26 * 1000)
 	{
 		if ( ((getTimeSingleton() - gb->startTime - (9 * 1000)) / 100) % 2 == 0)
@@ -111,16 +128,24 @@ void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 	switch (gb->bType)
 	{
 		case RED_BLOCK:
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
+		tileRect.x = 128;
+		tileRect.y = 0;
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 		break;
 		case BLUE_BLOCK:
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 255));
+		tileRect.x = 144;
+		tileRect.y = 0;
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 		break;
 		case GREEN_BLOCK:
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 255, 10));
+		tileRect.x = 144;
+		tileRect.y = 16;
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 		break;
 		case YELLOW_BLOCK:
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
+		tileRect.x = 128;
+		tileRect.y = 16;
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 		break;
 		default:
 		printf("No block encountered?\n");
@@ -128,32 +153,88 @@ void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 	}
 }
 
+void drawExplosion(SDL_Surface* buffer, Explosion* exp)
+{
+	SDL_Rect tileRect = {160, 32, 16, 16};
+	SDL_Rect entRect = {exp->x * 16, exp->y * 16, 16, 16};
+	
+	Uint32 delta = getTimeSingleton() - exp->startTime;
+	
+	tileRect.x += (Sint16)( (Uint32)((delta/750.0) * 6) * 16 );
+
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+}
+
 void testDraw(SDL_Surface* buffer)
 {
-	int i;
+	int i,j;
 
 	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
 	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
-	
-	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 100, 100));
 
-	for (i = 0; i < SCREEN_WIDTH / 16; i++)
-	{
-		SDL_FillRect(buffer, &r1, SDL_MapRGB(buffer->format, 255, 255, 255));
-		r1.x += 16;
-	}
-	
-	for (i = 0; i < SCREEN_HEIGHT / 16; i++)
-	{
-		SDL_FillRect(buffer, &r2, SDL_MapRGB(buffer->format, 255, 255, 255));
-		r2.y += 16;
-	}
-	
 	Entity** entList = getEntityList();
 
 	//used for default drawing
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect altRect = {0, 0, 4, 4};
+	SDL_Rect tileRect = {0, 0, 16, 16};
+	
+	tileRect.x = 160;
+	tileRect.y = 0;
+	for (i = 0; i < SCREEN_WIDTH/16; i++)
+	{
+		for (j = 0; j < SCREEN_HEIGHT/16; j++)
+		{
+			if (j > BOARD_TOP_WALL && j < BOARD_BOTTOM_WALL)
+			{
+				tileRect.x = 160;
+				tileRect.y = 0;
+			}
+			else
+			{
+				tileRect.x = 160;
+				tileRect.y = 16;
+			}
+
+			entRect.x = i*16;
+			entRect.y = j*16;
+			
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		}
+	}
+	
+	entRect.x = 0;
+	entRect.y = (BOARD_TOP_WALL + 1) * 16;
+	tileRect.x = 176;
+	tileRect.y = 0;
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	entRect.x = 0;
+	entRect.y = (BOARD_BOTTOM_WALL - 1) * 16;
+	tileRect.x = 176;
+	tileRect.y = 16;
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	entRect.x = (BOARD_WIDTH*16) - 16;
+	entRect.y = (BOARD_TOP_WALL + 1) * 16;
+	tileRect.x = 192;
+	tileRect.y = 0;
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	entRect.x = (BOARD_WIDTH*16) - 16;
+	entRect.y = (BOARD_BOTTOM_WALL - 1) * 16;
+	tileRect.x = 192;
+	tileRect.y = 16;
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+
+	/*for (i = 0; i < SCREEN_WIDTH / 16; i++)
+	{
+		SDL_FillRect(buffer, &r1, SDL_MapRGB(buffer->format, 0, 0, 0));
+		r1.x += 16;
+	}
+
+	for (i = 0; i < SCREEN_HEIGHT / 16; i++)
+	{
+		SDL_FillRect(buffer, &r2, SDL_MapRGB(buffer->format, 0, 0, 0));
+		r2.y += 16;
+	}*/
 
 	for (i = 0; i < getEntityListSize(); i++)
 	{
@@ -227,9 +308,9 @@ void testDraw(SDL_Surface* buffer)
 			case PLAYER2:
 			break;
 			case PERMABLOCK:
-			entRect.x = entList[i]->permaBlock.x * 16;
+			/*entRect.x = entList[i]->permaBlock.x * 16;
 			entRect.y = entList[i]->permaBlock.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 100, 100));
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 100, 100));*/
 			break;
 			case GAMEBLOCK:
 			drawGameBlock(buffer, (GameBlock*)entList[i]);
@@ -240,11 +321,7 @@ void testDraw(SDL_Surface* buffer)
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 255));
 			break;
 			case EXPLOSION:
-			entRect.x = 2 + (entList[i]->exp.x * 16);
-			entRect.y = 2 + (entList[i]->exp.y * 16);
-			entRect.w = 12;
-			entRect.h = 12;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 40, 50));
+			drawExplosion(buffer, (Explosion*)entList[i]);
 			break;
 			case LASER:
 			entRect.x = 2 + (entList[i]->laser.x * 16) + entList[i]->laser.offsetX - 8;
@@ -273,7 +350,9 @@ void testDraw(SDL_Surface* buffer)
 			case ICECREAM:
 			entRect.x = entList[i]->iceCream.x * 16;
 			entRect.y = entList[i]->iceCream.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
+			tileRect.x = 208;
+			tileRect.y = 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;
 			case ENEMY_CRAWLER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;

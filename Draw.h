@@ -14,17 +14,17 @@
 
 #include <SDL/SDL.h>
 
-/* setupFonts()
- * Purpose: Loads the necessary TTF fonts; do this on startup
+/* setupAssets()
+ * Purpose: Loads the necessary TTF fonts and images; do this on startup
  * Returns: 0 on success, 1 on failure
  */
-int setupFonts();
+int setupAssets();
 
-/* clearFonts
- * Purpose: Frees the necessary fonts from memory; do this on exit
+/* clearAssets
+ * Purpose: Frees fonts and images from memory; do this when closing the game
  * Returns: n/a
  */
-void clearFonts();
+void clearAssets();
 
 /* testDrawFunction()
  * Purpose: Getting something out the door for now.

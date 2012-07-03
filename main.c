@@ -48,9 +48,9 @@ int init()
 		return 1;
 	}
 	
-	if (setupFonts() != 0)
+	if (setupAssets() != 0)
 	{
-		perror("Error setting up fonts");
+		perror("Error setting up file assets");
 		return -1;
 	}
 	
@@ -65,7 +65,7 @@ int deinit()
 {
 	SDL_FreeSurface(buffer);
 	
-	clearFonts();
+	clearAssets();
 
 	TTF_Quit();
 	SDL_Quit();
@@ -325,6 +325,12 @@ int main(int argc, char* argv[])
 
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
+	}
+	
+	for (i = 0; i < 4; i++)
+	{
+		Entity* en = pushEntity(GAMEBLOCK, 2 + i*2, BOARD_TOP_WALL + 3);
+		en->gBlock.bType = RED_BLOCK;
 	}
 
 	clearResetGame();
