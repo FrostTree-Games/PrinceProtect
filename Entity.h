@@ -118,6 +118,8 @@ typedef struct TeleBlock
 	Uint32 startTime;
 	int side; // 0 = west,  = east
 	struct TeleBlock* twin;
+	Uint32 lastClickTime;
+	int frame; //0 -> first frame; 1 -> second frame
 } TeleBlock;
 
 typedef struct

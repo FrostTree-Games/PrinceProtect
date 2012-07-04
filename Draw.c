@@ -159,8 +159,28 @@ void drawExplosion(SDL_Surface* buffer, Explosion* exp)
 	SDL_Rect entRect = {exp->x * 16, exp->y * 16, 16, 16};
 	
 	Uint32 delta = getTimeSingleton() - exp->startTime;
-	
+
 	tileRect.x += (Sint16)( (Uint32)((delta/750.0) * 6) * 16 );
+
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+}
+
+void drawIceblock(SDL_Surface* buffer, IceBlock* ib)
+{
+	SDL_Rect tileRect = {160, 48, 16, 16};
+	SDL_Rect entRect = {(ib->x * 16) + (ib->offsetX - 8), (ib->y * 16) + (ib->offsetY - 8), 16, 16};
+
+	tileRect.x += (Sint16)( (3 - ib->health) * 16 );
+
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+}
+
+void drawTeleBlock(SDL_Surface* buffer, TeleBlock* tb)
+{
+	SDL_Rect tileRect = {208, 48, 16, 16};
+	SDL_Rect entRect = {tb->x * 16, tb->y * 16, 16, 16};
+
+	tileRect.x += (Sint16)( tb->frame * 16 );
 
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
@@ -316,9 +336,7 @@ void testDraw(SDL_Surface* buffer)
 			drawGameBlock(buffer, (GameBlock*)entList[i]);
 			break;
 			case ICEBLOCK:
-			entRect.x = entList[i]->iBlock.x * 16 + entList[i]->iBlock.offsetX - 8;
-			entRect.y = entList[i]->iBlock.y * 16 + entList[i]->iBlock.offsetY - 8;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 255));
+			drawIceblock(buffer, (IceBlock*)entList[i]);
 			break;
 			case EXPLOSION:
 			drawExplosion(buffer, (Explosion*)entList[i]);
@@ -342,10 +360,7 @@ void testDraw(SDL_Surface* buffer)
 			}
 			break;
 			case TELEBLOCK:
-			entRect.w = 4;
-			entRect.x = 6 + entList[i]->tBlock.x * 16;
-			entRect.y = entList[i]->tBlock.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 255, 0));
+			drawTeleBlock(buffer, (TeleBlock*)entList[i]);
 			break;
 			case ICECREAM:
 			entRect.x = entList[i]->iceCream.x * 16;

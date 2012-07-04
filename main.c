@@ -330,7 +330,7 @@ int main(int argc, char* argv[])
 	for (i = 0; i < 4; i++)
 	{
 		Entity* en = pushEntity(GAMEBLOCK, 2 + i*2, BOARD_TOP_WALL + 3);
-		en->gBlock.bType = RED_BLOCK;
+		en->gBlock.bType = BLUE_BLOCK;
 	}
 
 	clearResetGame();

@@ -89,6 +89,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->tBlock.x = newX;
 		newEntity->tBlock.y = newY;
 		newEntity->tBlock.startTime = getTimeSingleton();
+		newEntity->tBlock.lastClickTime = getTimeSingleton();
+		newEntity->tBlock.frame = 0;
 		if (newX < 32/2)
 		{
 			newEntity->tBlock.side = 0;
@@ -1912,7 +1914,7 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 		{
 			if (westResultSize == 0)
 			{
-				block->offsetX = 15;
+				block->offsetX = 16;
 				block->x -= 1;
 			}
 			else
@@ -1921,7 +1923,7 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 				block->moving = 0;
 			}
 		}
-		else if (block->offsetX > 15)
+		else if (block->offsetX > 16)
 		{
 			if (eastResultSize == 0)
 			{
@@ -1938,7 +1940,7 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 		{
 			if (northResultSize == 0)
 			{
-				block->offsetY = 15;
+				block->offsetY = 16;
 				block->y -= 1;
 			}
 			else
@@ -1947,7 +1949,7 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 				block->moving = 0;
 			}
 		}
-		else if (block->offsetY > 15)
+		else if (block->offsetY > 16)
 		{
 			if (southResultSize == 0)
 			{
@@ -2106,6 +2108,20 @@ void update_teleblock(TeleBlock* tb)
 	Entity* checkList[5];
 	int checkResultSize = 0;
 	occupyingOnHere(tb->x, tb->y, checkList, 5, &checkResultSize);
+	
+	if (getTimeSingleton() - tb->lastClickTime > 100)
+	{
+		if (tb->frame == 0)
+		{
+			tb->frame = 1;
+		}
+		else if (tb->frame == 1)
+		{
+			tb->frame = 0;
+		}
+		
+		tb->lastClickTime = getTimeSingleton();	
+	}
 
 	if (checkResultSize > 0)
 	{
