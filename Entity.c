@@ -49,6 +49,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.swordTimer = 0;
                 newEntity->player.isThrusting = 0;
                 newEntity->player.knockBackDirection = 255;
+                newEntity->player.lastFrameUpdate = getTimeSingleton();
+                newEntity->player.frame = 0;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -498,6 +500,21 @@ void update_player(Player* pl, Uint32 currTime)
 	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
 	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	
+	//quick and hasty animation
+	if (currTime - pl->lastFrameUpdate > 250)
+	{
+		if (pl->frame == 0)
+		{
+			pl->frame = 1;
+		}
+		else
+		{
+			pl->frame = 0;
+		}
+		
+		pl->lastFrameUpdate = currTime;
+	}
 	
 	//this is a quick way of preventing block timeout
 	if (pl->holding != NULL)

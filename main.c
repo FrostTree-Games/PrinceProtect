@@ -36,7 +36,7 @@ int init()
 		return 1;
 	}
 
-	if ((screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE)) == NULL)
+	if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
 	{
 		perror("Error initalizing screen");
 		return 1;
@@ -286,7 +286,8 @@ int testLoop()
 
 		testDraw(buffer);
 		
-		SDL_BlitSurface(buffer, NULL, screen, NULL);
+		//SDL_BlitSurface(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);
 		SDL_Delay(20);
 	}
@@ -340,7 +341,7 @@ int main(int argc, char* argv[])
 	testLoop();
 	
 	freeEntityList();
-	
+
 	deinit();
 
 	return 0;

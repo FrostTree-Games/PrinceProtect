@@ -173,7 +173,7 @@ void updateWave()
 					if (checkResultSize == 0)
 					{
 						Entity* newBlock;
-						switch (xrand() % 4)
+						switch (xrand() % 1/*4*/)
 						{
 							case 0:
 							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);

@@ -147,6 +147,8 @@ typedef struct
 	GameBlock* holding;
 	Uint32 lastUpdate;
 	unsigned char knockBackDirection; //0->N, 1->E, 2->S, 3->W, 255->NOT KNOCKED BACK
+	Uint32 lastFrameUpdate;
+	int frame; //0 -> first frame ; 1 -> second frame
 } Player;
 
 typedef struct

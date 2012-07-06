@@ -10,7 +10,7 @@
 #include "Pushdown.h"
 #include "GameLogic.h"
 
-int pushNotificationFontSize = 20;
+int pushNotificationFontSize = 10;
 TTF_Font* pushNotificationFont = NULL;
 
 SDL_Surface* tileSheet;
@@ -185,12 +185,112 @@ void drawTeleBlock(SDL_Surface* buffer, TeleBlock* tb)
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
 
+void drawPlayer1(SDL_Surface* buffer, Player* pl)
+{
+	SDL_Rect entRect = {0, 0, 16, 16};
+	SDL_Rect tileRect = {0, 0, 16, 16};
+	SDL_Rect altRect = {0, 0, 8, 8};
+
+	entRect.x = pl->x * 16;
+	entRect.y = pl->y * 16;
+	
+	switch (pl->direction)
+	{
+		case 0:
+		tileRect.y += 16;
+		break;
+		case 1:
+		tileRect.y += 32;
+		break;
+		case 2:
+		tileRect.y += 0;
+		break;
+		case 3:
+		tileRect.y += 48;
+		break;
+		default:
+		break;
+	}
+
+	
+	if (pl->frame == 1)
+	{
+		tileRect.x += 16;
+	}
+	
+	if (pl->holding != NULL)
+	{
+		tileRect.x += 32;
+	}
+	
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+
+	//draw sword if necessary
+	if (pl->isThrusting == 1)
+	{
+		switch (pl->direction)
+		{
+			case 0:
+			altRect.x = (pl->x * 16) + 4;
+			altRect.y = (pl->y * 16) - 8;
+			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			break;
+			case 1:
+			altRect.x = (pl->x * 16) + 16;
+			altRect.y = (pl->y * 16) + 4;
+			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			break;
+			case 2:
+			altRect.x = (pl->x * 16) + 4;
+			altRect.y = (pl->y * 16) + 16;
+			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			break;
+			case 3:
+			altRect.x = (pl->x * 16) - 8;
+			altRect.y = (pl->y * 16) + 4;
+			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			break;
+			default:
+			break;
+		}
+	}
+	
+	entRect.x = (pl->x * 16);
+	entRect.y = (pl->y * 16) - 14;
+	
+	tileRect.x = 128;
+	tileRect.y = 0;
+	
+	if (pl->holding != NULL)
+	{
+		switch (pl->holding->bType)
+		{
+			case RED_BLOCK:
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			case BLUE_BLOCK:
+			tileRect.x += 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			case GREEN_BLOCK:
+			tileRect.x += 16;
+			tileRect.y += 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			case YELLOW_BLOCK:
+			tileRect.y += 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			default:
+			printf("No block encountered?\n");
+			break;
+		}
+	}
+}
+
 void testDraw(SDL_Surface* buffer)
 {
 	int i,j;
-
-	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
-	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
 
 	Entity** entList = getEntityList();
 
@@ -244,7 +344,11 @@ void testDraw(SDL_Surface* buffer)
 	tileRect.y = 16;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 
-	/*for (i = 0; i < SCREEN_WIDTH / 16; i++)
+	/*
+	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
+	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
+
+	for (i = 0; i < SCREEN_WIDTH / 16; i++)
 	{
 		SDL_FillRect(buffer, &r1, SDL_MapRGB(buffer->format, 0, 0, 0));
 		r1.x += 16;
@@ -264,66 +368,7 @@ void testDraw(SDL_Surface* buffer)
 		switch (entList[i]->type)
 		{
 			case PLAYER1:
-			entRect.x = entList[i]->player.x * 16;
-			entRect.y = entList[i]->player.y * 16;
-			altRect.w = 8;
-			altRect.h = 8;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 255));
-
-			//draw sword if necessary
-			if (entList[i]->player.isThrusting == 1)
-			{
-				switch (entList[i]->player.direction)
-				{
-					case 0:
-					altRect.x = (entList[i]->player.x * 16) + 4;
-                                        altRect.y = (entList[i]->player.y * 16) - 8;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
-					break;
-                                        case 1:
-                                        altRect.x = (entList[i]->player.x * 16) + 16;
-                                        altRect.y = (entList[i]->player.y * 16) + 4;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
-					break;
-					case 2:
-					altRect.x = (entList[i]->player.x * 16) + 4;
-                                        altRect.y = (entList[i]->player.y * 16) + 16;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
-					break;
-					case 3:
-					altRect.x = (entList[i]->player.x * 16) - 8;
-                                        altRect.y = (entList[i]->player.y * 16) + 4;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
-					break;
-					default:
-					break;
-				}
-			}
-			
-			entRect.x = (entList[i]->player.x * 16);
-			entRect.y = (entList[i]->player.y * 16) - 8;
-			
-			if (entList[i]->player.holding != NULL)
-			{
-				switch (entList[i]->player.holding->bType)
-				{
-					case RED_BLOCK:
-					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
-					break;
-					case BLUE_BLOCK:
-					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 10, 255));
-					break;
-					case GREEN_BLOCK:
-					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 10, 255, 10));
-					break;
-					case YELLOW_BLOCK:
-					SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
-					break;
-					default:
-					printf("No block encountered?\n");
-					break;
-				}
-			}
+			drawPlayer1(buffer, (Player*)entList[i]);
 			break;
 			case PLAYER2:
 			break;
