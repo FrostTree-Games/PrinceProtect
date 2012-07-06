@@ -191,6 +191,42 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect tileRect = {0, 0, 16, 16};
 	SDL_Rect altRect = {0, 0, 8, 8};
 
+	if (pl->holding != NULL)
+	{
+		SDL_Rect placementRect = {pl->x * 16, pl->y * 16, 0, 0};
+
+		switch (pl->direction)
+		{
+			case 0:
+			placementRect.y -= 16;
+			break;
+			case 1:
+			placementRect.x += 16;
+			break;
+			case 2:
+			placementRect.y += 16;
+			break;
+			case 3:
+			placementRect.x -= 16;
+			break;
+			default:
+			break;
+		}
+
+		placementRect.w = 16;
+		placementRect.h = 1;
+		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
+		placementRect.y += 16;
+		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
+		placementRect.y -= 16;
+
+		placementRect.w = 1;
+		placementRect.h = 16;
+		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
+		placementRect.x += 16;
+		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
+	}
+
 	entRect.x = (pl->x * 16) + pl->offsetX - 8;
 	entRect.y = (pl->y * 16) + pl->offsetY - 8;
 

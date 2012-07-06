@@ -671,7 +671,7 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->enemy.offsetX = 8;
 						westList[i]->enemy.offsetY = 8;
 						westList[i]->enemy.health -= 1;
-						
+
 						pl->isThrusting = 0;
 					}
 
@@ -805,6 +805,8 @@ void update_player(Player* pl, Uint32 currTime)
 				fprintf(stderr, "Player direction has become invalid\n");
 				break;
 			}
+			
+			return; //prevents player from walking onto their own placed block
 		}
 	}
 	else if (!getKey(P1_A) && pl->aKeyDown)
@@ -814,6 +816,17 @@ void update_player(Player* pl, Uint32 currTime)
 
 	if (getKey(P1_RIGHT))
 	{
+		if (pl->direction == 0 || pl->direction == 2)
+		{
+			if (pl->offsetY % 4 == 1)
+			{
+				pl->offsetY--;
+			}
+			else if (pl->offsetY % 4 == 3)
+			{
+				pl->offsetY++;
+			}
+		}
 		pl->offsetX += 2;
 		pl->direction = 1;
 
@@ -833,6 +846,17 @@ void update_player(Player* pl, Uint32 currTime)
 	
 	if (getKey(P1_DOWN))
 	{
+		if (pl->direction == 1 || pl->direction == 3)
+		{
+			if (pl->offsetX % 4 == 1)
+			{
+				pl->offsetX--;
+			}
+			else if (pl->offsetX % 4 == 3)
+			{
+				pl->offsetX++;
+			}
+		}
 		pl->offsetY += 2;
 		pl->direction = 2;
 		
@@ -852,6 +876,17 @@ void update_player(Player* pl, Uint32 currTime)
 	
 	if (getKey(P1_LEFT))
 	{
+		if (pl->direction == 0 || pl->direction == 2)
+		{
+			if (pl->offsetY % 4 == 1)
+			{
+				pl->offsetY--;
+			}
+			else if (pl->offsetY % 4 == 3)
+			{
+				pl->offsetY++;
+			}
+		}
 		pl->offsetX -= 2;
 		pl->direction = 3;
 		
@@ -872,6 +907,17 @@ void update_player(Player* pl, Uint32 currTime)
 	
 	if (getKey(P1_UP))
 	{
+		if (pl->direction == 1 || pl->direction == 3)
+		{
+			if (pl->offsetX % 4 == 1)
+			{
+				pl->offsetX--;
+			}
+			else if (pl->offsetX % 4 == 3)
+			{
+				pl->offsetX++;
+			}
+		}
 		pl->offsetY -= 2;
 		pl->direction = 0;
 		
