@@ -135,6 +135,8 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
+	int offsetX;
+	int offsetY;
 	unsigned char direction; //0->N, 1->E, 2->S, 3->W
 	unsigned char upKeyDown; //for checking if keys have been typed, for staggered movement
 	unsigned char downKeyDown;

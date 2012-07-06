@@ -191,9 +191,9 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect tileRect = {0, 0, 16, 16};
 	SDL_Rect altRect = {0, 0, 8, 8};
 
-	entRect.x = pl->x * 16;
-	entRect.y = pl->y * 16;
-	
+	entRect.x = (pl->x * 16) + pl->offsetX - 8;
+	entRect.y = (pl->y * 16) + pl->offsetY - 8;
+
 	switch (pl->direction)
 	{
 		case 0:
@@ -231,23 +231,23 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 		switch (pl->direction)
 		{
 			case 0:
-			altRect.x = (pl->x * 16) + 4;
-			altRect.y = (pl->y * 16) - 8;
+			altRect.x = (pl->x * 16) + 4 + pl->offsetX - 8;
+			altRect.y = (pl->y * 16) - 8 + pl->offsetY - 8;
 			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 			break;
 			case 1:
-			altRect.x = (pl->x * 16) + 16;
-			altRect.y = (pl->y * 16) + 4;
+			altRect.x = (pl->x * 16) + 16 + pl->offsetX - 8;
+			altRect.y = (pl->y * 16) + 4 + pl->offsetY - 8;
 			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 			break;
 			case 2:
-			altRect.x = (pl->x * 16) + 4;
-			altRect.y = (pl->y * 16) + 16;
+			altRect.x = (pl->x * 16) + 4 + pl->offsetX - 8;
+			altRect.y = (pl->y * 16) + 16 + pl->offsetY - 8;
 			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 			break;
 			case 3:
-			altRect.x = (pl->x * 16) - 8;
-			altRect.y = (pl->y * 16) + 4;
+			altRect.x = (pl->x * 16) - 8 + pl->offsetX - 8;
+			altRect.y = (pl->y * 16) + 4 + pl->offsetY - 8;
 			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
 			break;
 			default:
@@ -255,8 +255,8 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 		}
 	}
 	
-	entRect.x = (pl->x * 16);
-	entRect.y = (pl->y * 16) - 14;
+	entRect.x = (pl->x * 16) + pl->offsetX - 8;
+	entRect.y = (pl->y * 16) - 14 + pl->offsetY - 8;
 	
 	tileRect.x = 128;
 	tileRect.y = 0;

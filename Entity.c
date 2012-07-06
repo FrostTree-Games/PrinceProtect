@@ -39,6 +39,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		case PLAYER1:
 		newEntity->player.x = newX;
 		newEntity->player.y = newY;
+		newEntity->player.offsetX = 8;
+		newEntity->player.offsetY = 8;
                 newEntity->player.upKeyDown = 0;
                 newEntity->player.downKeyDown = 0;
                 newEntity->player.leftKeyDown = 0;
@@ -603,13 +605,6 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
-
-					/*if (northList[i]->type == GAMEBLOCK)
-					{
-						northList[i]->type = DELETE_ME_PLEASE;
-						
-						pl->isThrusting = 0;
-					} */
 				}
 			}
 			break;
@@ -633,16 +628,9 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->iBlock.moving = 1;
 						eastList[i]->iBlock.direction = pl->direction;
 						eastList[i]->iBlock.health -= 1;
-						
+
 						pl->isThrusting = 0;
 					}
-					
-					/*if (eastList[i]->type == GAMEBLOCK)
-					{
-						eastList[i]->type = DELETE_ME_PLEASE;
-						
-						pl->isThrusting = 0;
-					} */
 				}
 			}
 			break;
@@ -669,13 +657,6 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
-					
-					/*if (southList[i]->type == GAMEBLOCK)
-					{
-						southList[i]->type = DELETE_ME_PLEASE;
-						
-						pl->isThrusting = 0;
-					}  */
 				}
 			}
 			break;
@@ -702,13 +683,6 @@ void update_player(Player* pl, Uint32 currTime)
 						
 						pl->isThrusting = 0;
 					}
-					
-					/*if (westList[i]->type == GAMEBLOCK)
-					{
-						westList[i]->type = DELETE_ME_PLEASE;
-						
-						pl->isThrusting = 0;
-					}  */
 				}
 			}
 			break;
@@ -838,100 +812,81 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->aKeyDown = 0;
 	}
 
-	if (getKey(P1_UP) && pl->upKeyDown == 0)
+	if (getKey(P1_RIGHT))
 	{
-		yInc--;
-		pl->direction = 0;
-
-		if (northResultSize > 0)
-		{
-			for (i = 0; i < northResultSize; i++)
-			{
-				if (northList[i]->type == PERMABLOCK || northList[i]->type == GAMEBLOCK || northList[i]->type == ICEBLOCK || northList[i]->type == ICECREAM)
-				{
-					yInc++;
-					break;
-				}
-			}
-		}
-		
-		pl->upKeyDown = 1;
-	}
-	else if (!getKey(P1_UP) && pl->upKeyDown == 1)
-	{
-		pl->upKeyDown = 0;
-	}
-
-	if (getKey(P1_DOWN) && pl->downKeyDown == 0)
-	{
-		yInc++;
-		pl->direction = 2;
-
-		if (southResultSize > 0)
-		{
-			for (i = 0; i < southResultSize; i++)
-			{
-				if (southList[i]->type == PERMABLOCK || southList[i]->type == GAMEBLOCK || southList[i]->type == ICEBLOCK || southList[i]->type == ICECREAM)
-				{
-					yInc--;
-					break;
-				}
-			}
-		}
-		
-		pl->downKeyDown = 1;
-	}
-	else if (!getKey(P1_DOWN) && pl->downKeyDown == 1)
-	{
-		pl->downKeyDown = 0;
-	}
-
-	if (getKey(P1_LEFT) && pl->leftKeyDown == 0)
-	{
-		xInc--;
-		pl->direction = 3;
-
-		if (westResultSize > 0)
-		{
-			for (i = 0; i < westResultSize; i++)
-			{
-				if (westList[i]->type == PERMABLOCK || westList[i]->type == GAMEBLOCK || westList[i]->type == ICEBLOCK || westList[i]->type == ICECREAM)
-				{
-					xInc++;
-					break;
-				}
-			}
-		}
-		
-		pl->leftKeyDown = 1;
-	}
-	else if (!getKey(P1_LEFT) && pl->leftKeyDown == 1)
-	{
-		pl->leftKeyDown = 0;
-	}
-
-	if (getKey(P1_RIGHT) && pl->rightKeyDown == 0)
-	{
-		xInc++;
+		pl->offsetX += 2;
 		pl->direction = 1;
 
-		if (eastResultSize > 0)
+		if (pl->offsetX > 16)
 		{
-			for (i = 0; i < eastResultSize; i++)
+			if (eastResultSize < 1)
 			{
-				if (eastList[i]->type == PERMABLOCK || eastList[i]->type == GAMEBLOCK || eastList[i]->type == ICEBLOCK || eastList[i]->type == ICECREAM)
-				{
-					xInc--;
-					break;
-				}
+				xInc++;
+				pl->offsetX = 0;
+			}
+			else
+			{
+				pl->offsetX = 16;
 			}
 		}
-		
-		pl->rightKeyDown = 1;
 	}
-	else if (!getKey(P1_RIGHT) && pl->rightKeyDown == 1)
+	
+	if (getKey(P1_DOWN))
 	{
-		pl->rightKeyDown = 0;
+		pl->offsetY += 2;
+		pl->direction = 2;
+		
+		if (pl->offsetY > 16)
+		{
+			if (southResultSize < 1)
+			{
+				yInc++;
+				pl->offsetY = 0;
+			}
+			else
+			{
+				pl->offsetY = 16;
+			}
+		}
+	}
+	
+	if (getKey(P1_LEFT))
+	{
+		pl->offsetX -= 2;
+		pl->direction = 3;
+		
+		if (pl->offsetX < 0)
+		{
+			if (westResultSize < 1)
+			{
+				xInc--;
+				pl->offsetX = 16;
+			}
+			else
+			{
+				pl->offsetX = 0;
+			}
+		}
+
+	}
+	
+	if (getKey(P1_UP))
+	{
+		pl->offsetY -= 2;
+		pl->direction = 0;
+		
+		if (pl->offsetY < 0)
+		{
+			if ( northResultSize < 1)
+			{
+				yInc--;
+				pl->offsetY = 16;
+			}
+			else
+			{
+				pl->offsetY = 0;
+			}
+		}
 	}
 
 	pl->x += xInc;
