@@ -34,6 +34,7 @@ typedef enum
 	ENEMY_BOXERGREG,
 	ICECREAM,
 	SUPERHAMMER,
+	GLUE,
 	DELETE_ME_PLEASE
 } EntityType;
 
@@ -137,6 +138,14 @@ typedef struct
 	int y;
 } SuperHammer;
 
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	Uint32 startTime;
+} FloorGlue;
+
 // players 1 and 2 entity types
 typedef struct
 {
@@ -194,6 +203,7 @@ typedef union
 	TeleBlock tBlock;
 	IceCream iceCream;
 	SuperHammer hammer;
+	FloorGlue glue;
 	Enemy enemy;
 } Entity;
 

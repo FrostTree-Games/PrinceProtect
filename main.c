@@ -73,6 +73,59 @@ int deinit()
 	return 0;
 }
 
+// sorts all of the entities according to y and type
+// so they're drawn mostly correctly.
+void sortEntitiesForDrawing()
+{
+	int compareEntities(const void * elem1, const void * elem2)
+	{
+		Entity* en1 = *(Entity**)elem1;
+		Entity* en2 = *(Entity**)elem2;
+		
+		if (en1->type == GLUE)
+		{
+			return -1;
+		}
+		else if (en2->type == GLUE)
+		{
+			return 1;
+		}
+
+		if (en1->base.y < en2->base.y)
+		{
+			return -1;
+		}
+		else if (en2->base.y < en1->base.y)
+		{
+			return 1;
+		}
+		else
+		{
+			if (en1->type == PLAYER1)
+			{
+				return 1;
+			}
+			else if (en2->type == PLAYER1)
+			{
+				return -1;
+			}
+
+			if (en1->type == EXPLOSION)
+			{
+				return -1;
+			}
+			else if (en2->type == EXPLOSION)
+			{
+				return 1;
+			}
+		}
+		
+		return 0;
+	}
+	
+	qsort(getEntityList(), getEntityListSize(), sizeof(Entity*), compareEntities); //not optimal, but whatever
+}
+
 // perform game logic on all the connecting game blocks
 // NOTE: this code uses a nested function, which is a feature of GCC;
 //       if you find yourself cursed with porting such code using another
@@ -145,24 +198,7 @@ void whimsyBlocks()
 		switch (b)
 		{
 			case RED_BLOCK:
-			gameBlockGrid[x][y]->type = EXPLOSION;
-			gameBlockGrid[x][y]->exp.startTime = getTimeSingleton();
-			if (gameBlockGrid[x-1][y] == NULL)
-			{
-				gameBlockGrid[x-1][y] = pushEntity(EXPLOSION, x-1, y);
-			}
-			if (gameBlockGrid[x+1][y] == NULL)
-			{
-				gameBlockGrid[x+1][y] = pushEntity(EXPLOSION, x+1, y);
-			}
-			if (gameBlockGrid[x][y-1] == NULL)
-			{
-				gameBlockGrid[x][y-1] = pushEntity(EXPLOSION, x, y-1);
-			}
-			if (gameBlockGrid[x][y+1] == NULL)
-			{
-				gameBlockGrid[x][y+1] = pushEntity(EXPLOSION, x, y+1);
-			}
+			gameBlockGrid[x][y]->type = SUPERHAMMER;
 			break;
 			case GREEN_BLOCK:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
@@ -277,16 +313,12 @@ int testLoop()
 			whimsyBlocks();
 
 			update_entity(entList[i], getTimeSingleton());
-			
-			if (entList[i]->base.y < 5 && entList[i]->base.y > -1)
-			{
-				printf("what? %d\n", entList[i]->type);
-			}
 		}
 
+		sortEntitiesForDrawing();
+
 		testDraw(buffer);
-		
-		//SDL_BlitSurface(buffer, NULL, screen, NULL);
+
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);
 		SDL_Delay(17); //crude 60fps
@@ -298,12 +330,18 @@ int testLoop()
 int main(int argc, char* argv[])
 {
 	int i;
-	
+
 	srand(time(NULL));
 
 	init();
 
 	initEntityList();
+	
+	for (i = BOARD_TOP_WALL + 1; i < BOARD_BOTTOM_WALL; i ++)
+	{
+		pushEntity(GLUE, 5, i);
+		pushEntity(GLUE, 6, i);
+	}
 
 	pushEntity(PLAYER1, 3, 11);
 
@@ -327,8 +365,6 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
 	}
-	
-	pushEntity(SUPERHAMMER, 5, 9);
 
 	clearResetGame();
 	

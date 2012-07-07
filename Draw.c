@@ -454,6 +454,11 @@ void testDraw(SDL_Surface* buffer)
 			entRect.y = entList[i]->hammer.y * 16;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
 			break;
+			case GLUE:
+			entRect.x = entList[i]->hammer.x * 16;
+			entRect.y = entList[i]->hammer.y * 16;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 150, 75, 0));
+			break;
 			case ENEMY_CRAWLER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
 			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;

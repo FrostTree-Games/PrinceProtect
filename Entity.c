@@ -120,6 +120,11 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->hammer.x = newX;
 		newEntity->hammer.y = newY;
 		break;
+		case GLUE:
+		newEntity->glue.x = newX;
+		newEntity->glue.y = newY;
+		newEntity->glue.startTime = getTimeSingleton();
+		break;
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
@@ -397,7 +402,8 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
 			}
-			else
+
+			if ((*returnedSize) >= listMaxSize)
 			{
 				return 1;
 			}
@@ -432,14 +438,11 @@ int filterOccupyWallsForPlayer(int x, int y, Entity** list, int listMaxSize, int
 		
 		if (en->base.x == x && en->base.y == y)
 		{
-			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER))
+
+			if ((en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
-			}
-			else
-			{
-				return 1;
 			}
 		}
 	}
@@ -511,6 +514,20 @@ void update_player(Player* pl, Uint32 currTime)
 	int eastResultSize;
 	int westResultSize;
 	int currResultSize;
+	
+	Entity* northListFull[5];
+	Entity* southListFull[5];
+	Entity* eastListFull[5];
+	Entity* westListFull[5];
+	int northResultFullSize;
+	int southResultFullSize;
+	int eastResultFullSize;
+	int westResultFullSize;
+	
+	occupyingOnHere(pl->x, pl->y - 1, northListFull, 5, &northResultFullSize);
+	occupyingOnHere(pl->x, pl->y + 1, southListFull, 5, &southResultFullSize);
+	occupyingOnHere(pl->x + 1, pl->y, eastListFull, 5, &eastResultFullSize);
+	occupyingOnHere(pl->x - 1, pl->y, westListFull, 5, &westResultFullSize);
 
 	filterOccupyWallsForPlayer(pl->x, pl->y - 1, northList, 5, &northResultSize);
 	filterOccupyWallsForPlayer(pl->x, pl->y + 1, southList, 5, &southResultSize);
@@ -622,6 +639,7 @@ void update_player(Player* pl, Uint32 currTime)
 			case 0:
 			if (northResultSize > 0)
 			{
+
 				for (i = 0; i < northResultSize; i++)
 				{
 					if (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG)
@@ -807,7 +825,7 @@ void update_player(Player* pl, Uint32 currTime)
 			switch (pl->direction)
 			{
 				case 0:
-				if (northResultSize == 0)
+				if (northResultFullSize == 0)
 				{
 					(pl->holding)->x = pl->x;
 					(pl->holding)->y = pl->y - 1;
@@ -815,7 +833,7 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 				break;
 				case 1:
-				if (eastResultSize == 0)
+				if (eastResultFullSize == 0)
 				{
 					(pl->holding)->y = pl->y;
 					(pl->holding)->x = pl->x + 1;
@@ -823,7 +841,7 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 				break;
 				case 2:
-				if (southResultSize == 0)
+				if (southResultFullSize == 0)
 				{
 					(pl->holding)->x = pl->x;
 					(pl->holding)->y = pl->y + 1;
@@ -831,7 +849,7 @@ void update_player(Player* pl, Uint32 currTime)
 				}
 				break;
 				case 3:
-				if (westResultSize == 0)
+				if (westResultFullSize == 0)
 				{
 					(pl->holding)->y = pl->y;
 					(pl->holding)->x = pl->x - 1;
@@ -1003,6 +1021,7 @@ void update_player(Player* pl, Uint32 currTime)
 void update_enemy(Enemy* enemy, Uint32 currTime)
 {
 	int i;
+	int moveSpeed = 1;
 	Uint32 delta = currTime - enemy->lastMovementUpdate;
 
 	Entity* northList[5];
@@ -1064,6 +1083,19 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
 		}
+		
+		if (currList[i]->type == GLUE)
+		{
+			if (enemy->knockBackDirection != 255)
+			{
+				enemy->knockBackDirection = 255;
+			}
+				
+			if  (xrand() % 2 == 0)
+			{
+				moveSpeed = 0;
+			}
+		}
 	}
 
 	if (delta / 32 > 0)
@@ -1073,16 +1105,16 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			switch (enemy->direction)
 			{
 				case 0:
-				enemy->offsetY -= 1;
+				enemy->offsetY -= moveSpeed;
 				break;
 				case 1:
-				enemy->offsetX += 1;
+				enemy->offsetX += moveSpeed;
 				break;
 				case 2:
-				enemy->offsetY += 1;
+				enemy->offsetY += moveSpeed;
 				break;
 				case 3:
-				enemy->offsetX -= 1;
+				enemy->offsetX -= moveSpeed;
 				break;
 				default:
 				break;
@@ -1307,6 +1339,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	}
 
 	int i;
+	int moveSpeed = 4;
 	Uint32 delta = currTime - enemy->lastMovementUpdate;
 
 	Entity* northList[5];
@@ -1345,6 +1378,23 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
 		}
+		
+		if (currList[i]->type == GLUE)
+		{
+			if (xrand() % 4 == 0)
+			{
+				moveSpeed = 1;
+			}
+			else
+			{
+				moveSpeed = 0;
+			}
+			
+			if (enemy->knockBackDirection != 255)
+			{
+				enemy->knockBackDirection = 255;
+			}
+		}
 	}
 
 	if (delta / 32 > 0)
@@ -1373,16 +1423,16 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			switch (enemy->direction)
 			{
 				case 0:
-				enemy->offsetY -= 4;
+				enemy->offsetY -= moveSpeed;
 				break;
 				case 1:
-				enemy->offsetX += 4;
+				enemy->offsetX += moveSpeed;
 				break;
 				case 2:
-				enemy->offsetY += 4;
+				enemy->offsetY += moveSpeed;
 				break;
 				case 3:
-				enemy->offsetX -= 4;
+				enemy->offsetX -= moveSpeed;
 				break;
 				case 4:
 				{
@@ -1655,6 +1705,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 	}
 
 	int i;
+	int moveSpeed = 1;
 	Uint32 delta = currTime - enemy->lastMovementUpdate;
 
 	Entity* northList[5];
@@ -1716,6 +1767,19 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
 		}
+		
+		if (currList[i]->type == GLUE)
+		{
+			if (enemy->knockBackDirection != 255)
+			{
+				enemy->knockBackDirection = 255;
+			}
+				
+			if (xrand() % 2 == 1)
+			{
+				moveSpeed = 0;
+			}
+		}
 	}
 
 	if (delta / 32 > 0)
@@ -1759,16 +1823,16 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			switch (enemy->direction)
 			{
 				case 0:
-				enemy->offsetY -= 1;
+				enemy->offsetY -= moveSpeed;
 				break;
 				case 1:
-				enemy->offsetX += 1;
+				enemy->offsetX += moveSpeed;
 				break;
 				case 2:
-				enemy->offsetY += 1;
+				enemy->offsetY += moveSpeed;
 				break;
 				case 3:
-				enemy->offsetX -= 1;
+				enemy->offsetX -= moveSpeed;
 				break;
 				default:
 				break;
@@ -2230,6 +2294,14 @@ void update_teleblock(TeleBlock* tb)
 	}
 }
 
+void update_glue(FloorGlue* gl)
+{
+	/*if (getTimeSingleton() - gl->startTime > 30 * 1000)
+	{
+		gl->type = DELETE_ME_PLEASE;
+	}*/
+}
+
 void update_gameBlock(GameBlock* gb, Uint32 currTime)
 {
 	int i;
@@ -2351,6 +2423,9 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_boxergreg( (Enemy*)entity, currTime);
 		break;
 		case SUPERHAMMER:
+		break;
+		case GLUE:
+		update_glue( (FloorGlue*)entity);
 		break;
 		case ICECREAM:
 		break;
