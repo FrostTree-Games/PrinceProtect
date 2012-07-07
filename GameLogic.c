@@ -12,7 +12,7 @@
 #define MAX_ONSCREEN_ICECREAM 30
 
 #define BETWEEN_WAVE_DELAY 3000
-#define INITAL_SECONDS_BETWEEN_ROBOTS 4000
+#define INITAL_SECONDS_BETWEEN_ROBOTS 3000
 #define REST_PERIOD_LENGTH 5000
 
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
@@ -78,7 +78,7 @@ void updateWave()
 	
 	for (i = 0; i < getEntityListSize(); i++)
 	{
-		if (enemyCount < MAX_ONSCREEN_ENEMIES && (entList[i]->type == ENEMY_SHOOTER || entList[i]->type == ENEMY_CRAWLER))
+		if (enemyCount < MAX_ONSCREEN_ENEMIES && (entList[i]->type == ENEMY_SHOOTER || entList[i]->type == ENEMY_CRAWLER || entList[i]->type == ENEMY_BOXERGREG))
 		{
 			onScreenEnemies[enemyCount] = (Enemy*)(entList[i]);
 			enemyCount++;
@@ -138,7 +138,7 @@ void updateWave()
 					break;
 					case 0:
 					default:
-					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
 					break;
 				}
 				en->direction = 1;
@@ -162,7 +162,7 @@ void updateWave()
 				int xSpot = -1;
 				int ySpot = -1;
 
-				for (i = 0; i < 5; i++)
+				/*for (i = 0; i < 5; i++)
 				{
 					xSpot = (xrand() % (BOARD_WIDTH - 4)) + 2;
 					ySpot = (xrand() % 8) + 6;
@@ -173,7 +173,7 @@ void updateWave()
 					if (checkResultSize == 0)
 					{
 						Entity* newBlock;
-						switch (xrand() % 1/*4*/)
+						switch (xrand() % 4)
 						{
 							case 0:
 							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
@@ -196,7 +196,7 @@ void updateWave()
 						}
 						break;
 					}
-				}
+				} */
 			}
 		}
 		

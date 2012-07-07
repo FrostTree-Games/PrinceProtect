@@ -289,7 +289,7 @@ int testLoop()
 		//SDL_BlitSurface(buffer, NULL, screen, NULL);
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);
-		SDL_Delay(20);
+		SDL_Delay(17); //crude 60fps
 	}
 
 	return 0;
@@ -326,12 +326,6 @@ int main(int argc, char* argv[])
 
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
-	}
-	
-	for (i = 0; i < 4; i++)
-	{
-		Entity* en = pushEntity(GAMEBLOCK, 2 + i*2, BOARD_TOP_WALL + 3);
-		en->gBlock.bType = BLUE_BLOCK;
 	}
 
 	clearResetGame();

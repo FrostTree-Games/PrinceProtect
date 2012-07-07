@@ -7,6 +7,8 @@
 #include "Keyboard.h"
 #include "GameLogic.h"
 
+#define PLAYER_WALK_SPEED 3
+
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
 const int entityListMaxSize = 552; // the area is a 32 by 16 tile zone (plus 40 extra overhead locations)
@@ -21,6 +23,11 @@ Uint32 getTimeSingleton()
 void setTimeSingleton(Uint32 newTime)
 {
 	timeSingleton = newTime;
+}
+
+int xor(int value1, int value2)
+{
+	return ( (value1 && !value2) || (!value1 && value2) );
 }
 
 void pair_teleblocks(TeleBlock* placed, TeleBlock* mirror)
@@ -591,7 +598,7 @@ void update_player(Player* pl, Uint32 currTime)
 					{
 						northList[i]->enemy.knockBackDirection = pl->direction;
 						northList[i]->enemy.offsetX = 8;
-						northList[i]->enemy.offsetY = 8;
+						northList[i]->enemy.offsetY = 9;
 						northList[i]->enemy.health -= 1;
 						
 						pl->isThrusting = 0;
@@ -616,7 +623,7 @@ void update_player(Player* pl, Uint32 currTime)
 					if (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG)
 					{
 						eastList[i]->enemy.knockBackDirection = pl->direction;
-						eastList[i]->enemy.offsetX = 8;
+						eastList[i]->enemy.offsetX = 9;
 						eastList[i]->enemy.offsetY = 8;
 						eastList[i]->enemy.health -= 1;
 						
@@ -643,7 +650,7 @@ void update_player(Player* pl, Uint32 currTime)
 					{
 						southList[i]->enemy.knockBackDirection = pl->direction;
 						southList[i]->enemy.offsetX = 8;
-						southList[i]->enemy.offsetY = 8;
+						southList[i]->enemy.offsetY = 7;
 						southList[i]->enemy.health -= 1;
 
 						pl->isThrusting = 0;
@@ -668,7 +675,7 @@ void update_player(Player* pl, Uint32 currTime)
 					if (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG)
 					{
 						westList[i]->enemy.knockBackDirection = pl->direction;
-						westList[i]->enemy.offsetX = 8;
+						westList[i]->enemy.offsetX = 7;
 						westList[i]->enemy.offsetY = 8;
 						westList[i]->enemy.health -= 1;
 
@@ -827,7 +834,7 @@ void update_player(Player* pl, Uint32 currTime)
 				pl->offsetY++;
 			}
 		}
-		pl->offsetX += 2;
+		pl->offsetX += PLAYER_WALK_SPEED;
 		pl->direction = 1;
 
 		if (pl->offsetX > 16)
@@ -857,7 +864,7 @@ void update_player(Player* pl, Uint32 currTime)
 				pl->offsetX++;
 			}
 		}
-		pl->offsetY += 2;
+		pl->offsetY += PLAYER_WALK_SPEED;
 		pl->direction = 2;
 		
 		if (pl->offsetY > 16)
@@ -887,7 +894,7 @@ void update_player(Player* pl, Uint32 currTime)
 				pl->offsetY++;
 			}
 		}
-		pl->offsetX -= 2;
+		pl->offsetX -= PLAYER_WALK_SPEED;
 		pl->direction = 3;
 		
 		if (pl->offsetX < 0)
@@ -918,7 +925,7 @@ void update_player(Player* pl, Uint32 currTime)
 				pl->offsetX++;
 			}
 		}
-		pl->offsetY -= 2;
+		pl->offsetY -= PLAYER_WALK_SPEED;
 		pl->direction = 0;
 		
 		if (pl->offsetY < 0)
@@ -1614,7 +1621,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
-	
+
 	if(enemy->health < 1)
 	{
 		enemy->type = DELETE_ME_PLEASE;
@@ -1661,10 +1668,39 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 
 	if (delta / 32 > 0)
 	{
-		if (enemy->offsetX == 8 && enemy->offsetY == 8 && enemy->AISlot1 == 0)
+		if (enemy->offsetX == 8 && enemy->offsetY == 8 && enemy->AISlot1 == 0 && enemy->knockBackDirection == 255)
 		{
 			enemy->direction = newDir(enemy);
 		}
+
+		
+			if (enemy->knockBackDirection < 255 && xor((enemy->offsetY == 8) && (enemy->knockBackDirection == 0 || enemy->knockBackDirection == 2), (enemy->offsetX == 8) && (enemy->knockBackDirection == 1 || enemy->knockBackDirection == 3)))
+			{
+				/*enemy->direction = enemy->knockBackDirection;
+				enemy->knockBackDirection = 255;   */
+				enemy->direction = 4;
+				switch (enemy->knockBackDirection)
+				{
+					case 0:
+					enemy->AISlot2 = 2;
+					break;
+					case 1:
+					enemy->AISlot2 = 3;
+					break;
+					case 2:
+					enemy->AISlot2 = 0;
+					break;
+					case 3:
+					enemy->AISlot2 = 1;
+					break;
+					default:
+					enemy->AISlot2 = enemy->knockBackDirection;
+					break;
+				}
+	
+				enemy->knockBackDirection = 255;
+			}
+
 
 		if (enemy->knockBackDirection == 255)
 		{
@@ -1722,12 +1758,6 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					enemy->direction = newDir(enemy);
 				}
 			}
-			
-			if (enemy->knockBackDirection < 255)
-			{
-				enemy->direction = enemy->knockBackDirection;
-				enemy->knockBackDirection = 255;
-			}
 		}
 		else if (enemy->offsetX > 16)
 		{
@@ -1743,12 +1773,6 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 				{
 					enemy->direction = newDir(enemy);
 				}
-			}
-			
-			if (enemy->knockBackDirection < 255)
-			{
-				enemy->direction = enemy->knockBackDirection;
-				enemy->knockBackDirection = 255;
 			}
 		}
 
@@ -1767,12 +1791,6 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					enemy->direction = newDir(enemy);
 				}
 			}
-			
-			if (enemy->knockBackDirection < 255)
-			{
-				enemy->direction = enemy->knockBackDirection;
-				enemy->knockBackDirection = 255;
-			}
 		}
 		else if (enemy->offsetY > 16)
 		{
@@ -1788,12 +1806,6 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 				{
 					enemy->direction = newDir(enemy);
 				}
-			}
-
-			if (enemy->knockBackDirection < 255)
-			{
-				enemy->direction = enemy->knockBackDirection;
-				enemy->knockBackDirection = 255;
 			}
 		}
 		
@@ -1867,6 +1879,11 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 				if (currTime - enemy->timer > 250)
 				{
 					enemy->AISlot1 = 0;
+				}
+				
+				if (xrand() % 5 < 2)
+				{
+					enemy->AISlot2 = xrand() % 4;
 				}
 			}
 			else if (enemy->AISlot1 == 0 && xrand() % 10 < 3)

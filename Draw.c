@@ -190,6 +190,9 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
 	SDL_Rect altRect = {0, 0, 8, 8};
+	
+	SDL_Rect quickRed = {pl->x * 16, pl->y * 16, 16, 16};
+	SDL_FillRect(buffer, &quickRed, SDL_MapRGB(buffer->format, 255, 0, 0));
 
 	if (pl->holding != NULL)
 	{
@@ -380,7 +383,6 @@ void testDraw(SDL_Surface* buffer)
 	tileRect.y = 16;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 
-	/*
 	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
 	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
 
@@ -394,7 +396,7 @@ void testDraw(SDL_Surface* buffer)
 	{
 		SDL_FillRect(buffer, &r2, SDL_MapRGB(buffer->format, 0, 0, 0));
 		r2.y += 16;
-	}*/
+	}
 
 	for (i = 0; i < getEntityListSize(); i++)
 	{
