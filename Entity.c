@@ -842,7 +842,7 @@ void update_player(Player* pl, Uint32 currTime)
 			if (eastResultSize < 1)
 			{
 				xInc++;
-				pl->offsetX = 0;
+				pl->offsetX -= 16;
 			}
 			else
 			{
@@ -872,7 +872,7 @@ void update_player(Player* pl, Uint32 currTime)
 			if (southResultSize < 1)
 			{
 				yInc++;
-				pl->offsetY = 0;
+				pl->offsetY -= 16;
 			}
 			else
 			{
@@ -902,7 +902,7 @@ void update_player(Player* pl, Uint32 currTime)
 			if (westResultSize < 1)
 			{
 				xInc--;
-				pl->offsetX = 16;
+				pl->offsetX += 16;
 			}
 			else
 			{
@@ -933,7 +933,7 @@ void update_player(Player* pl, Uint32 currTime)
 			if ( northResultSize < 1)
 			{
 				yInc--;
-				pl->offsetY = 16;
+				pl->offsetY += 16;
 			}
 			else
 			{
