@@ -33,6 +33,7 @@ typedef enum
 	ENEMY_SHOOTER,
 	ENEMY_BOXERGREG,
 	ICECREAM,
+	SUPERHAMMER,
 	DELETE_ME_PLEASE
 } EntityType;
 
@@ -129,6 +130,13 @@ typedef struct
 	int y;
 } IceCream;
 
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+} SuperHammer;
+
 // players 1 and 2 entity types
 typedef struct
 {
@@ -151,6 +159,7 @@ typedef struct
 	unsigned char knockBackDirection; //0->N, 1->E, 2->S, 3->W, 255->NOT KNOCKED BACK
 	Uint32 lastFrameUpdate;
 	int frame; //0 -> first frame ; 1 -> second frame
+	int holdingSuperHammer; //0 -> false; 1 -> true
 } Player;
 
 typedef struct
@@ -184,6 +193,7 @@ typedef union
 	Laser laser;
 	TeleBlock tBlock;
 	IceCream iceCream;
+	SuperHammer hammer;
 	Enemy enemy;
 } Entity;
 

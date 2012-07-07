@@ -60,6 +60,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.knockBackDirection = 255;
                 newEntity->player.lastFrameUpdate = getTimeSingleton();
                 newEntity->player.frame = 0;
+                newEntity->player.holdingSuperHammer = 0;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -114,6 +115,10 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		case ICECREAM:
 		newEntity->iceCream.x = newX;
 		newEntity->iceCream.y = newY;
+		break;
+		case SUPERHAMMER:
+		newEntity->hammer.x = newX;
+		newEntity->hammer.y = newY;
 		break;
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
@@ -427,7 +432,7 @@ int filterOccupyWallsForPlayer(int x, int y, Entity** list, int listMaxSize, int
 		
 		if (en->base.x == x && en->base.y == y)
 		{
-			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM))
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -492,7 +497,7 @@ int filterOccupyType(int x, int y, Entity** list, int listMaxSize, int* returned
 
 void update_player(Player* pl, Uint32 currTime)
 {
-	int i;
+	int i,j;
 	int xInc = 0;
 	int yInc = 0;
 
@@ -500,15 +505,18 @@ void update_player(Player* pl, Uint32 currTime)
 	Entity* southList[5];
 	Entity* eastList[5];
 	Entity* westList[5];
+	Entity* currList[5];
 	int northResultSize;
 	int southResultSize;
 	int eastResultSize;
 	int westResultSize;
+	int currResultSize;
 
-	occupyingOnHere(pl->x, pl->y - 1, northList, 5, &northResultSize);
-	occupyingOnHere(pl->x, pl->y + 1, southList, 5, &southResultSize);
-	occupyingOnHere(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
-	occupyingOnHere(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	filterOccupyWallsForPlayer(pl->x, pl->y - 1, northList, 5, &northResultSize);
+	filterOccupyWallsForPlayer(pl->x, pl->y + 1, southList, 5, &southResultSize);
+	filterOccupyWallsForPlayer(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
+	filterOccupyWallsForPlayer(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	occupyingOnHere(pl->x, pl->y, currList, 5, &currResultSize);
 	
 	//quick and hasty animation
 	if (currTime - pl->lastFrameUpdate > 250)
@@ -569,6 +577,16 @@ void update_player(Player* pl, Uint32 currTime)
 		return;
 	}
 	
+	for (i = 0; i < currResultSize; i++)
+	{
+		if (currList[i]->type == SUPERHAMMER && pl->holdingSuperHammer == 0)
+		{
+			pl->holdingSuperHammer = 1;
+			currList[i]->type = DELETE_ME_PLEASE;
+			break;
+		}
+	}
+	
 	if (getKey(P1_B) && !(pl->bKeyDown))
 	{
 		pl->bKeyDown = 1;
@@ -585,6 +603,18 @@ void update_player(Player* pl, Uint32 currTime)
 		if (currTime - pl->swordTimer > 150)
 		{
 			pl->isThrusting = 0;
+			
+			if (pl->holdingSuperHammer == 1)
+			{
+				pl->holdingSuperHammer = 0;
+				for (i = 0; i < 3; i++)
+				{
+					for (j = 0; j < 3; j++)
+					{
+						pushEntity(EXPLOSION, pl->x - 1 + i, pl->y - 1 + j);
+					}
+				}
+			}
 		}
 
 		switch (pl->direction)
@@ -836,6 +866,17 @@ void update_player(Player* pl, Uint32 currTime)
 		}
 		pl->offsetX += PLAYER_WALK_SPEED;
 		pl->direction = 1;
+		
+		if (getKey(P1_UP))
+		{
+			pl->offsetX -= PLAYER_WALK_SPEED/2;
+			pl->offsetY += PLAYER_WALK_SPEED/2;
+		}
+		else if (getKey(P1_DOWN))
+		{
+			pl->offsetX -= PLAYER_WALK_SPEED/2;
+			pl->offsetY -= PLAYER_WALK_SPEED/2;
+		}
 
 		if (pl->offsetX > 16)
 		{
@@ -896,6 +937,17 @@ void update_player(Player* pl, Uint32 currTime)
 		}
 		pl->offsetX -= PLAYER_WALK_SPEED;
 		pl->direction = 3;
+
+		if (getKey(P1_UP))
+		{
+			pl->offsetX += PLAYER_WALK_SPEED/2;
+			pl->offsetY += PLAYER_WALK_SPEED/2;
+		}
+		else if (getKey(P1_DOWN))
+		{
+			pl->offsetX += PLAYER_WALK_SPEED/2;
+			pl->offsetY -= PLAYER_WALK_SPEED/2;
+		}
 		
 		if (pl->offsetX < 0)
 		{
@@ -2297,6 +2349,8 @@ void update_entity(Entity* entity, Uint32 currTime)
 		break;
 		case ENEMY_BOXERGREG:
 		update_boxergreg( (Enemy*)entity, currTime);
+		break;
+		case SUPERHAMMER:
 		break;
 		case ICECREAM:
 		break;

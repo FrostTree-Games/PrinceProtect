@@ -190,9 +190,6 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
 	SDL_Rect altRect = {0, 0, 8, 8};
-	
-	SDL_Rect quickRed = {pl->x * 16, pl->y * 16, 16, 16};
-	SDL_FillRect(buffer, &quickRed, SDL_MapRGB(buffer->format, 255, 0, 0));
 
 	if (pl->holding != NULL)
 	{
@@ -451,6 +448,11 @@ void testDraw(SDL_Surface* buffer)
 			tileRect.x = 208;
 			tileRect.y = 16;
 			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			case SUPERHAMMER:
+			entRect.x = entList[i]->hammer.x * 16;
+			entRect.y = entList[i]->hammer.y * 16;
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
 			break;
 			case ENEMY_CRAWLER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;

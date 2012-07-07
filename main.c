@@ -327,6 +327,8 @@ int main(int argc, char* argv[])
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
 	}
+	
+	pushEntity(SUPERHAMMER, 5, 9);
 
 	clearResetGame();
 	
