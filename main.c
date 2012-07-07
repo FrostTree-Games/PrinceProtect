@@ -213,14 +213,7 @@ void whimsyBlocks()
 			gameBlockGrid[x][y]->iBlock.health = 3;
 			break;
 			case YELLOW_BLOCK:
-			for (i = 0; i < 4; i++)
-			{
-				Entity* offShoot = pushEntity(LASER, x, y);
-				offShoot->laser.direction = i;
-				offShoot->laser.allegiance = 1;
-			}
-			
-			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			gameBlockGrid[x][y]->type = GLUE;
 			break;
 			default:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
@@ -336,14 +329,8 @@ int main(int argc, char* argv[])
 	init();
 
 	initEntityList();
-	
-	for (i = BOARD_TOP_WALL + 1; i < BOARD_BOTTOM_WALL; i ++)
-	{
-		pushEntity(GLUE, 5, i);
-		pushEntity(GLUE, 6, i);
-	}
 
-	pushEntity(PLAYER1, 3, 11);
+	pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
 
 	for (i = -2; i < BOARD_WIDTH + 3; i++)
 	{

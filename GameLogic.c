@@ -156,13 +156,13 @@ void updateWave()
 
 		if (gameBlockCount < 20)
 		{
-			if(val / 20 < 7)
+			if(val / 20 < 4)
 			{
 				int i;
 				int xSpot = -1;
 				int ySpot = -1;
 
-				/*for (i = 0; i < 5; i++)
+				for (i = 0; i < 5; i++)
 				{
 					xSpot = (xrand() % (BOARD_WIDTH - 4)) + 2;
 					ySpot = (xrand() % 8) + 6;
@@ -196,7 +196,7 @@ void updateWave()
 						}
 						break;
 					}
-				} */
+				}
 			}
 		}
 		
