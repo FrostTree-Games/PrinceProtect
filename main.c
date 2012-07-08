@@ -22,6 +22,9 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 272
 
+// 1 of the (X) is clicked, game should then entirely exit
+int hardCoreQuit = 0;
+
 SDL_Surface* screen;
 SDL_Surface* buffer;
 
@@ -193,7 +196,7 @@ void whimsyBlocks()
 		{
 			return;
 		}
-		
+
 		//turn the block into it's designated type
 		switch (b)
 		{
@@ -268,6 +271,42 @@ void whimsyBlocks()
 	}
 }
 
+int gameOverLoop()
+{
+	int quit = 0;
+	SDL_Event ev;
+	
+	setTimeSingleton(SDL_GetTicks());
+	
+	Uint32 gameOverHang = getTimeSingleton();
+	
+	while (!quit && !hardCoreQuit)
+	{
+		while (SDL_PollEvent(&ev))
+		{
+			if (ev.type == SDL_QUIT)
+			{
+				hardCoreQuit = 1;
+			}
+		}
+		
+		setTimeSingleton(SDL_GetTicks());
+		
+		if (getTimeSingleton() - gameOverHang > 6 * 1000)
+		{
+			quit = 1;
+		}
+		
+		drawGameOverScreen(buffer);
+
+		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_Flip(screen);
+		SDL_Delay(17); //crude 60fps
+	}
+	
+	return 0;
+}
+
 int testLoop()
 {
 	int i;   //loop iterators
@@ -283,6 +322,11 @@ int testLoop()
 			{
 				quit = 1;
 			}
+		}
+		
+		if (getGameState() != 1)
+		{
+			quit = 1;
 		}
 		
 		//update call
@@ -354,10 +398,12 @@ int main(int argc, char* argv[])
 	}
 
 	clearResetGame();
-	
+
 	beginGame();
 
 	testLoop();
+	
+	gameOverLoop();
 	
 	freeEntityList();
 

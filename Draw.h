@@ -26,6 +26,12 @@ int setupAssets();
  */
 void clearAssets();
 
+/* drawGameOverScreen()
+ * Purpose: Draw a game over screen to the buffer
+ * Returns: n/a
+ */
+void drawGameOverScreen(SDL_Surface* buffer);
+
 /* testDrawFunction()
  * Purpose: Getting something out the door for now.
  * Returns: n/a

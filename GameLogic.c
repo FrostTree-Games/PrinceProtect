@@ -37,6 +37,9 @@ Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 Uint32 sinceLastEnemyOutput = 0;
 int enemiesLeftToPush = 0;
 
+int gameEnding = 0; //0 false, 1 true
+Uint32 endGameDelta;
+
 Uint32 lastUpdateTime = 0;
 
 unsigned int xrand(void)
@@ -138,7 +141,7 @@ void updateWave()
 					break;
 					case 0:
 					default:
-					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
 					break;
 				}
 				en->direction = 1;
@@ -222,11 +225,27 @@ void updateGameLogic()
 	{
 		return;
 	}
-	
+
 	if (lastUpdateTime == 0)
 	{
 		lastUpdateTime = getTimeSingleton();
 		return;
+	}
+	
+	if (player1Health < 1)
+	{
+		if (gameEnding == 0)
+		{
+			gameEnding = 1;
+			endGameDelta = getTimeSingleton();
+		}
+		else if (gameEnding == 1)
+		{
+			if (getTimeSingleton() - endGameDelta > 5 * 1000)
+			{
+				gameState = 0;
+			}
+		}
 	}
 
 	if (restPeriod == 0)
@@ -247,6 +266,7 @@ int clearResetGame()
 	player2Health = 10;
 	
 	gameScore = 0;
+	gameEnding = 0;
 	
 	waveNumber = 0;
 	
@@ -360,6 +380,11 @@ void modPlayermaxHealth(int playerNo, int delta)
 int getIceCreamCount()
 {
 	return numberOfIceCreams;
+}
+
+int getGameState()
+{
+	return gameState;
 }
 
 

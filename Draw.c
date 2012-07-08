@@ -229,6 +229,12 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 
 	entRect.x = (pl->x * 16) + pl->offsetX - 8;
 	entRect.y = (pl->y * 16) + pl->offsetY - 8;
+	
+	if (pl->dead == 1)
+	{
+		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
+		return;
+	}
 
 	switch (pl->direction)
 	{
@@ -527,5 +533,23 @@ void testDraw(SDL_Surface* buffer)
 	drawHealthScores(buffer);
 	
 	drawLatestPushDown(buffer);
+}
+
+void drawGameOverScreen(SDL_Surface* buffer)
+{
+	SDL_Color cl = {255, 255, 255, 0};
+
+	char p1HealthText[50];
+	sprintf(p1HealthText, "GAME OVER");
+
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
+
+	SDL_Surface* gameOverText;
+	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+	
+	SDL_Rect p1HpPos = {buffer->w/2 - gameOverText->w/2, 5, 0, 0};
+
+	SDL_BlitSurface(gameOverText, NULL, buffer, &p1HpPos);
+	SDL_FreeSurface(gameOverText);
 }
 
