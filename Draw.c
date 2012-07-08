@@ -538,18 +538,31 @@ void testDraw(SDL_Surface* buffer)
 void drawGameOverScreen(SDL_Surface* buffer)
 {
 	SDL_Color cl = {255, 255, 255, 0};
+	
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
 
 	char p1HealthText[50];
 	sprintf(p1HealthText, "GAME OVER");
-
-	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
-
 	SDL_Surface* gameOverText;
-	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
-	
-	SDL_Rect p1HpPos = {buffer->w/2 - gameOverText->w/2, 5, 0, 0};
 
-	SDL_BlitSurface(gameOverText, NULL, buffer, &p1HpPos);
+	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+	SDL_Rect textPos = {buffer->w/2 - gameOverText->w/2, 50, 0, 0};
+	SDL_BlitSurface(gameOverText, NULL, buffer, &textPos);
+	SDL_FreeSurface(gameOverText);
+
+	switch(getGameState())
+	{
+		case 2:
+		sprintf(p1HealthText, "YOU COULDN'T TAKE IT!");
+		break;
+		case 3:
+		sprintf(p1HealthText, "THE GOODS GOT AWAY! HOW COULD YOU?");
+		break;
+	}
+
+	textPos.y += 50;
+	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+	SDL_BlitSurface(gameOverText, NULL, buffer, &textPos);
 	SDL_FreeSurface(gameOverText);
 }
 

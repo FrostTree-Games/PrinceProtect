@@ -314,13 +314,13 @@ int testLoop()
 	int quit = 0;
 	SDL_Event ev;
 
-	while (!quit)
+	while (!quit && !hardCoreQuit)
 	{
 		while(SDL_PollEvent(&ev))
 		{
 			if (ev.type == SDL_QUIT)
 			{
-				quit = 1;
+				hardCoreQuit = 1;
 			}
 		}
 		
@@ -372,39 +372,16 @@ int main(int argc, char* argv[])
 
 	init();
 
-	initEntityList();
-
-	pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
-
-	for (i = -2; i < BOARD_WIDTH + 3; i++)
-	{
-		pushEntity(PERMABLOCK, i, BOARD_TOP_WALL);
-		pushEntity(PERMABLOCK, i, BOARD_BOTTOM_WALL);
-	}
-
-	for (i = 0; i < BOARD_HEIGHT + 2; i++)
-	{
-		pushEntity(PERMABLOCK, -2, 5 + i);
-		pushEntity(PERMABLOCK, BOARD_WIDTH + 1, 5 + i);
-	}
-
-	for (i = 0; i < 2; i++)
-	{
-		pushEntity(ICECREAM, 9 + i, 7);
-		pushEntity(ICECREAM, 9 + i, 8);
-
-		pushEntity(ICECREAM, 9 + i, 11);
-		pushEntity(ICECREAM, 9 + i, 12);
-	}
-
 	clearResetGame();
+	
+	pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
 
 	beginGame();
 
 	testLoop();
-	
+
 	gameOverLoop();
-	
+
 	freeEntityList();
 
 	deinit();

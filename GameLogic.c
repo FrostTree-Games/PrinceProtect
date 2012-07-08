@@ -20,6 +20,8 @@
 //game states:
 // 0 -> no game running
 // 1 -> regular game play
+// 2 -> player health depleted
+// 3 -> ice cream depleted
 int gameState = 0;
 
 int player1Health = 0;
@@ -243,7 +245,24 @@ void updateGameLogic()
 		{
 			if (getTimeSingleton() - endGameDelta > 5 * 1000)
 			{
-				gameState = 0;
+				gameState = 2;
+			}
+		}
+	}
+	
+	if (numberOfIceCreams < 1)
+	{
+		if (gameEnding == 0)
+		{
+			pushNewMessage("Ice Cream Depleted!");
+			gameEnding = 1;
+			endGameDelta = getTimeSingleton();
+		}
+		else if (gameEnding == 1)
+		{
+			if (getTimeSingleton() - endGameDelta > 7 * 1000)
+			{
+				gameState = 3;
 			}
 		}
 	}
@@ -260,6 +279,8 @@ void updateGameLogic()
 
 int clearResetGame()
 {
+	int i;
+	
 	gameState = 0;
 
 	player1Health = 10;
@@ -269,6 +290,34 @@ int clearResetGame()
 	gameEnding = 0;
 	
 	waveNumber = 0;
+	
+	if (getEntityList() != NULL)
+	{
+		freeEntityList();
+	}
+	
+	initEntityList();
+	
+	for (i = -2; i < BOARD_WIDTH + 3; i++)
+	{
+		pushEntity(PERMABLOCK, i, BOARD_TOP_WALL);
+		pushEntity(PERMABLOCK, i, BOARD_BOTTOM_WALL);
+	}
+
+	for (i = 0; i < BOARD_HEIGHT + 2; i++)
+	{
+		pushEntity(PERMABLOCK, -2, 5 + i);
+		pushEntity(PERMABLOCK, BOARD_WIDTH + 1, 5 + i);
+	}
+
+	for (i = 0; i < 2; i++)
+	{
+		pushEntity(ICECREAM, 9 + i, 7);
+		pushEntity(ICECREAM, 9 + i, 8);
+
+		pushEntity(ICECREAM, 9 + i, 11);
+		pushEntity(ICECREAM, 9 + i, 12);
+	}
 	
 	return 0;
 }
@@ -283,6 +332,8 @@ int beginGame()
 	gameState = 1;
 	
 	restPeriod = 1;
+	
+	numberOfIceCreams = 8; //quick fix
 
 	return 0;
 }
