@@ -191,143 +191,173 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect tileRect = {0, 0, 16, 16};
 	SDL_Rect altRect = {0, 0, 8, 8};
 
-	if (pl->holding != NULL)
+	if (pl->isThrusting  == 0)
 	{
-		SDL_Rect placementRect = {pl->x * 16, pl->y * 16, 0, 0};
-
-		switch (pl->direction)
+		if (pl->holding != NULL)
 		{
-			case 0:
-			placementRect.y -= 16;
-			break;
-			case 1:
-			placementRect.x += 16;
-			break;
-			case 2:
+			SDL_Rect placementRect = {pl->x * 16, pl->y * 16, 0, 0};
+	
+			switch (pl->direction)
+			{
+				case 0:
+				placementRect.y -= 16;
+				break;
+				case 1:
+				placementRect.x += 16;
+				break;
+				case 2:
+				placementRect.y += 16;
+				break;
+				case 3:
+				placementRect.x -= 16;
+				break;
+				default:
+				break;
+			}
+	
+			placementRect.w = 16;
+			placementRect.h = 1;
+			SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
 			placementRect.y += 16;
-			break;
-			case 3:
-			placementRect.x -= 16;
-			break;
-			default:
-			break;
+			SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
+			placementRect.y -= 16;
+	
+			placementRect.w = 1;
+			placementRect.h = 16;
+			SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
+			placementRect.x += 16;
+			SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
 		}
-
-		placementRect.w = 16;
-		placementRect.h = 1;
-		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
-		placementRect.y += 16;
-		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
-		placementRect.y -= 16;
-
-		placementRect.w = 1;
-		placementRect.h = 16;
-		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
-		placementRect.x += 16;
-		SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
-	}
-
-	entRect.x = (pl->x * 16) + pl->offsetX - 8;
-	entRect.y = (pl->y * 16) + pl->offsetY - 8;
 	
-	if (pl->dead == 1)
-	{
-		SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
-		return;
-	}
-
-	switch (pl->direction)
-	{
-		case 0:
-		tileRect.y += 16;
-		break;
-		case 1:
-		tileRect.y += 32;
-		break;
-		case 2:
-		tileRect.y += 0;
-		break;
-		case 3:
-		tileRect.y += 48;
-		break;
-		default:
-		break;
-	}
-
+		entRect.x = (pl->x * 16) + pl->offsetX - 8;
+		entRect.y = (pl->y * 16) + pl->offsetY - 8;
+		
+		if (pl->dead == 1)
+		{
+			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
+			return;
+		}
 	
-	if (pl->frame == 1)
-	{
-		tileRect.x += 16;
-	}
-	
-	if (pl->holding != NULL)
-	{
-		tileRect.x += 32;
-	}
-	
-	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
-
-	//draw sword if necessary
-	if (pl->isThrusting == 1)
-	{
 		switch (pl->direction)
 		{
 			case 0:
-			altRect.x = (pl->x * 16) + 4 + pl->offsetX - 8;
-			altRect.y = (pl->y * 16) - 8 + pl->offsetY - 8;
-			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			tileRect.y += 16;
 			break;
 			case 1:
-			altRect.x = (pl->x * 16) + 16 + pl->offsetX - 8;
-			altRect.y = (pl->y * 16) + 4 + pl->offsetY - 8;
-			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			tileRect.y += 32;
 			break;
 			case 2:
-			altRect.x = (pl->x * 16) + 4 + pl->offsetX - 8;
-			altRect.y = (pl->y * 16) + 16 + pl->offsetY - 8;
-			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			tileRect.y += 0;
 			break;
 			case 3:
-			altRect.x = (pl->x * 16) - 8 + pl->offsetX - 8;
-			altRect.y = (pl->y * 16) + 4 + pl->offsetY - 8;
-			SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 200, 200, 210));
+			tileRect.y += 48;
 			break;
 			default:
 			break;
 		}
-	}
 	
-	entRect.x = (pl->x * 16) + pl->offsetX - 8;
-	entRect.y = (pl->y * 16) - 14 + pl->offsetY - 8;
-	
-	tileRect.x = 128;
-	tileRect.y = 0;
-	
-	if (pl->holding != NULL)
-	{
-		switch (pl->holding->bType)
+		
+		if (pl->frame == 1)
 		{
-			case RED_BLOCK:
-			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
-			break;
-			case BLUE_BLOCK:
 			tileRect.x += 16;
-			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
-			break;
-			case GREEN_BLOCK:
-			tileRect.x += 16;
-			tileRect.y += 16;
-			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
-			break;
-			case YELLOW_BLOCK:
-			tileRect.y += 16;
-			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
-			break;
-			default:
-			printf("No block encountered?\n");
-			break;
+		}
+		
+		if (pl->holding != NULL)
+		{
+			tileRect.x += 32;
+		}
+		
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		
+		entRect.x = (pl->x * 16) + pl->offsetX - 8;
+		entRect.y = (pl->y * 16) - 14 + pl->offsetY - 8;
+		
+		tileRect.x = 128;
+		tileRect.y = 0;
+		
+		if (pl->holding != NULL)
+		{
+			switch (pl->holding->bType)
+			{
+				case RED_BLOCK:
+				SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+				break;
+				case BLUE_BLOCK:
+				tileRect.x += 16;
+				SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+				break;
+				case GREEN_BLOCK:
+				tileRect.x += 16;
+				tileRect.y += 16;
+				SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+				break;
+				case YELLOW_BLOCK:
+				tileRect.y += 16;
+				SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+				break;
+				default:
+				printf("No block encountered?\n");
+				break;
+			}
 		}
 	}
+	else
+	{
+		tileRect.x = 0;
+		tileRect.y = 64;
+		
+		switch (pl->direction)
+		{
+			case 0:
+			tileRect.y += 16;
+			break;
+			case 1:
+			tileRect.y += 32;
+			break;
+			case 2:
+			tileRect.y += 0;
+			break;
+			case 3:
+			tileRect.y += 48;
+			break;
+			default:
+			break;
+		}
+		
+		if (getTimeSingleton() - pl->swordTimer > 75)
+		{
+			tileRect.x += 16;
+		}
+		
+		entRect.x = (pl->x * 16) + pl->offsetX - 8;
+		entRect.y = (pl->y * 16) + pl->offsetY - 8;
+		
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		
+		tileRect.y += 64;
+		
+		//draw sword/hammer
+		switch (pl->direction)
+		{
+			case 0:
+			entRect.y -= 16;
+			break;
+			case 1:
+			entRect.x += 16;
+			break;
+			case 2:
+			entRect.y += 16;
+			break;
+			case 3:
+			entRect.x -= 16;
+			break;
+			default:
+			break;
+		}
+		
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
+
 }
 
 void testDraw(SDL_Surface* buffer)
@@ -386,7 +416,7 @@ void testDraw(SDL_Surface* buffer)
 	tileRect.y = 16;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 
-	SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
+	/*SDL_Rect r1 = {0, 0, 1, SCREEN_HEIGHT};
 	SDL_Rect r2 = {0, 0, SCREEN_WIDTH, 1};
 
 	for (i = 0; i < SCREEN_WIDTH / 16; i++)
@@ -399,7 +429,7 @@ void testDraw(SDL_Surface* buffer)
 	{
 		SDL_FillRect(buffer, &r2, SDL_MapRGB(buffer->format, 0, 0, 0));
 		r2.y += 16;
-	}
+	}  */
 
 	for (i = 0; i < getEntityListSize(); i++)
 	{
