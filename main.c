@@ -175,8 +175,6 @@ void whimsyBlocks()
 	
 	void clearConnectedBlocks(int x, int y, BlockType b)
 	{
-		int i;
-
 		if (x < 0 || y < 0 || x > BOARD_WIDTH || y > BOARD_HEIGHT)
 		{
 			return;
@@ -366,8 +364,6 @@ int testLoop()
 
 int main(int argc, char* argv[])
 {
-	int i;
-
 	srand(time(NULL));
 
 	init();

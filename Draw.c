@@ -189,7 +189,6 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 {
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
-	SDL_Rect altRect = {0, 0, 8, 8};
 
 	if (pl->isThrusting  == 0)
 	{
