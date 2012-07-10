@@ -188,6 +188,8 @@ typedef struct
 	int AISlot2; //boxerGreg: direction currently standing
 	int AISlot3;
 	Uint32 timer;
+	Uint32 lastFrameUpdate;
+	int frame; //0 -> first frame ; 1 -> second frame
 } Enemy;
 
 // viva la crude polymorphism!

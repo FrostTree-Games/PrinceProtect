@@ -140,6 +140,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.AISlot2 = 0;
 		newEntity->enemy.AISlot3 = 0;
 		newEntity->enemy.timer = 0;
+		newEntity->enemy.lastFrameUpdate = getTimeSingleton();
+		newEntity->enemy.frame = 0;
 		break;
 		case ENEMY_SHOOTER:
 		newEntity->enemy.x = newX;
@@ -659,6 +661,7 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->enemy.offsetX = 8;
 						northList[i]->enemy.offsetY = 9;
 						northList[i]->enemy.health -= 1;
+						northList[i]->enemy.timer = currTime;
 						
 						pl->isThrusting = 0;
 					}
@@ -685,6 +688,7 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->enemy.offsetX = 9;
 						eastList[i]->enemy.offsetY = 8;
 						eastList[i]->enemy.health -= 1;
+						eastList[i]->enemy.timer = currTime;
 						
 						pl->isThrusting = 0;
 					}
@@ -711,6 +715,7 @@ void update_player(Player* pl, Uint32 currTime)
 						southList[i]->enemy.offsetX = 8;
 						southList[i]->enemy.offsetY = 7;
 						southList[i]->enemy.health -= 1;
+						southList[i]->enemy.timer = currTime;
 
 						pl->isThrusting = 0;
 					}
@@ -737,6 +742,7 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->enemy.offsetX = 7;
 						westList[i]->enemy.offsetY = 8;
 						westList[i]->enemy.health -= 1;
+						westList[i]->enemy.timer = currTime;
 
 						pl->isThrusting = 0;
 					}
@@ -1052,6 +1058,20 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
 	
+	if (currTime - enemy->lastFrameUpdate > 150)
+	{
+		if (enemy->frame == 0)
+		{
+			enemy->frame = 1;
+		}
+		else
+		{
+			enemy->frame = 0;
+		}
+		
+		enemy->lastFrameUpdate = currTime;
+	}
+	
 	if(enemy->health < 1)
 	{
 		enemy->type = DELETE_ME_PLEASE;
@@ -1136,16 +1156,16 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			switch (enemy->knockBackDirection)
 			{
 				case 0:
-				enemy->offsetY -= 8;
+				enemy->offsetY -= 4;
 				break;
 				case 1:
-				enemy->offsetX += 8;
+				enemy->offsetX += 4;
 				break;
 				case 2:
-				enemy->offsetY += 8;
+				enemy->offsetY += 4;
 				break;
 				case 3:
-				enemy->offsetX -= 8;
+				enemy->offsetX -= 4;
 				break;
 				default:
 				break;

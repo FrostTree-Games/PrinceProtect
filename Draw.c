@@ -357,7 +357,65 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 		
 		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	}
+}
 
+void drawCrawler(SDL_Surface* buffer, Enemy* en)
+{
+	SDL_Rect entRect = {0, 0, 16, 16};
+	SDL_Rect tileRect = {0, 0, 16, 16};
+	
+	tileRect.x = 32;
+	tileRect.y = 128;
+	
+	entRect.x = (en->x * 16) + en->offsetX - 8;
+	entRect.y = (en->y * 16) + en->offsetY - 8;
+	
+	if (en->knockBackDirection == 255)
+	{
+		if (en->cream != NULL)
+		{
+			tileRect.x += 32;
+		}
+		
+		if (en->frame == 1)
+		{
+			tileRect.x += 16;
+		}
+		
+		switch (en->direction)
+		{
+			case 0:
+			tileRect.y += 16;
+			break;
+			case 1:
+			tileRect.y += 32;
+			break;
+			case 2:
+			tileRect.y += 0;
+			break;
+			case 3:
+			tileRect.y += 48;
+			break;
+			default:
+			break;
+		}
+	}
+	else
+	{
+		tileRect.y += (((getTimeSingleton() - en->timer)/50 ) % 4) * 16;
+	}
+	
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	
+	if (en->cream != NULL)
+	{
+		entRect.y -= 16;
+		
+		tileRect.x = 208;
+		tileRect.y = 16;
+
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
 }
 
 void testDraw(SDL_Surface* buffer)
@@ -496,14 +554,15 @@ void testDraw(SDL_Surface* buffer)
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 150, 75, 0));
 			break;
 			case ENEMY_CRAWLER:
-			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
+			drawCrawler(buffer, (Enemy*)entList[i]);
+			/*entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
 			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
 			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 100, 5));
 			if (entList[i]->enemy.cream != NULL)
 			{
 				entRect.y -= 16;
 				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
-			}
+			}     */
 			break;
 			case ENEMY_SHOOTER:
 			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
