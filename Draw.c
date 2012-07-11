@@ -14,6 +14,8 @@ int pushNotificationFontSize = 10;
 TTF_Font* pushNotificationFont = NULL;
 
 SDL_Surface* tileSheet;
+SDL_Surface* pubLogo;
+SDL_Surface* devLogo;
 
 int setupAssets()
 {
@@ -31,11 +33,25 @@ int setupAssets()
 
 	if ((pushNotificationFont = TTF_OpenFont("ttf/slkscr.ttf", pushNotificationFontSize)) == NULL)
 	{
+		fprintf(stderr, "Error opening font. Check assets.\n");
+		return 1;
+	}
+
+	if ((tileSheet = IMG_Load("gfx/sheet.png")) == NULL)
+	{
+		fprintf(stderr, "Error loading tilesheet. Check assets.\n");
 		return 1;
 	}
 	
-	if ((tileSheet = IMG_Load("gfx/sheet.png")) == NULL)
+	if ((devLogo = IMG_Load("gfx/devLogo.png")) == NULL)
 	{
+		fprintf(stderr, "Error loading developer logo. Check assets.\n");
+		return 1;
+	}
+	
+	if ((pubLogo = IMG_Load("gfx/pubLogo.png")) == NULL)
+	{
+		fprintf(stderr, "Error loading publisher logo. Check assets.\n");
 		return 1;
 	}
 
@@ -45,8 +61,11 @@ int setupAssets()
 void clearAssets()
 {
 	TTF_CloseFont(pushNotificationFont);
-	
+
 	SDL_FreeSurface(tileSheet);
+	
+	SDL_FreeSurface(devLogo);
+	SDL_FreeSurface(pubLogo);
 }
 
 void drawLatestPushDown(SDL_Surface* buffer)
@@ -103,6 +122,31 @@ void drawHealthScores(SDL_Surface* buffer)
 	SDL_Rect iceCreamNumbers = {10, 25, 0, 0};
 	SDL_BlitSurface(health_surface, NULL, buffer, &iceCreamNumbers);
 	SDL_FreeSurface(health_surface);
+}
+
+void drawDevScreen(SDL_Surface* buffer, int devScreenNumber)
+{
+	SDL_Rect logoPosition = {0, 0, 0, 0};
+	SDL_Surface* image = NULL;
+
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
+
+	switch (devScreenNumber)
+	{
+		case 0:
+		image = pubLogo;
+		break;
+		case 1:
+		image = devLogo;
+		break;
+		default:
+		return;
+	}
+	
+	logoPosition.x = SCREEN_WIDTH/2 - (image->w)/2;
+	logoPosition.y = SCREEN_HEIGHT/2 - (image->h)/2;
+
+	SDL_BlitSurface(image, NULL, buffer, &logoPosition);
 }
 
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)

@@ -32,6 +32,12 @@ void clearAssets();
  */
 void drawGameOverScreen(SDL_Surface* buffer);
 
+/* drawDevScreen()
+ * Purpose: Fills a buffer with black and writes either all black (-1), the publisher logo (devScreenNumber = 0), or the developer logo (devScreenNumber = 1) to it
+ * Returns: n/a
+ */
+void drawDevScreen(SDL_Surface* buffer, int devScreenNumber);
+
 /* testDrawFunction()
  * Purpose: Getting something out the door for now.
  * Returns: n/a

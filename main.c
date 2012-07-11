@@ -2,7 +2,7 @@
  * ---------------
  * A game for Windows written by Daniel Savage.
  *
- * For noncommercial use only.
+ * Copyright 2012
  */
 
 
@@ -18,6 +18,7 @@
 #include "Draw.h"
 #include "Pushdown.h"
 #include "GameLogic.h"
+#include "GameScreens.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 272
@@ -367,6 +368,8 @@ int main(int argc, char* argv[])
 	srand(time(NULL));
 
 	init();
+	
+	preambleSplashScreen(screen);
 
 	clearResetGame();
 	

@@ -6,6 +6,9 @@
  * of these messages is handled the draw module though. Each message length is max 31 characters.
  */
  
+#ifndef PUSHDOWN_H
+#define PUSHDOWN_H
+ 
 #include <SDL/SDL.h>
  
 typedef struct
@@ -32,3 +35,5 @@ int pushNewMessage(char* text);
  */
 PushMessage* getCurrentMessage();
 
+
+#endif

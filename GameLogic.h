@@ -5,7 +5,10 @@
  * scores, player health, modes, game state, wave information, etc.
  */
  
- #include <SDL/SDL.h>
+#ifndef DRAWLOGIC_H
+#define DRAWLOGIC_H
+ 
+#include <SDL/SDL.h>
  
 /* xrand()
  * Purpose: Less-biased alternative to rand()
@@ -63,3 +66,6 @@ void addScore(int delta);
  * Returns: integer representing ice cream
  */
 int getIceCreamCount();
+
+
+#endif
