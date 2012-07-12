@@ -370,6 +370,8 @@ int main(int argc, char* argv[])
 	init();
 	
 	preambleSplashScreen(screen);
+	
+	titleScreen(screen);
 
 	clearResetGame();
 	

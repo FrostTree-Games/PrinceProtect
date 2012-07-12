@@ -5,6 +5,7 @@
 
 #include "Pushdown.h"
 #include "Entity.h" //When time singleton is in a better module, include that instead
+#include "Keyboard.h"
 
 PushMessage messageQueue[5];
 int queueRear = -1; //-1 means the queue is empty

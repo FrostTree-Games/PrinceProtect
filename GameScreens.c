@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 
 #include "Draw.h"
+#include "Keyboard.h"
 #include "GameScreens.h"
 
 int preambleSplashScreen(SDL_Surface* screen)
@@ -55,5 +56,110 @@ int preambleSplashScreen(SDL_Surface* screen)
 	}
 
 	return 0;
+}
+
+int titleScreen(SDL_Surface* screen)
+{
+	int hardCoreQuit = 0;
+
+	SDL_Event ev;
+	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+	Uint32 timeStamp = SDL_GetTicks();
+	
+	int menuPosition = 0; //0 up to 4, inclusive
+	int menuSelected = 255;
+	
+	int upKeyDown = 0;
+	int downKeyDown = 0;
+	int aKeyDown = 0;
+	
+	SDL_Rect testMenuBox = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2, 80, 102};
+	SDL_Rect testMenuSelect = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2 + 1, 80, 20};
+
+	while(hardCoreQuit == 0 && menuSelected == 255)
+	{
+		while(SDL_PollEvent(&ev))
+		{
+			if (ev.type == SDL_QUIT)
+			{
+				hardCoreQuit = 1;
+			}
+		}
+		
+		pollKeyboard();
+
+		if (getKey(P1_UP) && upKeyDown == 0)
+		{
+			upKeyDown = 1;
+		}
+		else if (!getKey(P1_UP) && upKeyDown == 1)
+		{
+			menuPosition -= 1;
+			if (menuPosition < 0)
+			{
+				menuPosition = 4;
+			}
+			upKeyDown = 0;
+		}
+
+		if (getKey(P1_DOWN) && downKeyDown == 0)
+		{
+			downKeyDown = 1;
+		}
+		else if (!getKey(P1_DOWN) && downKeyDown == 1)
+		{
+			menuPosition = (menuPosition + 1) % 5;
+			downKeyDown = 0;
+		}
+
+		if (getKey(P1_A) && aKeyDown == 0)
+		{
+			aKeyDown = 1;
+		}
+		else if (!getKey(P1_A) && aKeyDown == 1)
+		{
+			switch (menuPosition)
+			{
+				case 0:
+				menuSelected = 1;
+				break;
+				case 1:
+				menuSelected = 2;
+				break;
+				case 2:
+				menuSelected = 3;
+				break;
+				case 3:
+				menuSelected = 4;
+				break;
+				case 4:
+				menuSelected = 0;
+				break;
+				default:
+				menuPosition = 0;
+				break;
+			}
+			aKeyDown = 0;
+		}
+		
+		testMenuSelect.y = SCREEN_HEIGHT/2 + 1 + menuPosition*20;
+
+		SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
+		SDL_FillRect(buffer, &testMenuBox, SDL_MapRGB(buffer->format, 58, 58, 255));
+                SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
+
+		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_Flip(screen);
+		SDL_Delay(17);
+	}
+
+	SDL_FreeSurface(buffer);
+	
+	if (hardCoreQuit == 1)
+	{
+		return -1;
+	}
+
+	return menuSelected;
 }
 

@@ -19,12 +19,26 @@
  
 #ifndef SCREENS_H
 #define SCREENS_H
+
+#define SCREEN_TIMEOUT_SECONDS 20
  
 /* preambleSpashScreen()
  * Purpose: Displays the publisher and splash screens for around _____ seconds
  * Returns: Zero normally, 1 if the (X) button on the window was pressed
  */
-int preambleSplashSreen(SDL_Surface* screen);
+int preambleSplashScreen(SDL_Surface* screen);
+
+/* titleScreen()
+ * Purpose: Displays the title screen in a sexy loop. After SCREEN_TIMEOUT_SECONDS the game defines
+ * Returns: integer representing menu result press
+ *		0 -> EXIT
+ *		1 -> 1P GAME
+ *		2 -> 2P GAME
+ *		3 -> KEY CONFIG
+ *		4 -> SETTINGS
+ *		returns -1 if (X) button on window was pressed
+ */
+int titleScreen(SDL_Surface* screen);
 
 
 #endif
