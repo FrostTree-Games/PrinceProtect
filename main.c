@@ -23,11 +23,25 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 272
 
+typedef enum
+{
+	NONE = 0,
+	SPLASH,
+	TITLE,
+	KEY_CONFIG,
+	ETC_CONFIG,
+	INGAME,
+	GAME_OVER,
+	ENCOURAGEMENT
+} screenState;
+
 // 1 of the (X) is clicked, game should then entirely exit
 int hardCoreQuit = 0;
 
 SDL_Surface* screen;
 SDL_Surface* buffer;
+
+screenState currentState;
 
 int init()
 {
@@ -312,6 +326,10 @@ int testLoop()
 
 	int quit = 0;
 	SDL_Event ev;
+	
+	clearResetGame();
+
+	beginGame();
 
 	while (!quit && !hardCoreQuit)
 	{
@@ -359,6 +377,8 @@ int testLoop()
 		SDL_Flip(screen);
 		SDL_Delay(17); //crude 60fps
 	}
+	
+	freeEntityList();
 
 	return 0;
 }
@@ -366,20 +386,81 @@ int testLoop()
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
+	currentState = NONE;
+	
+	init();
+	
+	//init error handling will go here
 
+	while (hardCoreQuit == 0)
+	{
+		if (currentState == NONE)
+		{
+			currentState = SPLASH;
+		}
+		else if (currentState == SPLASH)
+		{
+			switch (preambleSplashScreen(screen))
+			{
+				case 0:
+				currentState = TITLE;
+				break;
+				case 1:
+				hardCoreQuit = 1;
+				break;
+				default:
+				fprintf(stderr, "Bad splash screen return!\n");
+				currentState = TITLE;
+				break;
+			}
+		}
+		else if (currentState == TITLE)
+		{
+			switch (titleScreen(screen))
+			{
+				case 0:
+				//PUT NICE EXIT TRANSITION HERE
+				break;
+				case 1:
+				currentState = INGAME;
+				break;
+				case 2:
+				break;
+				case 3:
+				break;
+				case 4:
+				break;
+				case -1:
+				hardCoreQuit = 1;
+				break;
+				default:
+				fprintf(stderr, "Title screen returned a strange menu code\n");
+				break;
+			}
+		}
+		else if (currentState == INGAME)
+		{
+			testLoop();
+			
+			currentState = GAME_OVER;
+		}
+		else if (currentState == GAME_OVER)
+		{
+			gameOverLoop();
+			currentState = TITLE;
+		}
+	}
+
+	deinit();
+
+	return 0;
+
+	/*
 	init();
 	
 	preambleSplashScreen(screen);
 	
 	titleScreen(screen);
-
-	clearResetGame();
-	
-	pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
-
-	beginGame();
-
-	testLoop();
 
 	gameOverLoop();
 
@@ -388,5 +469,6 @@ int main(int argc, char* argv[])
 	deinit();
 
 	return 0;
+	*/
 }
 

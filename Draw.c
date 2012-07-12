@@ -149,6 +149,57 @@ void drawDevScreen(SDL_Surface* buffer, int devScreenNumber)
 	SDL_BlitSurface(image, NULL, buffer, &logoPosition);
 }
 
+void drawTitleScreen(SDL_Surface* buffer, int mSelected)
+{
+	int i;
+
+	SDL_Rect testMenuBox = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2, 80, 102};
+	SDL_Rect testMenuSelect = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2 + 1, 80, 20};
+
+	SDL_Rect textPos = {0, 0, 0 ,0};
+	SDL_Surface* menuItemTextSurface = NULL;
+	SDL_Color textCol = {0, 0, 0, 0};
+
+	testMenuSelect.y = SCREEN_HEIGHT/2 + 1 + mSelected*20;
+
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
+	SDL_FillRect(buffer, &testMenuBox, SDL_MapRGB(buffer->format, 58, 58, 255));
+	SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
+	
+	for (i = 0; i < 5; i++)
+	{
+		switch (i)
+		{
+			case 0:
+			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "P1 START", textCol);
+			break;
+			case 1:
+			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "P2 START", textCol);
+			break;
+			case 2:
+			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "KEY CONFIG", textCol);
+			break;
+			case 3:
+			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "ETC CONFIG", textCol);
+			break;
+			case 4:
+			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "EXIT", textCol);
+			break;
+			default:
+			break;
+		}
+
+		textPos.x = SCREEN_WIDTH/2 - menuItemTextSurface->w/2;
+		textPos.y = SCREEN_HEIGHT/2 + 1 + i*20;
+		
+		if (menuItemTextSurface != NULL)
+		{
+			SDL_BlitSurface(menuItemTextSurface, NULL, buffer, &textPos);
+			SDL_FreeSurface(menuItemTextSurface);
+		}
+	}
+}
+
 void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 {
 	SDL_Rect tileRect = {0, 0, 16, 16};

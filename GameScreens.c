@@ -72,9 +72,6 @@ int titleScreen(SDL_Surface* screen)
 	int upKeyDown = 0;
 	int downKeyDown = 0;
 	int aKeyDown = 0;
-	
-	SDL_Rect testMenuBox = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2, 80, 102};
-	SDL_Rect testMenuSelect = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2 + 1, 80, 20};
 
 	while(hardCoreQuit == 0 && menuSelected == 255)
 	{
@@ -142,11 +139,7 @@ int titleScreen(SDL_Surface* screen)
 			aKeyDown = 0;
 		}
 		
-		testMenuSelect.y = SCREEN_HEIGHT/2 + 1 + menuPosition*20;
-
-		SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
-		SDL_FillRect(buffer, &testMenuBox, SDL_MapRGB(buffer->format, 58, 58, 255));
-                SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
+		drawTitleScreen(buffer, menuPosition);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);

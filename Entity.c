@@ -221,6 +221,8 @@ int freeEntityList()
 	
 	entityList = NULL;
 	
+	entityListCurrentSize = 0;
+	
 	return 1;
 }
 

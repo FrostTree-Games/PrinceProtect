@@ -38,6 +38,12 @@ void drawGameOverScreen(SDL_Surface* buffer);
  */
 void drawDevScreen(SDL_Surface* buffer, int devScreenNumber);
 
+/* drawTitleScreen()
+ * Purpose: draws the title screen
+ * Returns: n/a
+ */
+void drawTitleScreen(SDL_Surface* buffer, int mSelected);
+
 /* testDrawFunction()
  * Purpose: Getting something out the door for now.
  * Returns: n/a
