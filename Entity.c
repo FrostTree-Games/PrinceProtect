@@ -1636,6 +1636,9 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = enemy->x;
 			enemy->cream->y = enemy->y;
 		}
+		
+		addScore(50);
+
 		return;
 	}
 	
@@ -1849,6 +1852,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 				en->cream = NULL;
 				
 				en->type = DELETE_ME_PLEASE;
+
 				return 1;
 			}
 			else
@@ -1953,6 +1957,8 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			enemy->cream->x = enemy->x;
 			enemy->cream->y = enemy->y;
+
+			addScore(50);
 		}
 		return;
 	}
@@ -2320,6 +2326,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = enemy->x;
 			enemy->cream->y = enemy->y;
 		}
+		
+		addScore(50);
+
 		return;
 	}
 	
@@ -2987,7 +2996,7 @@ void update_gameBlock(GameBlock* gb, Uint32 currTime)
 		else if (gb->height < 0)
 		{
 			gb->height = 0;
-		}	
+		}
 
 		gb->lastUpdateTime = currTime;
 	}
@@ -3043,7 +3052,7 @@ void update_entity(Entity* entity, Uint32 currTime)
 		case ICECREAM:
 		break;
 		default:
-		printf("unregognized entity type updated\n");
+		printf("unregognized entity type updated: %d\n", entity->type);
 		break;
 	}
 	

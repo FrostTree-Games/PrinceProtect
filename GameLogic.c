@@ -460,6 +460,11 @@ int getGameState()
 int getScore()
 {
 	return gameScore;
-}	
+}
+
+void addScore(int delta)
+{
+	gameScore += delta;
+}
 
 

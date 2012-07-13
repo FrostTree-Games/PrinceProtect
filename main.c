@@ -279,6 +279,8 @@ void whimsyBlocks()
 				if (connectedBlockCounter > 3)
 				{
 					clearConnectedBlocks(i, j, gameBlockGrid[i][j]->gBlock.bType);
+					
+					addScore(75);
 				}
 			}
 		}
