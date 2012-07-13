@@ -457,4 +457,9 @@ int getGameState()
 	return gameState;
 }
 
+int getScore()
+{
+	return gameScore;
+}	
+
 

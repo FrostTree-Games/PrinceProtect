@@ -125,10 +125,16 @@ void drawHealthScores(SDL_Surface* buffer)
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 	SDL_FreeSurface(health_surface);
 
-	sprintf(p1HealthText, "ICECREAM: %d", getIceCreamCount());
+	sprintf(p1HealthText, "ICECREAM: %.2d", getIceCreamCount());
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
 	SDL_Rect iceCreamNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 25, 0, 0};
 	SDL_BlitSurface(health_surface, NULL, buffer, &iceCreamNumbers);
+	SDL_FreeSurface(health_surface);
+	
+	sprintf(p1HealthText, "SCORE: %.6d", getScore());
+	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+	SDL_Rect scoreNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 40, 0, 0};
+	SDL_BlitSurface(health_surface, NULL, buffer, &scoreNumbers);
 	SDL_FreeSurface(health_surface);
 }
 
