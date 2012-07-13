@@ -64,7 +64,6 @@ int titleScreen(SDL_Surface* screen)
 
 	SDL_Event ev;
 	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
-	Uint32 timeStamp = SDL_GetTicks();
 	
 	int menuPosition = 0; //0 up to 4, inclusive
 	int menuSelected = 255;

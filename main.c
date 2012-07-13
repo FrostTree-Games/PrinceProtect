@@ -31,6 +31,7 @@ typedef enum
 	KEY_CONFIG,
 	ETC_CONFIG,
 	INGAME,
+	INGAME2,
 	GAME_OVER,
 	ENCOURAGEMENT
 } screenState;
@@ -320,14 +321,21 @@ int gameOverLoop()
 	return 0;
 }
 
-int testLoop()
+int testLoop(int twoPlayerGame)
 {
 	int i;   //loop iterators
 
 	int quit = 0;
 	SDL_Event ev;
 	
-	clearResetGame();
+	if (twoPlayerGame == 0)
+	{
+		clearResetGame(1);
+	}
+	else
+	{
+		clearResetGame(2);
+	}
 
 	beginGame();
 
@@ -386,8 +394,8 @@ int testLoop()
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
-	currentState = NONE;
-	
+	currentState = TITLE; //should start at NONE
+
 	init();
 	
 	//init error handling will go here
@@ -425,6 +433,7 @@ int main(int argc, char* argv[])
 				currentState = INGAME;
 				break;
 				case 2:
+				currentState = INGAME2;
 				break;
 				case 3:
 				break;
@@ -440,7 +449,13 @@ int main(int argc, char* argv[])
 		}
 		else if (currentState == INGAME)
 		{
-			testLoop();
+			testLoop(0);
+			
+			currentState = GAME_OVER;
+		}
+		else if (currentState == INGAME2)
+		{
+			testLoop(1);
 			
 			currentState = GAME_OVER;
 		}
@@ -454,21 +469,5 @@ int main(int argc, char* argv[])
 	deinit();
 
 	return 0;
-
-	/*
-	init();
-	
-	preambleSplashScreen(screen);
-	
-	titleScreen(screen);
-
-	gameOverLoop();
-
-	freeEntityList();
-
-	deinit();
-
-	return 0;
-	*/
 }
 

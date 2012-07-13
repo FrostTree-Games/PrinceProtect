@@ -23,6 +23,7 @@
 // 2 -> player health depleted
 // 3 -> ice cream depleted
 int gameState = 0;
+int is2PlayerGame = 0; //0 -> false, 1 -> true
 
 int player1Health = 0;
 int player2Health = 0;
@@ -277,7 +278,7 @@ void updateGameLogic()
 	}
 }
 
-int clearResetGame()
+int clearResetGame(int playerCount)
 {
 	int i;
 
@@ -319,7 +320,23 @@ int clearResetGame()
 		pushEntity(ICECREAM, 9 + i, 12);
 	}
 	
-	pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
+	switch (playerCount)
+	{
+		case 1:
+		pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
+		is2PlayerGame = 0;
+		break;
+		case 2:
+		pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
+                pushEntity(PLAYER2, BOARD_WIDTH/2 + 1, 9);
+                is2PlayerGame = 1;
+                break;
+                default:
+                printf("ODD PLAYER COUNT; FIX THIS AND MAKE IT ATOMIC");
+                pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
+		is2PlayerGame = 0;
+		break;
+	}
 
 	return 0;
 }

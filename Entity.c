@@ -63,6 +63,26 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.holdingSuperHammer = 0;
                 newEntity->player.dead = 0;
 		break;
+		case PLAYER2:
+		newEntity->player.x = newX;
+		newEntity->player.y = newY;
+		newEntity->player.offsetX = 8;
+		newEntity->player.offsetY = 8;
+                newEntity->player.upKeyDown = 0;
+                newEntity->player.downKeyDown = 0;
+                newEntity->player.leftKeyDown = 0;
+                newEntity->player.rightKeyDown = 0;
+                newEntity->player.aKeyDown = 0;
+                newEntity->player.lastUpdate = 0;
+                newEntity->player.holding = NULL;
+                newEntity->player.swordTimer = 0;
+                newEntity->player.isThrusting = 0;
+                newEntity->player.knockBackDirection = 255;
+                newEntity->player.lastFrameUpdate = getTimeSingleton();
+                newEntity->player.frame = 0;
+                newEntity->player.holdingSuperHammer = 0;
+                newEntity->player.dead = 0;
+		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
 		newEntity->permaBlock.y = newY;
@@ -1037,6 +1057,540 @@ void update_player(Player* pl, Uint32 currTime)
 	return;
 }
 
+void update_player2(Player* pl, Uint32 currTime)
+{
+	int i,j;
+	int xInc = 0;
+	int yInc = 0;
+
+	Entity* northList[5];
+	Entity* southList[5];
+	Entity* eastList[5];
+	Entity* westList[5];
+	Entity* currList[5];
+	int northResultSize;
+	int southResultSize;
+	int eastResultSize;
+	int westResultSize;
+	int currResultSize;
+	
+	Entity* northListFull[5];
+	Entity* southListFull[5];
+	Entity* eastListFull[5];
+	Entity* westListFull[5];
+	int northResultFullSize;
+	int southResultFullSize;
+	int eastResultFullSize;
+	int westResultFullSize;
+	
+	occupyingOnHere(pl->x, pl->y - 1, northListFull, 5, &northResultFullSize);
+	occupyingOnHere(pl->x, pl->y + 1, southListFull, 5, &southResultFullSize);
+	occupyingOnHere(pl->x + 1, pl->y, eastListFull, 5, &eastResultFullSize);
+	occupyingOnHere(pl->x - 1, pl->y, westListFull, 5, &westResultFullSize);
+
+	filterOccupyWallsForPlayer(pl->x, pl->y - 1, northList, 5, &northResultSize);
+	filterOccupyWallsForPlayer(pl->x, pl->y + 1, southList, 5, &southResultSize);
+	filterOccupyWallsForPlayer(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
+	filterOccupyWallsForPlayer(pl->x - 1, pl->y, westList, 5, &westResultSize);
+	occupyingOnHere(pl->x, pl->y, currList, 5, &currResultSize);
+	
+	//quick and hasty animation
+	if (currTime - pl->lastFrameUpdate > 250)
+	{
+		if (pl->frame == 0)
+		{
+			pl->frame = 1;
+		}
+		else
+		{
+			pl->frame = 0;
+		}
+		
+		pl->lastFrameUpdate = currTime;
+	}
+	
+	if (pl->dead == 1)
+	{
+		return;
+	}
+	
+	if (getPlayerHealth(1) < 1)
+	{
+		pl->dead = 1;
+	}
+	
+	//this is a quick way of preventing block timeout
+	if (pl->holding != NULL)
+	{
+		pl->holding->startTime = getTimeSingleton();
+	}
+	
+	// if the player gets completely knocked back, then he/she cannot do logic for that iteration
+	if (pl->knockBackDirection != 255)
+	{
+		switch(pl->knockBackDirection)
+		{
+			case 0:
+			if (northResultSize == 0)
+			{
+				pl->y -= 1;
+			}
+			break;
+			case 1:
+			if (eastResultSize == 0 && pl->x + 1 < BOARD_WIDTH)
+			{
+				pl->x += 1;
+			}
+			break;
+			case 2:
+			if (southResultSize == 0)
+			{
+				pl->y += 1;
+			}
+			break;
+			case 3:
+			if (westResultSize == 0 && pl->x - 1 >= 0)
+			{
+				pl->x -= 1;
+			}
+			break;
+			default:
+			printf("Player knock back all odd! value:%d\n", pl->knockBackDirection);
+			break;
+		}
+
+		pl->knockBackDirection = 255;
+		return;
+	}
+	
+	for (i = 0; i < currResultSize; i++)
+	{
+		if (currList[i]->type == SUPERHAMMER && pl->holdingSuperHammer == 0)
+		{
+			pl->holdingSuperHammer = 1;
+			currList[i]->type = DELETE_ME_PLEASE;
+			break;
+		}
+	}
+	
+	if (getKey(P2_B) && !(pl->bKeyDown))
+	{
+		pl->bKeyDown = 1;
+		pl->swordTimer = currTime;
+		pl->isThrusting = 1;
+	}
+	else if (!getKey(P2_B) && pl->bKeyDown)
+	{
+		pl->bKeyDown = 0;
+	}
+
+	if (pl->isThrusting)
+	{
+		if (currTime - pl->swordTimer > 150)
+		{
+			pl->isThrusting = 0;
+			
+			if (pl->holdingSuperHammer == 1)
+			{
+				pl->holdingSuperHammer = 0;
+				for (i = 0; i < 3; i++)
+				{
+					for (j = 0; j < 3; j++)
+					{
+						pushEntity(EXPLOSION, pl->x - 1 + i, pl->y - 1 + j);
+					}
+				}
+			}
+		}
+
+		switch (pl->direction)
+		{
+			case 0:
+			if (northResultSize > 0)
+			{
+
+				for (i = 0; i < northResultSize; i++)
+				{
+					if (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG)
+					{
+						northList[i]->enemy.knockBackDirection = pl->direction;
+						northList[i]->enemy.offsetX = 8;
+						northList[i]->enemy.offsetY = 9;
+						northList[i]->enemy.health -= 1;
+						northList[i]->enemy.timer = currTime;
+						
+						pl->isThrusting = 0;
+					}
+					
+					if (northList[i]->type == ICEBLOCK)
+					{
+						northList[i]->iBlock.moving = 1;
+						northList[i]->iBlock.direction = pl->direction;
+						northList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+				}
+			}
+			break;
+			case 1:
+			if (eastResultSize > 0)
+			{
+				for (i = 0; i < eastResultSize; i++)
+				{
+					if (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG)
+					{
+						eastList[i]->enemy.knockBackDirection = pl->direction;
+						eastList[i]->enemy.offsetX = 9;
+						eastList[i]->enemy.offsetY = 8;
+						eastList[i]->enemy.health -= 1;
+						eastList[i]->enemy.timer = currTime;
+						
+						pl->isThrusting = 0;
+					}
+					
+					if (eastList[i]->type == ICEBLOCK)
+					{
+						eastList[i]->iBlock.moving = 1;
+						eastList[i]->iBlock.direction = pl->direction;
+						eastList[i]->iBlock.health -= 1;
+
+						pl->isThrusting = 0;
+					}
+				}
+			}
+			break;
+			case 2:
+			if (southResultSize > 0)
+			{
+				for (i = 0; i < southResultSize; i++)
+				{
+					if (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_BOXERGREG)
+					{
+						southList[i]->enemy.knockBackDirection = pl->direction;
+						southList[i]->enemy.offsetX = 8;
+						southList[i]->enemy.offsetY = 7;
+						southList[i]->enemy.health -= 1;
+						southList[i]->enemy.timer = currTime;
+
+						pl->isThrusting = 0;
+					}
+					
+					if (southList[i]->type == ICEBLOCK)
+					{
+						southList[i]->iBlock.moving = 1;
+						southList[i]->iBlock.direction = pl->direction;
+						southList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+				}
+			}
+			break;
+			case 3:
+			if (westResultSize > 0)
+			{
+				for (i = 0; i < westResultSize; i++)
+				{
+					if (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG)
+					{
+						westList[i]->enemy.knockBackDirection = pl->direction;
+						westList[i]->enemy.offsetX = 7;
+						westList[i]->enemy.offsetY = 8;
+						westList[i]->enemy.health -= 1;
+						westList[i]->enemy.timer = currTime;
+
+						pl->isThrusting = 0;
+					}
+
+					if (westList[i]->type == ICEBLOCK)
+					{
+						westList[i]->iBlock.moving = 1;
+						westList[i]->iBlock.direction = pl->direction;
+						westList[i]->iBlock.health -= 1;
+						
+						pl->isThrusting = 0;
+					}
+				}
+			}
+			break;
+			default:
+			fprintf(stderr, "Bad direction for thrusting player: %d\n", pl->direction);
+			break;
+		}
+
+		return; //don't move and thrust sword at the same time
+	}
+
+	if (getKey(P2_A) && !(pl->aKeyDown))
+	{
+		pl->aKeyDown = 1;
+
+		if (pl->holding == NULL)
+		{
+			if (pl->direction == 0)
+			{
+				if (northResultSize > 0)
+				{
+					for (i = 0; i < northResultSize; i++)
+					{
+						if (northList[i]->type == GAMEBLOCK && northList[i]->gBlock.height == 0)
+						{
+							pl->holding = (GameBlock*)(northList[i]);
+							northList[i]->gBlock.x = -1;
+							northList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+			if (pl->direction == 1)
+			{
+				if (eastResultSize > 0)
+				{
+					for (i = 0; i < eastResultSize; i++)
+					{
+						if (eastList[i]->type == GAMEBLOCK && eastList[i]->gBlock.height == 0)
+						{
+							pl->holding = (GameBlock*)(eastList[i]);
+							eastList[i]->gBlock.x = -1;
+							eastList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+			if (pl->direction == 2)
+			{
+				if (southResultSize > 0)
+				{
+					for (i = 0; i < southResultSize; i++)
+					{
+						if (southList[i]->type == GAMEBLOCK && southList[i]->gBlock.height == 0)
+						{
+							pl->holding = (GameBlock*)(southList[i]);
+							southList[i]->gBlock.x = -1;
+							southList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+			if (pl->direction == 3)
+			{
+				if (westResultSize > 0)
+				{
+					for (i = 0; i < westResultSize; i++)
+					{
+						if (westList[i]->type == GAMEBLOCK && westList[i]->gBlock.height == 0)
+						{
+							pl->holding = (GameBlock*)(westList[i]);
+							westList[i]->gBlock.x = -1;
+							westList[i]->gBlock.y = -1;
+							break;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			switch (pl->direction)
+			{
+				case 0:
+				if (northResultFullSize == 0)
+				{
+					(pl->holding)->x = pl->x;
+					(pl->holding)->y = pl->y - 1;
+					pl->holding = NULL;
+				}
+				break;
+				case 1:
+				if (eastResultFullSize == 0)
+				{
+					(pl->holding)->y = pl->y;
+					(pl->holding)->x = pl->x + 1;
+					pl->holding = NULL;
+				}
+				break;
+				case 2:
+				if (southResultFullSize == 0)
+				{
+					(pl->holding)->x = pl->x;
+					(pl->holding)->y = pl->y + 1;
+					pl->holding = NULL;
+				}
+				break;
+				case 3:
+				if (westResultFullSize == 0)
+				{
+					(pl->holding)->y = pl->y;
+					(pl->holding)->x = pl->x - 1;
+					pl->holding = NULL;
+				}
+				break;
+				default:
+				fprintf(stderr, "Player direction has become invalid\n");
+				break;
+			}
+			
+			return; //prevents player from walking onto their own placed block
+		}
+	}
+	else if (!getKey(P2_A) && pl->aKeyDown)
+	{
+		pl->aKeyDown = 0;
+	}
+
+	if (getKey(P2_RIGHT))
+	{
+		if (pl->direction == 0 || pl->direction == 2)
+		{
+			if (pl->offsetY % 4 == 1)
+			{
+				pl->offsetY--;
+			}
+			else if (pl->offsetY % 4 == 3)
+			{
+				pl->offsetY++;
+			}
+		}
+		pl->offsetX += PLAYER_WALK_SPEED;
+		pl->direction = 1;
+		
+		if (getKey(P2_UP))
+		{
+			pl->offsetX -= PLAYER_WALK_SPEED/2;
+			pl->offsetY += PLAYER_WALK_SPEED/2;
+		}
+		else if (getKey(P2_DOWN))
+		{
+			pl->offsetX -= PLAYER_WALK_SPEED/2;
+			pl->offsetY -= PLAYER_WALK_SPEED/2;
+		}
+
+		if (pl->offsetX > 16)
+		{
+			if (eastResultSize < 1)
+			{
+				xInc++;
+				pl->offsetX -= 16;
+			}
+			else
+			{
+				pl->offsetX = 16;
+			}
+		}
+	}
+	
+	if (getKey(P2_DOWN))
+	{
+		if (pl->direction == 1 || pl->direction == 3)
+		{
+			if (pl->offsetX % 4 == 1)
+			{
+				pl->offsetX--;
+			}
+			else if (pl->offsetX % 4 == 3)
+			{
+				pl->offsetX++;
+			}
+		}
+		pl->offsetY += PLAYER_WALK_SPEED;
+		pl->direction = 2;
+		
+		if (pl->offsetY > 16)
+		{
+			if (southResultSize < 1)
+			{
+				yInc++;
+				pl->offsetY -= 16;
+			}
+			else
+			{
+				pl->offsetY = 16;
+			}
+		}
+	}
+	
+	if (getKey(P2_LEFT))
+	{
+		if (pl->direction == 0 || pl->direction == 2)
+		{
+			if (pl->offsetY % 4 == 1)
+			{
+				pl->offsetY--;
+			}
+			else if (pl->offsetY % 4 == 3)
+			{
+				pl->offsetY++;
+			}
+		}
+		pl->offsetX -= PLAYER_WALK_SPEED;
+		pl->direction = 3;
+
+		if (getKey(P2_UP))
+		{
+			pl->offsetX += PLAYER_WALK_SPEED/2;
+			pl->offsetY += PLAYER_WALK_SPEED/2;
+		}
+		else if (getKey(P2_DOWN))
+		{
+			pl->offsetX += PLAYER_WALK_SPEED/2;
+			pl->offsetY -= PLAYER_WALK_SPEED/2;
+		}
+		
+		if (pl->offsetX < 0)
+		{
+			if (westResultSize < 1)
+			{
+				xInc--;
+				pl->offsetX += 16;
+			}
+			else
+			{
+				pl->offsetX = 0;
+			}
+		}
+
+	}
+	
+	if (getKey(P2_UP))
+	{
+		if (pl->direction == 1 || pl->direction == 3)
+		{
+			if (pl->offsetX % 4 == 1)
+			{
+				pl->offsetX--;
+			}
+			else if (pl->offsetX % 4 == 3)
+			{
+				pl->offsetX++;
+			}
+		}
+		pl->offsetY -= PLAYER_WALK_SPEED;
+		pl->direction = 0;
+		
+		if (pl->offsetY < 0)
+		{
+			if ( northResultSize < 1)
+			{
+				yInc--;
+				pl->offsetY += 16;
+			}
+			else
+			{
+				pl->offsetY = 0;
+			}
+		}
+	}
+
+	pl->x += xInc;
+	pl->y += yInc;
+
+	return;
+}
+
 void update_enemy(Enemy* enemy, Uint32 currTime)
 {
 	int i;
@@ -1955,11 +2509,19 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					case 0:
 					for (i = 0; i < northResultSize; i++)
 					{
-						if (northList[i]->type == PLAYER1 || northList[i]->type == PLAYER2)
+						if (northList[i]->type == PLAYER1)
 						{
 							if (northList[i]->player.knockBackDirection == 255)
 							{
 								modPlayerHealth(1, -1);
+								northList[i]->player.knockBackDirection = enemy->AISlot2;
+							}
+						}
+						if (northList[i]->type == PLAYER2)
+						{
+							if (northList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(2, -1);
 								northList[i]->player.knockBackDirection = enemy->AISlot2;
 							}
 						}
@@ -1968,11 +2530,19 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					case 1:
 					for (i = 0; i < eastResultSize; i++)
 					{
-						if (eastList[i]->type == PLAYER1 || eastList[i]->type == PLAYER2)
+						if (eastList[i]->type == PLAYER1)
 						{
 							if (eastList[i]->player.knockBackDirection == 255)
 							{
 								modPlayerHealth(1, -1);
+								eastList[i]->player.knockBackDirection = enemy->AISlot2;
+							}
+						}
+						if (eastList[i]->type == PLAYER2)
+						{
+							if (eastList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(2, -1);
 								eastList[i]->player.knockBackDirection = enemy->AISlot2;
 							}
 						}
@@ -1981,11 +2551,19 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					case 2:
 					for (i = 0; i < southResultSize; i++)
 					{
-						if (southList[i]->type == PLAYER1 || southList[i]->type == PLAYER2)
+						if (southList[i]->type == PLAYER1)
 						{
 							if (southList[i]->player.knockBackDirection == 255)
 							{
 								modPlayerHealth(1, -1);
+								southList[i]->player.knockBackDirection = enemy->AISlot2;
+							}
+						}
+						if (southList[i]->type == PLAYER2)
+						{
+							if (southList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(2, -1);
 								southList[i]->player.knockBackDirection = enemy->AISlot2;
 							}
 						}
@@ -1994,11 +2572,19 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					case 3:
 					for (i = 0; i < westResultSize; i++)
 					{
-						if (westList[i]->type == PLAYER1 || westList[i]->type == PLAYER2)
+						if (westList[i]->type == PLAYER1)
 						{
 							if (westList[i]->player.knockBackDirection == 255)
 							{
 								modPlayerHealth(1, -1);
+								westList[i]->player.knockBackDirection = enemy->AISlot2;
+							}
+						}
+						if (westList[i]->type == PLAYER2)
+						{
+							if (westList[i]->player.knockBackDirection == 255)
+							{
+								modPlayerHealth(2, -1);
 								westList[i]->player.knockBackDirection = enemy->AISlot2;
 							}
 						}
@@ -2161,7 +2747,15 @@ void update_laser(Laser* block, Uint32 currTime)
 	{
 		if (((currList[i]->type == PLAYER1) || (currList[i]->type == PLAYER2)) && block->allegiance == 0)
 		{
-			modPlayerHealth(1, -1);
+			if (currList[i]->type == PLAYER1)
+			{
+				modPlayerHealth(1, -1);
+			}
+
+			if (currList[i]->type == PLAYER2)
+			{
+				modPlayerHealth(2, -1);
+			}
 
 			block->type = DELETE_ME_PLEASE;
 			return;
@@ -2410,8 +3004,10 @@ void update_entity(Entity* entity, Uint32 currTime)
 	switch (entity->type)
 	{
 		case PLAYER1:
-		case PLAYER2:
 		update_player( (Player*)entity, currTime);
+		break;
+		case PLAYER2:
+		update_player2( (Player*)entity, currTime);
 		break;
 		case PERMABLOCK:
 		break;

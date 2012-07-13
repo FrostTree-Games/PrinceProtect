@@ -17,10 +17,10 @@
 unsigned int xrand();
  
 /* clearResetGame()
- * Purpose: Sets the game logic to a clean, uninitalized state
+ * Purpose: Sets the game logic to a clean, uninitalized state; also specify number of players (1 or 2)
  * Returns: 0 on success, 1 on some sort of error
  */
-int clearResetGame();
+int clearResetGame(int playerCount);
 
 /* beginGame()
  * Purpose: Starts a clean, uninitalized game

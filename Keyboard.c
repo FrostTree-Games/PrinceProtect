@@ -37,10 +37,10 @@ int getKey(gameKey key)
 		return keyList[SDLK_RIGHT];
 		break;
 		case P1_A:
-		return keyList[SDLK_a];
+		return keyList[SDLK_n];
 		break;
 		case P1_B:
-		return keyList[SDLK_s];
+		return keyList[SDLK_m];
 		break;
 		case P1_START:
 		return keyList[SDLK_RETURN];
@@ -49,13 +49,29 @@ int getKey(gameKey key)
 		return keyList[SDLK_BACKSPACE];
 		break;
 		case P2_UP:
+		return keyList[SDLK_w];
+		break;
 		case P2_DOWN:
+		return keyList[SDLK_s];
+		break;
 		case P2_LEFT:
+		return keyList[SDLK_a];
+		break;
 		case P2_RIGHT:
+		return keyList[SDLK_d];
+		break;
 		case P2_A:
+		return keyList[SDLK_r];
+		break;
 		case P2_B:
+		return keyList[SDLK_t];
+		break;
 		case P2_START:
+		return keyList[SDLK_y];
+		break;
 		case P2_SELECT:
+		return keyList[SDLK_u];
+		break;
 		printf("No P2 code written yet\n");
 		default:
 		return 0;
