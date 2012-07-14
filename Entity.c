@@ -177,6 +177,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.AISlot1 = 0;
 		newEntity->enemy.AISlot2 = 0;
 		newEntity->enemy.AISlot3 = 0;
+		newEntity->enemy.lastFrameUpdate = getTimeSingleton();
+		newEntity->enemy.frame = 0;
 		break;
 		case ENEMY_BOXERGREG:
 		newEntity->enemy.x = newX;
@@ -191,6 +193,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.AISlot1 = 0;
 		newEntity->enemy.AISlot2 = 0;
 		newEntity->enemy.AISlot3 = 0;
+		newEntity->enemy.lastFrameUpdate = getTimeSingleton();
+		newEntity->enemy.frame = 0;
 		break;
 		default:
 		free(newEntity);
@@ -2326,6 +2330,21 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
+	
+	if (currTime - enemy->lastFrameUpdate > 150)
+	{
+		if (enemy->frame == 0)
+		{
+			enemy->frame = 1;
+		}
+		else
+		{
+			enemy->frame = 0;
+		}
+		
+		enemy->lastFrameUpdate = currTime;
+	}
+	
 
 	if(enemy->health < 1)
 	{
@@ -2613,17 +2632,17 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 					break;
 				}
 				
-				if (currTime - enemy->timer > 250)
+				if (currTime - enemy->timer > 1000)
 				{
 					enemy->AISlot1 = 0;
 				}
 				
-				if (xrand() % 5 < 2)
+				if (xrand() % 5 < 1)
 				{
 					enemy->AISlot2 = xrand() % 4;
 				}
 			}
-			else if (enemy->AISlot1 == 0 && xrand() % 10 < 3)
+			else if (enemy->cream == NULL && enemy->AISlot1 == 0 && xrand() % 10 < 3)
 			{
 				enemy->AISlot1 = 1;
 				enemy->timer = currTime;

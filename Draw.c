@@ -659,7 +659,7 @@ void drawCrawler(SDL_Surface* buffer, Enemy* en)
 {
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
-	
+
 	tileRect.x = 32;
 	tileRect.y = 128;
 	
@@ -703,6 +703,123 @@ void drawCrawler(SDL_Surface* buffer, Enemy* en)
 	
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	
+	if (en->cream != NULL)
+	{
+		entRect.y -= 16;
+		
+		tileRect.x = 208;
+		tileRect.y = 16;
+
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
+}
+
+void drawBoxerGreg(SDL_Surface* buffer, Enemy* en)
+{
+	SDL_Rect entRect = {0, 0, 16, 16};
+	SDL_Rect tileRect = {0, 0, 16, 16};
+	
+	tileRect.x = 32;
+	tileRect.y = 192;
+	
+	entRect.x = (en->x * 16) + en->offsetX - 8;
+	entRect.y = (en->y * 16) + en->offsetY - 8;
+	
+	if (en->knockBackDirection == 255)
+	{
+		if (en->cream != NULL)
+		{
+			tileRect.x += 32;
+		}
+		
+		if (en->frame == 1)
+		{
+			tileRect.x += 16;
+		}
+		
+		switch (en->direction)
+		{
+			case 0:
+			tileRect.y += 16;
+			break;
+			case 1:
+			tileRect.y += 32;
+			break;
+			case 2:
+			tileRect.y += 0;
+			break;
+			case 3:
+			tileRect.y += 48;
+			break;
+			case 4:
+			if (en->cream == NULL)
+			{
+				tileRect.x += 64;
+			}	
+			switch (en->AISlot2)
+			{
+				case 0:
+				tileRect.y += 16;
+				break;
+				case 1:
+				tileRect.y += 32;
+				break;
+				case 2:
+				tileRect.y += 0;
+				break;
+				case 3:
+				tileRect.y += 48;
+				break;
+				default:
+				break;
+			}
+			break;
+			default:
+			break;
+		}
+	}
+	else
+	{
+		tileRect.y += (((getTimeSingleton() - en->timer)/50 ) % 4) * 16;
+	}
+	
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	
+	if (en->AISlot1 == 1)
+	{
+		tileRect.x = 128;
+		tileRect.y = 192;
+		
+		if (en->frame == 1)
+		{
+			tileRect.x += 16;
+		}
+
+		switch (en->AISlot2)
+		{
+			case 0:
+			tileRect.y += 16;
+			entRect.y -= 16;
+			break;
+			case 1:
+			tileRect.y += 32;
+			entRect.x += 16;
+			break;
+			case 2:
+			tileRect.y += 0;
+			entRect.y += 16;
+			break;
+			case 3:
+			tileRect.y += 48;
+			entRect.x -= 16;
+			break;
+			default:
+			break;
+		}
+
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
+
 	if (en->cream != NULL)
 	{
 		entRect.y -= 16;
@@ -872,44 +989,7 @@ void testDraw(SDL_Surface* buffer)
 			}
 			break;
 			case ENEMY_BOXERGREG:
-			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
-			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 170, 170, 190));
-			if (entList[i]->enemy.cream != NULL)
-			{
-				entRect.y -= 16;
-				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
-			}
-			
-			//draw sword if necessary
-			if (entList[i]->enemy.AISlot1 == 1)
-			{
-				switch (entList[i]->enemy.AISlot2)
-				{
-					case 0:
-					altRect.x = (entList[i]->enemy.x * 16) + 4;
-                                        altRect.y = (entList[i]->enemy.y * 16) - 8;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
-					break;
-                                        case 1:
-                                        altRect.x = (entList[i]->enemy.x * 16) + 16;
-                                        altRect.y = (entList[i]->enemy.y * 16) + 4;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
-					break;
-					case 2:
-					altRect.x = (entList[i]->enemy.x * 16) + 4;
-                                        altRect.y = (entList[i]->enemy.y * 16) + 16;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
-					break;
-					case 3:
-					altRect.x = (entList[i]->enemy.x * 16) - 8;
-                                        altRect.y = (entList[i]->enemy.y * 16) + 4;
-                                        SDL_FillRect(buffer, &altRect, SDL_MapRGB(buffer->format, 255, 0, 50));
-					break;
-					default:
-					break;
-				}
-			}
+			drawBoxerGreg(buffer, (Enemy*)entList[i]);
 			break;
 			default:
 			break;

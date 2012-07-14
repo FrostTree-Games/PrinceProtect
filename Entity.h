@@ -186,7 +186,7 @@ typedef struct
 	unsigned char knockBackDirection; // 255->no knock back, 0->N, 1->E, 2->S, 3->W
 	IceCream* cream;
 	int AISlot1; //boxerGreg: 0 -> not punching, 1 -> punching, 2 -> blocking
-	int AISlot2; //boxerGreg: direction currently standing
+	int AISlot2; //boxerGreg: direction currently standing when direction is 4
 	int AISlot3;
 	Uint32 timer;
 	Uint32 lastFrameUpdate;
