@@ -57,6 +57,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.holding = NULL;
                 newEntity->player.swordTimer = 0;
                 newEntity->player.isThrusting = 0;
+                newEntity->player.thrustHit = 0;
                 newEntity->player.knockBackDirection = 255;
                 newEntity->player.lastFrameUpdate = getTimeSingleton();
                 newEntity->player.frame = 0;
@@ -644,6 +645,7 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->bKeyDown = 1;
 		pl->swordTimer = currTime;
 		pl->isThrusting = 1;
+		pl->thrustHit = 1;
 	}
 	else if (!getKey(P1_B) && pl->bKeyDown)
 	{
@@ -655,6 +657,7 @@ void update_player(Player* pl, Uint32 currTime)
 		if (currTime - pl->swordTimer > 150)
 		{
 			pl->isThrusting = 0;
+			pl->thrustHit = 0;
 			
 			if (pl->holdingSuperHammer == 1)
 			{
@@ -677,7 +680,7 @@ void update_player(Player* pl, Uint32 currTime)
 
 				for (i = 0; i < northResultSize; i++)
 				{
-					if (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG)
+					if (pl->thrustHit == 1 && (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG))
 					{
 						northList[i]->enemy.knockBackDirection = pl->direction;
 						northList[i]->enemy.offsetX = 8;
@@ -685,7 +688,7 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->enemy.health -= 1;
 						northList[i]->enemy.timer = currTime;
 						
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 					
 					if (northList[i]->type == ICEBLOCK)
@@ -694,7 +697,7 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->iBlock.direction = pl->direction;
 						northList[i]->iBlock.health -= 1;
 						
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 				}
 			}
@@ -704,7 +707,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < eastResultSize; i++)
 				{
-					if (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG)
+					if (pl->thrustHit == 1 && (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG))
 					{
 						eastList[i]->enemy.knockBackDirection = pl->direction;
 						eastList[i]->enemy.offsetX = 9;
@@ -712,7 +715,7 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->enemy.health -= 1;
 						eastList[i]->enemy.timer = currTime;
 						
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 					
 					if (eastList[i]->type == ICEBLOCK)
@@ -721,7 +724,7 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->iBlock.direction = pl->direction;
 						eastList[i]->iBlock.health -= 1;
 
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 				}
 			}
@@ -731,7 +734,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < southResultSize; i++)
 				{
-					if (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_BOXERGREG)
+					if (pl->thrustHit == 1 && (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_BOXERGREG))
 					{
 						southList[i]->enemy.knockBackDirection = pl->direction;
 						southList[i]->enemy.offsetX = 8;
@@ -739,7 +742,7 @@ void update_player(Player* pl, Uint32 currTime)
 						southList[i]->enemy.health -= 1;
 						southList[i]->enemy.timer = currTime;
 
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 					
 					if (southList[i]->type == ICEBLOCK)
@@ -748,7 +751,7 @@ void update_player(Player* pl, Uint32 currTime)
 						southList[i]->iBlock.direction = pl->direction;
 						southList[i]->iBlock.health -= 1;
 						
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 				}
 			}
@@ -758,7 +761,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < westResultSize; i++)
 				{
-					if (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG)
+					if (pl->thrustHit == 1 && (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG))
 					{
 						westList[i]->enemy.knockBackDirection = pl->direction;
 						westList[i]->enemy.offsetX = 7;
@@ -766,7 +769,7 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->enemy.health -= 1;
 						westList[i]->enemy.timer = currTime;
 
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 
 					if (westList[i]->type == ICEBLOCK)
@@ -775,7 +778,7 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->iBlock.direction = pl->direction;
 						westList[i]->iBlock.health -= 1;
 						
-						pl->isThrusting = 0;
+						pl->thrustHit = 0;
 					}
 				}
 			}

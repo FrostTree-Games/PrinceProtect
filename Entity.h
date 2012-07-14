@@ -163,6 +163,7 @@ typedef struct
 	unsigned char bKeyDown;
 	Uint32 swordTimer;
 	int isThrusting; // 0 = false, 1 = true
+	int thrustHit; // 0 = false, 1 = true (prevents monster from getting damaged too many times)
 	GameBlock* holding;
 	Uint32 lastUpdate;
 	unsigned char knockBackDirection; //0->N, 1->E, 2->S, 3->W, 255->NOT KNOCKED BACK
