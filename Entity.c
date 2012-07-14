@@ -654,22 +654,24 @@ void update_player(Player* pl, Uint32 currTime)
 
 	if (pl->isThrusting)
 	{
+		if (pl->holdingSuperHammer == 1)
+		{
+			pl->holdingSuperHammer = 0;
+			pl->thrustHit = 0;
+			
+			for (i = 0; i < 3; i++)
+			{
+				for (j = 0; j < 3; j++)
+				{
+					pushEntity(EXPLOSION, pl->x - 1 + i, pl->y - 1 + j);
+				}
+			}
+		}
+
 		if (currTime - pl->swordTimer > 150)
 		{
 			pl->isThrusting = 0;
 			pl->thrustHit = 0;
-			
-			if (pl->holdingSuperHammer == 1)
-			{
-				pl->holdingSuperHammer = 0;
-				for (i = 0; i < 3; i++)
-				{
-					for (j = 0; j < 3; j++)
-					{
-						pushEntity(EXPLOSION, pl->x - 1 + i, pl->y - 1 + j);
-					}
-				}
-			}
 		}
 
 		switch (pl->direction)
