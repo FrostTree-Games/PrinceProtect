@@ -276,12 +276,27 @@ void drawExplosion(SDL_Surface* buffer, Explosion* exp)
 
 void drawIceblock(SDL_Surface* buffer, IceBlock* ib)
 {
+	if (ib->health == 0)
+	{
+		return;
+	}
+
 	SDL_Rect tileRect = {160, 48, 16, 16};
 	SDL_Rect entRect = {(ib->x * 16) + (ib->offsetX - 8), (ib->y * 16) + (ib->offsetY - 8), 16, 16};
 
 	tileRect.x += (Sint16)( (3 - ib->health) * 16 );
 
-	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	if (ib->health == 1 && getTimeSingleton() - ib->startTime > 8 * 1000)
+	{
+		if ((getTimeSingleton()/100) % 2 == 0)
+		{
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		}
+	}
+	else
+	{
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
 }
 
 void drawTeleBlock(SDL_Surface* buffer, TeleBlock* tb)

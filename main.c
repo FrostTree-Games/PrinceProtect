@@ -157,7 +157,7 @@ void whimsyBlocks()
 	int flagMatrix[32][28];
 	int connectedBlockCounter = 0;
 	Entity** entList = getEntityList();
-	
+
 	void checkConnectedBlocks(int x, int y, BlockType b)
 	{
 		if (x > BOARD_WIDTH || y > BOARD_HEIGHT || x < 0 || y < 0)
@@ -228,6 +228,7 @@ void whimsyBlocks()
 			gameBlockGrid[x][y]->iBlock.offsetX = 8;
 			gameBlockGrid[x][y]->iBlock.offsetY = 8;
 			gameBlockGrid[x][y]->iBlock.health = 3;
+			gameBlockGrid[x][y]->iBlock.startTime = getTimeSingleton() - ((rand() % 7) * 100);
 			break;
 			case YELLOW_BLOCK:
 			gameBlockGrid[x][y]->type = GLUE;

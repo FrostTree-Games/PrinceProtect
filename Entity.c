@@ -658,7 +658,7 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			pl->holdingSuperHammer = 0;
 			pl->thrustHit = 0;
-			
+
 			for (i = 0; i < 3; i++)
 			{
 				for (j = 0; j < 3; j++)
@@ -689,15 +689,16 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->enemy.offsetY = 9;
 						northList[i]->enemy.health -= 1;
 						northList[i]->enemy.timer = currTime;
-						
+
 						pl->thrustHit = 0;
 					}
 					
-					if (northList[i]->type == ICEBLOCK)
+					if (pl->thrustHit == 1 && (northList[i]->type == ICEBLOCK))
 					{
 						northList[i]->iBlock.moving = 1;
 						northList[i]->iBlock.direction = pl->direction;
 						northList[i]->iBlock.health -= 1;
+						northList[i]->iBlock.startTime = currTime;
 						
 						pl->thrustHit = 0;
 					}
@@ -720,11 +721,12 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 					
-					if (eastList[i]->type == ICEBLOCK)
+					if (pl->thrustHit == 1 && (eastList[i]->type == ICEBLOCK))
 					{
 						eastList[i]->iBlock.moving = 1;
 						eastList[i]->iBlock.direction = pl->direction;
 						eastList[i]->iBlock.health -= 1;
+						eastList[i]->iBlock.startTime = currTime;
 
 						pl->thrustHit = 0;
 					}
@@ -747,11 +749,12 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 					
-					if (southList[i]->type == ICEBLOCK)
+					if (pl->thrustHit == 1 && (southList[i]->type == ICEBLOCK))
 					{
 						southList[i]->iBlock.moving = 1;
 						southList[i]->iBlock.direction = pl->direction;
 						southList[i]->iBlock.health -= 1;
+						southList[i]->iBlock.startTime = currTime;
 						
 						pl->thrustHit = 0;
 					}
@@ -774,11 +777,12 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 
-					if (westList[i]->type == ICEBLOCK)
+					if (pl->thrustHit == 1 && (westList[i]->type == ICEBLOCK))
 					{
 						westList[i]->iBlock.moving = 1;
 						westList[i]->iBlock.direction = pl->direction;
 						westList[i]->iBlock.health -= 1;
+						westList[i]->iBlock.startTime = currTime;
 						
 						pl->thrustHit = 0;
 					}
@@ -2651,6 +2655,12 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 	{
 		block->type = DELETE_ME_PLEASE;
 		return;
+	}
+	
+	if (currTime - block->startTime > 10 * 1000)
+	{
+		block->health -= 1;
+		block->startTime = currTime;
 	}
 
 	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
