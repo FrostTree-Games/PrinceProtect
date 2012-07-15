@@ -230,8 +230,20 @@ void drawGameBlock(SDL_Surface* buffer, GameBlock* gb)
 
 	if (gb->height > 0)
 	{
-		SDL_Rect shadowRect= {(gb->x * 16) + 4, (gb->y * 16) + 4, 8, 8};
-		SDL_FillRect(buffer, &shadowRect, SDL_MapRGB(buffer->format, 5, 5, 5));
+		SDL_Rect shadowRect= {(gb->x * 16), (gb->y * 16), 16, 16};
+		SDL_Rect shadowTileRect = {208, 0, 16, 16};
+		
+		if (gb->height < 33)
+		{
+			shadowTileRect.x += 16;
+		}
+		
+		if (gb->height < 66)
+		{
+			shadowTileRect.x += 16;
+		}
+		
+		SDL_BlitSurface(tileSheet, &shadowTileRect, buffer, &shadowRect);
 	}
 
 	switch (gb->bType)
