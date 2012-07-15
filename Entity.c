@@ -1941,6 +1941,20 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			return 4;
 		}
 	}
+	
+	if (currTime - enemy->lastFrameUpdate > 150)
+	{
+		if (enemy->frame == 0)
+		{
+			enemy->frame = 1;
+		}
+		else
+		{
+			enemy->frame = 0;
+		}
+		
+		enemy->lastFrameUpdate = currTime;
+	}
 
 	int i;
 	int moveSpeed = 4;

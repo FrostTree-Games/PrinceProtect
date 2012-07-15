@@ -755,7 +755,7 @@ void drawBoxerGreg(SDL_Surface* buffer, Enemy* en)
 			if (en->cream == NULL)
 			{
 				tileRect.x += 64;
-			}	
+			}
 			switch (en->AISlot2)
 			{
 				case 0:
@@ -829,6 +829,98 @@ void drawBoxerGreg(SDL_Surface* buffer, Enemy* en)
 
 		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	}
+}
+
+void drawShooter(SDL_Surface* buffer, Enemy* en)
+{
+	SDL_Rect entRect = {0, 0, 16, 16};
+	SDL_Rect tileRect = {0, 0, 16, 16};
+
+	tileRect.x = 96;
+	tileRect.y = 128;
+	
+	entRect.x = (en->x * 16) + en->offsetX - 8;
+	entRect.y = (en->y * 16) + en->offsetY - 8;
+	
+	if (en->knockBackDirection == 255)
+	{
+		if (en->cream != NULL)
+		{
+			tileRect.x += 32;
+		}
+		
+		if (en->frame == 1)
+		{
+			tileRect.x += 16;
+		}
+		
+		switch (en->direction)
+		{
+			case 0:
+			tileRect.y += 16;
+			break;
+			case 1:
+			tileRect.y += 32;
+			break;
+			case 2:
+			tileRect.y += 0;
+			break;
+			case 3:
+			tileRect.y += 48;
+			break;
+			default:
+			break;
+		}
+	}
+	else
+	{
+		tileRect.y += (((getTimeSingleton() - en->timer)/50 ) % 4) * 16;
+	}
+	
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	
+	if (en->cream != NULL)
+	{
+		entRect.y -= 16;
+		
+		tileRect.x = 208;
+		tileRect.y = 16;
+
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
+}
+
+void drawLaser(SDL_Surface* buffer, Laser* ls)
+{
+	SDL_Rect entRect = {0, 0, 16, 16};
+	SDL_Rect tileRect = {160, 64, 16, 16};
+
+	entRect.x = (ls->x * 16) + ls->offsetX - 8;
+	entRect.y = (ls->y * 16) + ls->offsetY - 8;
+
+	if (ls->allegiance == 0)
+	{
+		tileRect.y += 16;
+	}
+	
+	switch(ls->direction)
+	{
+		case 0:
+		tileRect.x += 48;
+		break;
+		case 1:
+		break;
+		case 2:
+		tileRect.x += 16;
+		break;
+		case 3:
+		tileRect.x += 32;
+		break;
+		default:
+		break;
+	}
+
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
 
 void testDraw(SDL_Surface* buffer)
@@ -930,22 +1022,7 @@ void testDraw(SDL_Surface* buffer)
 			drawExplosion(buffer, (Explosion*)entList[i]);
 			break;
 			case LASER:
-			entRect.x = 2 + (entList[i]->laser.x * 16) + entList[i]->laser.offsetX - 8;
-			entRect.y = 2 + (entList[i]->laser.y * 16) + entList[i]->laser.offsetY - 8;
-			entRect.w = 12;
-			entRect.h = 12;
-			if (entList[i]->laser.allegiance == 0)
-			{
-				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 0, 255, 50));
-			}
-			else if (entList[i]->laser.allegiance == 1)
-			{
-				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 210, 255, 50));
-			}
-			else
-			{
-				printf("Illegal laser allegiance: %d\n", entList[i]->laser.allegiance);
-			}
+			drawLaser(buffer, (Laser*)entList[i]);
 			break;
 			case TELEBLOCK:
 			drawTeleBlock(buffer, (TeleBlock*)entList[i]);
@@ -969,24 +1046,9 @@ void testDraw(SDL_Surface* buffer)
 			break;
 			case ENEMY_CRAWLER:
 			drawCrawler(buffer, (Enemy*)entList[i]);
-			/*entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
-			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 100, 5));
-			if (entList[i]->enemy.cream != NULL)
-			{
-				entRect.y -= 16;
-				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
-			}     */
 			break;
 			case ENEMY_SHOOTER:
-			entRect.x = (entList[i]->enemy.x * 16) + entList[i]->enemy.offsetX - 8;
-			entRect.y = (entList[i]->enemy.y * 16) + entList[i]->enemy.offsetY - 8;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 100, 255, 75));
-			if (entList[i]->enemy.cream != NULL)
-			{
-				entRect.y -= 16;
-				SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 240));
-			}
+			drawShooter(buffer, (Enemy*)entList[i]);
 			break;
 			case ENEMY_BOXERGREG:
 			drawBoxerGreg(buffer, (Enemy*)entList[i]);
