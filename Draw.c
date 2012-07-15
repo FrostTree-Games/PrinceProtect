@@ -471,6 +471,11 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 		
 		tileRect.y += 64;
 		
+		if (pl->holdingSuperHammer == 1)
+		{
+			tileRect.y += 64;
+		}
+		
 		//draw sword/hammer
 		switch (pl->direction)
 		{
@@ -1049,7 +1054,9 @@ void testDraw(SDL_Surface* buffer)
 			case SUPERHAMMER:
 			entRect.x = entList[i]->hammer.x * 16;
 			entRect.y = entList[i]->hammer.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 0, 0));
+			tileRect.x = 208 + 16;
+			tileRect.y = 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;
 			case GLUE:
 			entRect.x = entList[i]->hammer.x * 16;

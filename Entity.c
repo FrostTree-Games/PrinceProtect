@@ -660,7 +660,6 @@ void update_player(Player* pl, Uint32 currTime)
 	{
 		if (pl->holdingSuperHammer == 1)
 		{
-			pl->holdingSuperHammer = 0;
 			pl->thrustHit = 0;
 
 			for (i = 0; i < 3; i++)
@@ -674,6 +673,7 @@ void update_player(Player* pl, Uint32 currTime)
 
 		if (currTime - pl->swordTimer > 150)
 		{
+			pl->holdingSuperHammer = 0;
 			pl->isThrusting = 0;
 			pl->thrustHit = 0;
 		}
