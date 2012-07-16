@@ -1054,14 +1054,16 @@ void testDraw(SDL_Surface* buffer)
 			case SUPERHAMMER:
 			entRect.x = entList[i]->hammer.x * 16;
 			entRect.y = entList[i]->hammer.y * 16;
-			tileRect.x = 208 + 16;
+			tileRect.x = 224;
 			tileRect.y = 16;
 			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;
 			case GLUE:
-			entRect.x = entList[i]->hammer.x * 16;
-			entRect.y = entList[i]->hammer.y * 16;
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 150, 75, 0));
+			entRect.x = entList[i]->iceCream.x * 16;
+			entRect.y = entList[i]->iceCream.y * 16;
+			tileRect.x = 240;
+			tileRect.y = 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;
 			case ENEMY_CRAWLER:
 			drawCrawler(buffer, (Enemy*)entList[i]);

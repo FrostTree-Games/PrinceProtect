@@ -337,8 +337,6 @@ int clearResetGame(int playerCount)
 		is2PlayerGame = 0;
 		break;
 	}
-	
-	pushEntity(SUPERHAMMER, 5, 9);
 
 	return 0;
 }
