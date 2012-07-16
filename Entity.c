@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Keyboard.h"
 #include "GameLogic.h"
+#include "Particle.h"
 
 #define PLAYER_WALK_SPEED 3
 
@@ -704,6 +705,11 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->iBlock.health -= 1;
 						northList[i]->iBlock.startTime = currTime;
 						
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
+
 						pl->thrustHit = 0;
 					}
 				}
@@ -721,7 +727,7 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->enemy.offsetY = 8;
 						eastList[i]->enemy.health -= 1;
 						eastList[i]->enemy.timer = currTime;
-						
+
 						pl->thrustHit = 0;
 					}
 					
@@ -731,6 +737,11 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->iBlock.direction = pl->direction;
 						eastList[i]->iBlock.health -= 1;
 						eastList[i]->iBlock.startTime = currTime;
+
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
 
 						pl->thrustHit = 0;
 					}
@@ -760,6 +771,11 @@ void update_player(Player* pl, Uint32 currTime)
 						southList[i]->iBlock.health -= 1;
 						southList[i]->iBlock.startTime = currTime;
 						
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
+
 						pl->thrustHit = 0;
 					}
 				}
@@ -787,6 +803,11 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->iBlock.direction = pl->direction;
 						westList[i]->iBlock.health -= 1;
 						westList[i]->iBlock.startTime = currTime;
+					
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
 						
 						pl->thrustHit = 0;
 					}
@@ -1697,6 +1718,11 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			if  (xrand() % 2 == 0)
 			{
 				moveSpeed = 0;
+				
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, 1.9f);
 			}
 		}
 	}
@@ -2008,6 +2034,11 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			else
 			{
 				moveSpeed = 0;
+				
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, 1.9f);
 			}
 			
 			if (enemy->knockBackDirection != 255)
@@ -2416,6 +2447,11 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			if (xrand() % 2 == 1)
 			{
 				moveSpeed = 0;
+				
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, 1.9f);
 			}
 		}
 	}
@@ -2694,6 +2730,11 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 	{
 		block->health -= 1;
 		block->startTime = currTime;
+		
+		pushParticle(ICE, block->x * 16, block->y * 16, -2.0f, -1.9f);
+		pushParticle(ICE, block->x * 16, block->y * 16, 2.0f, -1.9f);
+		pushParticle(ICE, block->x * 16, block->y * 16, 2.0f, 1.9f);
+		pushParticle(ICE, block->x * 16, block->y * 16, -2.0f, 1.9f);
 	}
 
 	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);

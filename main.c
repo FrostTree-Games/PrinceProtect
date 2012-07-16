@@ -19,13 +19,14 @@
 #include "Pushdown.h"
 #include "GameLogic.h"
 #include "GameScreens.h"
+#include "Particle.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 272
 
 typedef enum
 {
-	NONE = 0,
+	INIT = 0,
 	SPLASH,
 	TITLE,
 	KEY_CONFIG,
@@ -331,6 +332,8 @@ int testLoop(int twoPlayerGame)
 	int quit = 0;
 	SDL_Event ev;
 	
+	initalizeParticleList();
+	
 	if (twoPlayerGame == 0)
 	{
 		clearResetGame(1);
@@ -381,6 +384,8 @@ int testLoop(int twoPlayerGame)
 		}
 
 		sortEntitiesForDrawing();
+		
+		updateParticles();
 
 		testDraw(buffer);
 
@@ -390,6 +395,8 @@ int testLoop(int twoPlayerGame)
 	}
 	
 	freeEntityList();
+	
+	freeParticleList();
 
 	return 0;
 }
@@ -405,7 +412,7 @@ int main(int argc, char* argv[])
 
 	while (hardCoreQuit == 0)
 	{
-		if (currentState == NONE)
+		if (currentState == INIT)
 		{
 			currentState = SPLASH;
 		}

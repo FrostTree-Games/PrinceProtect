@@ -9,6 +9,7 @@
 #include "Entity.h"
 #include "Pushdown.h"
 #include "GameLogic.h"
+#include "Particle.h"
 
 int pushNotificationFontSize = 10;
 TTF_Font* pushNotificationFont = NULL;
@@ -16,6 +17,26 @@ TTF_Font* pushNotificationFont = NULL;
 SDL_Surface* tileSheet;
 SDL_Surface* pubLogo;
 SDL_Surface* devLogo;
+
+// PIXEL MANIPULATION FUNCTIONS STOLEN FROM
+// http://lazyfoo.net/SDL_tutorials/lesson31/index.php
+// USED WITHOUT PERMISSION:: ALL RIGHTS TO LAZY FOO PRODUCTIONS
+Uint32 get_pixel32( SDL_Surface *surface, int x, int y )
+{
+	//Convert the pixels to 32 bit
+	Uint32 *pixels = (Uint32 *)surface->pixels;
+	
+	//Get the requested pixel
+	return pixels[ ( y * surface->w ) + x ];
+}
+void put_pixel32( SDL_Surface *surface, int x, int y, Uint32 pixel )
+{
+	//Convert the pixels to 32 bit
+	Uint32 *pixels = (Uint32 *)surface->pixels;
+	
+	//Set the pixel
+	pixels[ ( y * surface->w ) + x ] = pixel;
+}
 
 int setupAssets()
 {
@@ -940,6 +961,60 @@ void drawLaser(SDL_Surface* buffer, Laser* ls)
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
 
+void drawParticles(SDL_Surface* buffer)
+{
+	int i;
+	Uint32 px = 0;
+	Uint8* pxOffset = (Uint8*)&px;;
+	
+	Particle* pList = getParticleList();
+	
+	if (pList == NULL)
+	{
+		return;
+	}
+	
+	for (i = 0; i < PARTICLE_LIST_MAX_SIZE; i++)
+	{
+		if (pList[i].type == NONE)
+		{
+			continue;
+		}
+
+		switch (pList[i].type)
+		{
+			case ICE:
+			pxOffset[0] = 255;
+			pxOffset[1] = 255;
+			pxOffset[2] = 0;
+			break;
+			case MUD:
+			pxOffset[0] = 0;
+			pxOffset[1] = 200;
+			pxOffset[2] = 200;
+			break;
+			default:
+			break;
+		}
+		
+		switch (pList[i].type)
+		{
+			case ICE:
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
+			put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y, px);
+			put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px);
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y + 1, px);
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y - 1, px);
+			break;
+			case MUD:
+                        put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
+                        put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y + 1, px);
+			default:
+			break;
+		}
+	}
+}
+
 void testDraw(SDL_Surface* buffer)
 {
 	int i,j;
@@ -948,7 +1023,6 @@ void testDraw(SDL_Surface* buffer)
 
 	//used for default drawing
 	SDL_Rect entRect = {0, 0, 16, 16};
-	SDL_Rect altRect = {0, 0, 4, 4};
 	SDL_Rect tileRect = {0, 0, 16, 16};
 	
 	tileRect.x = 160;
@@ -1078,6 +1152,8 @@ void testDraw(SDL_Surface* buffer)
 			break;
 		}
 	}
+
+	drawParticles(buffer);
 	
 	drawHealthScores(buffer);
 	

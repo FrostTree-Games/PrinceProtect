@@ -1,5 +1,5 @@
-all: main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o
-	gcc -Wall -o whimsy.exe main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o -lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image
+all: main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o Particle.o
+	gcc -Wall -o whimsy.exe main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o Particle.o GameScreens.o -lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image
 
 main.o:
 	gcc -g -Wall -c main.c
@@ -22,5 +22,8 @@ GameLogic.o:
 GameScreens.o:
 	gcc -g -Wall -c GameScreens.c
 
+Particle.o:
+	gcc -g -Wall -c Particle.c
+
 clean:
-	rm main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o
+	rm main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o Particle.o whimsy.exe
