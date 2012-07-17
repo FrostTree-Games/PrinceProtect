@@ -34,15 +34,27 @@ typedef enum
 } gameKey;
 
 /* pollKeyboard()
- * Purpose: Updates the keyboard in memory. Should be called once every frame.
+ * Purpose: Updates the keyboard in memory. Should be called once every frame. Provides accurate gameKeys at that instant
  * Returns: n/a
  */
 void pollKeyboard();
 
+/* setKey()
+ * Purpose: Sets a specific player key to a certain gameKey
+ * Returns: n/a
+ */
+void setKey(SDLKey input, gameKey key);
+
 /* getKey()
- * Purpose: Determines if a key is pressed or not.
+ * Purpose: Determines if a gameKey is pressed or not.
  * Returns: -1 if pollKeyboard has never been called; 1 if specified key is down; 0 otherwise
  */
 int getKey(gameKey key);
+
+/* getSDLKeyValue()
+ * Purpose: Determines what key is pressed corresponds to what gameKey
+ * Returns: SDLKey of specified gameKey
+ */
+SDLKey getSDLKeyValue(gameKey key);
 
 #endif
