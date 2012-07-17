@@ -10,6 +10,7 @@
 #include "Pushdown.h"
 #include "GameLogic.h"
 #include "Particle.h"
+#include "Keyboard.h"
 
 int pushNotificationFontSize = 10;
 TTF_Font* pushNotificationFont = NULL;
@@ -201,7 +202,96 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition)
 	SDL_Rect buttonTextPosition = {53 + 10, 204 + 10, 0, 0};
 	SDL_Surface* buttonText;
 
+	SDL_Rect controlsPosition = {0, 0, 0, 0};
+	SDL_Surface* controlsText;
+
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 255, 0, 255));
+	
+	controlsPosition.x = 53;
+	controlsPosition.y = 53;
+	for (i = 0; i < 6; i++)
+	{
+		switch (i)
+		{
+			case 0:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P1_UP)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 1:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P1_DOWN)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 2:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P1_LEFT)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 3:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P1_RIGHT)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 4:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P1_A)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 5:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P1_B)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			default:
+			break;
+		}
+		
+		controlsPosition.y += 15;
+	}
+	
+	controlsPosition.x = 159;
+	controlsPosition.y = 53;
+	for (i = 0; i < 6; i++)
+	{
+		switch (i)
+		{
+			case 0:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P2_UP)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 1:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P2_DOWN)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 2:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P2_LEFT)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 3:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P2_RIGHT)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 4:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P2_A)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			case 5:
+			controlsText = TTF_RenderText_Solid(pushNotificationFont, (const char*)SDL_GetKeyName(getSDLKeyValue(P2_B)), textCol);
+			SDL_BlitSurface(controlsText, NULL, buffer, &controlsPosition);
+			SDL_FreeSurface(controlsText);
+			break;
+			default:
+			break;
+		}
+		
+		controlsPosition.y += 15;
+	}
 
 	for (i = 0; i < 3; i++)
 	{

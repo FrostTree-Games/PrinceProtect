@@ -44,7 +44,7 @@ int keyConfigScreen(SDL_Surface* screen)
 
 			leftKeyDown = 0;
 		}
-		
+
 		if (getKey(P1_RIGHT) && rightKeyDown == 0)
 		{
 			rightKeyDown = 1;
@@ -72,9 +72,7 @@ int keyConfigScreen(SDL_Surface* screen)
 
 			aKeyDown = 0;
 		}
-		
-		//do hard loop if keys need to be set (regret nothing)
-		
+
 		drawKeyConfigScreen(buffer, menuPosition);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
