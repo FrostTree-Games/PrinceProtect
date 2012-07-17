@@ -4,6 +4,94 @@
 #include "Keyboard.h"
 #include "GameScreens.h"
 
+int keyConfigScreen(SDL_Surface* screen)
+{
+	int hardCoreQuit = 0;
+	
+	int menuPosition = 2; //highlights selected menu: 0 -> configP1, 1 -> configP2, 2 -> back button
+	int quit = 0;
+	
+	int leftKeyDown = 0;
+	int rightKeyDown = 0;
+	int aKeyDown = 0;
+
+	SDL_Event ev;
+	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+	Uint32 timeStamp = SDL_GetTicks();
+
+	while(quit == 0 && hardCoreQuit == 0)
+	{
+		while(SDL_PollEvent(&ev))
+		{
+			if (ev.type == SDL_QUIT)
+			{
+				hardCoreQuit = 1;
+			}
+		}
+		
+		pollKeyboard();
+
+		if (getKey(P1_LEFT) && leftKeyDown == 0)
+		{
+			leftKeyDown = 1;
+		}
+		else if (!getKey(P1_LEFT) && leftKeyDown == 1)
+		{
+			if (menuPosition > 0)
+			{
+				menuPosition -= 1;
+			}
+
+			leftKeyDown = 0;
+		}
+		
+		if (getKey(P1_RIGHT) && rightKeyDown == 0)
+		{
+			rightKeyDown = 1;
+		}
+		else if (!getKey(P1_RIGHT) && rightKeyDown == 1)
+		{
+			if (menuPosition < 2)
+			{
+				menuPosition += 1;
+			}
+
+			rightKeyDown = 0;
+		}
+		
+		if (getKey(P1_A) && aKeyDown == 0)
+		{
+			aKeyDown = 1;
+		}
+		else if (!getKey(P1_A) && aKeyDown == 1)
+		{
+			if (menuPosition == 2)
+			{
+				quit = 1;
+			}
+
+			aKeyDown = 0;
+		}
+		
+		//do hard loop if keys need to be set (regret nothing)
+		
+		drawKeyConfigScreen(buffer, menuPosition);
+
+		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_Flip(screen);
+		SDL_Delay(17);
+	}
+	
+	SDL_FreeSurface(buffer);
+	
+	if (hardCoreQuit == 1)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
 int preambleSplashScreen(SDL_Surface* screen)
 {
 	int hardCoreQuit = 0;
@@ -81,7 +169,7 @@ int titleScreen(SDL_Surface* screen)
 				hardCoreQuit = 1;
 			}
 		}
-		
+
 		pollKeyboard();
 
 		if (getKey(P1_UP) && upKeyDown == 0)

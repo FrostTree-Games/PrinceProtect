@@ -446,6 +446,7 @@ int main(int argc, char* argv[])
 				currentState = INGAME2;
 				break;
 				case 3:
+				currentState = KEY_CONFIG;
 				break;
 				case 4:
 				break;
@@ -468,6 +469,15 @@ int main(int argc, char* argv[])
 			testLoop(1);
 			
 			currentState = GAME_OVER;
+		}
+		else if (currentState == KEY_CONFIG)
+		{
+			if (keyConfigScreen(screen) == 1)
+			{
+				hardCoreQuit = 1;
+			}	
+
+			currentState = TITLE;
 		}
 		else if (currentState == GAME_OVER)
 		{

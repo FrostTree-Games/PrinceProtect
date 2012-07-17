@@ -193,6 +193,51 @@ void drawDevScreen(SDL_Surface* buffer, int devScreenNumber)
 	SDL_BlitSurface(image, NULL, buffer, &logoPosition);
 }
 
+void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition)
+{
+	int i;
+	SDL_Color textCol = {10, 100, 255, 0};
+	SDL_Rect buttonBox = {53, 204, 53, 48};
+	SDL_Rect buttonTextPosition = {53 + 10, 204 + 10, 0, 0};
+	SDL_Surface* buttonText;
+
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 255, 0, 255));
+
+	for (i = 0; i < 3; i++)
+	{
+		if (i == menuPosition)
+		{
+			SDL_FillRect(buffer, &buttonBox, SDL_MapRGB(buffer->format, 255, 255, 0));
+		}
+		else
+		{
+			SDL_FillRect(buffer, &buttonBox, SDL_MapRGB(buffer->format, 0, 0, 0));
+		}
+
+		switch (i)
+		{
+			case 0:
+			buttonText = TTF_RenderText_Solid(pushNotificationFont, "P1 KEY CONFIG", textCol);
+			break;
+			case 1:
+			buttonText = TTF_RenderText_Solid(pushNotificationFont, "P2 KEY CONFIG", textCol);
+			break;
+			case 2:
+			buttonText = TTF_RenderText_Solid(pushNotificationFont, "BACK", textCol);
+			break;
+			default:
+			buttonText = TTF_RenderText_Solid(pushNotificationFont, "LOL WUT?", textCol);
+			break;
+		}
+		
+		SDL_BlitSurface(buttonText, NULL, buffer, &buttonTextPosition);
+		SDL_FreeSurface(buttonText);
+
+		buttonTextPosition.x += 106;
+		buttonBox.x += 106;
+	}
+}
+
 void drawTitleScreen(SDL_Surface* buffer, int mSelected)
 {
 	int i;

@@ -22,6 +22,12 @@
 
 #define SCREEN_TIMEOUT_SECONDS 20
  
+/* keyConfigScreen()
+ * Purpose: Displays the screen that lets the player check key info
+ * Returns: Zero normally, 1 if the (X) button on the window was pressed
+ */
+int keyConfigScreen(SDL_Surface* screen);
+
 /* preambleSpashScreen()
  * Purpose: Displays the publisher and splash screens for around _____ seconds
  * Returns: Zero normally, 1 if the (X) button on the window was pressed

@@ -32,6 +32,12 @@ void clearAssets();
  */
 void drawGameOverScreen(SDL_Surface* buffer);
 
+/* drawKeyConfigScreen()
+ * Purpose: Draws the key config screen onto a buffer
+ * Returns: n/a
+ */
+void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition);
+
 /* drawDevScreen()
  * Purpose: Fills a buffer with black and writes either all black (-1), the publisher logo (devScreenNumber = 0), or the developer logo (devScreenNumber = 1) to it
  * Returns: n/a
