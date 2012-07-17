@@ -1719,10 +1719,10 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			{
 				moveSpeed = 0;
 				
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, -1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, -1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, 1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, -2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, 2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, -2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, 2.0f, 1.9f);
 			}
 		}
 	}
@@ -2035,10 +2035,10 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			{
 				moveSpeed = 0;
 				
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, -1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, -1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, 1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16 + 16, -2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16 + 16, enemy->y * 16 + 16, 2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16, enemy->y * 16 + 16, -2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16 + 16, enemy->y * 16 + 16, 2.0f, 1.9f);
 			}
 			
 			if (enemy->knockBackDirection != 255)
@@ -2448,10 +2448,10 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			{
 				moveSpeed = 0;
 				
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, -1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, -1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, -2.0f, 1.9f);
-				pushParticle(MUD, enemy->x * 16, enemy->y * 16, 2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, -2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, 2.0f, -1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, -2.0f, 1.9f);
+				pushParticle(MUD, enemy->x * 16 + 8, enemy->y * 16 + 16, 2.0f, 1.9f);
 			}
 		}
 	}

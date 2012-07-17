@@ -17,6 +17,7 @@ TTF_Font* pushNotificationFont = NULL;
 SDL_Surface* tileSheet;
 SDL_Surface* pubLogo;
 SDL_Surface* devLogo;
+SDL_Surface* gameLogo; //used on the title screen
 
 // PIXEL MANIPULATION FUNCTIONS STOLEN FROM
 // http://lazyfoo.net/SDL_tutorials/lesson31/index.php
@@ -75,6 +76,12 @@ int setupAssets()
 		fprintf(stderr, "Error loading publisher logo. Check assets.\n");
 		return 1;
 	}
+	
+	if ((gameLogo = IMG_Load("gfx/gameLogo.png")) == NULL)
+	{
+		fprintf(stderr, "Error loading game logo. Check assets.\n");
+		return 1;
+	}
 
 	return 0;
 }
@@ -84,6 +91,8 @@ void clearAssets()
 	TTF_CloseFont(pushNotificationFont);
 
 	SDL_FreeSurface(tileSheet);
+	
+	SDL_FreeSurface(gameLogo);
 	
 	SDL_FreeSurface(devLogo);
 	SDL_FreeSurface(pubLogo);
@@ -194,12 +203,16 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected)
 	SDL_Rect textPos = {0, 0, 0 ,0};
 	SDL_Surface* menuItemTextSurface = NULL;
 	SDL_Color textCol = {0, 0, 0, 0};
+	
+	SDL_Rect titlePos = {49, 20, 0, 0};
 
 	testMenuSelect.y = SCREEN_HEIGHT/2 + 1 + mSelected*20;
 
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
 	SDL_FillRect(buffer, &testMenuBox, SDL_MapRGB(buffer->format, 58, 58, 255));
 	SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
+	
+	SDL_BlitSurface(gameLogo, NULL, buffer, &titlePos);
 	
 	for (i = 0; i < 5; i++)
 	{

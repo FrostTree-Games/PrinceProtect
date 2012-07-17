@@ -63,7 +63,7 @@ void updateParticles()
 			}
 			break;
 			case MUD:
-			if (getTimeSingleton() - particleList[i].startTime > 250)
+			if (getTimeSingleton() - particleList[i].startTime > 100)
 			{
 				particleList[i].type = NONE;
 			}
