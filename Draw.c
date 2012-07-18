@@ -194,7 +194,7 @@ void drawDevScreen(SDL_Surface* buffer, int devScreenNumber)
 	SDL_BlitSurface(image, NULL, buffer, &logoPosition);
 }
 
-void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition)
+void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 {
 	int i;
 	SDL_Color textCol = {10, 100, 255, 0};
@@ -291,6 +291,65 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition)
 		}
 		
 		controlsPosition.y += 15;
+	}
+	
+	if (keyCheck != -1)
+	{
+		SDL_Rect queryBox = {100, 100, 120, 50};
+		SDL_Rect queryTextPosition = {110, 110, 0, 0};
+		SDL_Surface* queryTextSurface = NULL;
+		char queryText[100];
+		char* keyText;
+
+		switch (keyCheck)
+		{
+			case 0:
+			keyText = (char*)"P1 MOVE UP";
+			break;
+			case 1:
+			keyText = (char*)"P1 MOVE DOWN";
+			break;
+			case 2:
+			keyText = (char*)"P1 MOVE LEFT";
+			break;
+			case 3:
+			keyText = (char*)"P1 MOVE RIGHT";
+			break;
+			case 4:
+			keyText = (char*)"P1 GRAB/DROP BLOCK";
+			break;
+			case 5:
+			keyText = (char*)"P1 STRIKE";
+			break;
+			case 10:
+			keyText = (char*)"P2 MOVE UP";
+			break;
+			case 11:
+			keyText = (char*)"P2 MOVE DOWN";
+			break;
+			case 12:
+			keyText = (char*)"P2 MOVE LEFT";
+			break;
+			case 13:
+			keyText = (char*)"P2 MOVE RIGHT";
+			break;
+			case 14:
+			keyText = (char*)"P2 GRAB/DROP BLOCK";
+			break;
+			case 15:
+			keyText = (char*)"P2 STRIKE";
+			break;
+			default:
+			keyText = (char*)"???";
+			break;
+
+		}
+
+		sprintf(queryText, "Press key for %s", keyText);
+		SDL_FillRect(buffer, &queryBox, SDL_MapRGB(buffer->format, 100, 100, 100));
+		queryTextSurface = TTF_RenderText_Solid(pushNotificationFont, (const char*)queryText, textCol);
+		SDL_BlitSurface(queryTextSurface, NULL, buffer, &queryTextPosition);
+		SDL_FreeSurface(queryTextSurface);
 	}
 
 	for (i = 0; i < 3; i++)

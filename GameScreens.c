@@ -58,7 +58,7 @@ int keyConfigScreen(SDL_Surface* screen)
 
 			rightKeyDown = 0;
 		}
-		
+
 		if (getKey(P1_A) && aKeyDown == 0)
 		{
 			aKeyDown = 1;
@@ -69,11 +69,131 @@ int keyConfigScreen(SDL_Surface* screen)
 			{
 				quit = 1;
 			}
+			else if (menuPosition == 0)
+			{
+				int i = 0;
+				SDL_Event check;
+				
+				//this is a disgusting loop-inside a loop // no regrets
+				while (i < 6)
+				{
+					while (SDL_PollEvent(&check))
+					{
+						if (check.type == SDL_QUIT)
+						{
+							hardCoreQuit = 1;
+							i = 6;
+						}
+						else if (check.type == SDL_KEYUP)
+						{
+							if (check.key.keysym.sym == SDLK_ESCAPE)
+							{
+								i = 6;
+								continue;
+							}
+							else
+							{
+								switch (i)
+								{
+									case 0:
+									setKey(check.key.keysym.sym, P1_UP);
+									break;
+									case 1:
+									setKey(check.key.keysym.sym, P1_DOWN);
+									break;
+									case 2:
+									setKey(check.key.keysym.sym, P1_LEFT);
+									break;
+									case 3:
+									setKey(check.key.keysym.sym, P1_RIGHT);
+									break;
+									case 4:
+									setKey(check.key.keysym.sym, P1_A);
+									break;
+									case 5:
+									setKey(check.key.keysym.sym, P1_B);
+									break;
+									default:
+									break;
+								}
+								
+								i++;
+							}
+						}
+					}
+
+					drawKeyConfigScreen(buffer, menuPosition, i);
+
+					SDL_SoftStretch(buffer, NULL, screen, NULL);
+					SDL_Flip(screen);
+					SDL_Delay(17);
+				}
+			}
+			else if (menuPosition == 1)
+			{
+				int i = 0;
+				SDL_Event check;
+				
+				//this is a disgusting loop-inside a loop // no regrets
+				while (i < 6)
+				{
+					while (SDL_PollEvent(&check))
+					{
+						if (check.type == SDL_QUIT)
+						{
+							hardCoreQuit = 1;
+							i = 6;
+						}
+						else if (check.type == SDL_KEYUP)
+						{
+							if (check.key.keysym.sym == SDLK_ESCAPE)
+							{
+								i = 6;
+								continue;
+							}
+							else
+							{
+								switch (i)
+								{
+									case 0:
+									setKey(check.key.keysym.sym, P2_UP);
+									break;
+									case 1:
+									setKey(check.key.keysym.sym, P2_DOWN);
+									break;
+									case 2:
+									setKey(check.key.keysym.sym, P2_LEFT);
+									break;
+									case 3:
+									setKey(check.key.keysym.sym, P2_RIGHT);
+									break;
+									case 4:
+									setKey(check.key.keysym.sym, P2_A);
+									break;
+									case 5:
+									setKey(check.key.keysym.sym, P2_B);
+									break;
+									default:
+									break;
+								}
+								
+								i++;
+							}
+						}
+					}
+
+					drawKeyConfigScreen(buffer, menuPosition, i + 10);
+
+					SDL_SoftStretch(buffer, NULL, screen, NULL);
+					SDL_Flip(screen);
+					SDL_Delay(17);
+				}
+			}
 
 			aKeyDown = 0;
 		}
 
-		drawKeyConfigScreen(buffer, menuPosition);
+		drawKeyConfigScreen(buffer, menuPosition, -1);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);
