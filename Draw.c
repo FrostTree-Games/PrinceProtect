@@ -554,7 +554,35 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
 
-	if (pl->isThrusting  == 0)
+	if (pl->knockBackDirection != 255)
+	{
+		tileRect.x = 32;
+		tileRect.y = 64;
+		
+		switch (pl->knockBackDirection)
+		{
+			case 0:
+			tileRect.y += 0;
+			break;
+			case 1:
+			tileRect.y += 48;
+			break;
+			case 2:
+			tileRect.y += 16;
+			break;
+			case 3:
+			tileRect.y += 32;
+			break;
+			default:
+			break;
+		}
+		
+		entRect.x = (pl->x * 16) + pl->offsetX - 8;
+		entRect.y = (pl->y * 16) + pl->offsetY - 8;
+		
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
+	else if (pl->isThrusting  == 0)
 	{
 		if (pl->holding != NULL)
 		{

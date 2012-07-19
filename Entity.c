@@ -596,43 +596,67 @@ void update_player(Player* pl, Uint32 currTime)
 	{
 		pl->holding->startTime = getTimeSingleton();
 	}
-	
+
 	// if the player gets completely knocked back, then he/she cannot do logic for that iteration
 	if (pl->knockBackDirection != 255)
 	{
-		switch(pl->knockBackDirection)
+		if (currTime - pl->swordTimer > 210)
 		{
-			case 0:
-			if (northResultSize == 0)
+			switch (pl->knockBackDirection)
 			{
-				pl->y -= 1;
+				case 0:
+				pl->direction = 2;
+				break;
+				case 1:
+				pl->direction = 3;
+				break;
+				case 2:
+				pl->direction = 0;
+				break;
+				case 3:
+				pl->direction = 1;
+				break;
+				default:
+				break;
 			}
-			break;
-			case 1:
-			if (eastResultSize == 0 && pl->x + 1 < BOARD_WIDTH)
-			{
-				pl->x += 1;
-			}
-			break;
-			case 2:
-			if (southResultSize == 0)
-			{
-				pl->y += 1;
-			}
-			break;
-			case 3:
-			if (westResultSize == 0 && pl->x - 1 >= 0)
-			{
-				pl->x -= 1;
-			}
-			break;
-			default:
-			printf("Player knock back all odd! value:%d\n", pl->knockBackDirection);
-			break;
-		}
 
-		pl->knockBackDirection = 255;
-		return;
+			pl->knockBackDirection = 255;
+		}
+		
+		if (currTime - pl->swordTimer < 130)
+		{
+			switch(pl->knockBackDirection)
+			{
+				case 0:
+				//if (northResultSize == 0)
+				//{
+					pl->offsetY -= 4;
+				//}
+				break;
+				case 1:
+				//if (eastResultSize == 0 && pl->x + 1 < BOARD_WIDTH)
+				//{
+					pl->offsetX += 4;
+				//}
+				break;
+				case 2:
+				//if (southResultSize == 0)
+				//{
+					pl->offsetY += 4;
+				//}
+				break;
+				case 3:
+				//if (westResultSize == 0 && pl->x - 1 >= 0)
+				//{
+					pl->offsetX -= 4;
+				//}
+				break;
+				default:
+				printf("Player knock back all odd! value:%d\n", pl->knockBackDirection);
+				case 255:
+				break;
+			}
+		}
 	}
 	
 	for (i = 0; i < currResultSize; i++)
@@ -645,7 +669,7 @@ void update_player(Player* pl, Uint32 currTime)
 		}
 	}
 	
-	if (getKey(P1_B) && !(pl->bKeyDown))
+	if (getKey(P1_B) && !(pl->bKeyDown) && pl->knockBackDirection == 255)
 	{
 		pl->bKeyDown = 1;
 		pl->swordTimer = currTime;
@@ -657,7 +681,7 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->bKeyDown = 0;
 	}
 
-	if (pl->isThrusting)
+	if (pl->isThrusting && pl->knockBackDirection == 255)
 	{
 		if (pl->holdingSuperHammer == 1)
 		{
@@ -822,7 +846,7 @@ void update_player(Player* pl, Uint32 currTime)
 		return; //don't move and thrust sword at the same time
 	}
 
-	if (getKey(P1_A) && !(pl->aKeyDown))
+	if (getKey(P1_A) && !(pl->aKeyDown) && pl->knockBackDirection == 255)
 	{
 		pl->aKeyDown = 1;
 
@@ -937,12 +961,12 @@ void update_player(Player* pl, Uint32 currTime)
 			return; //prevents player from walking onto their own placed block
 		}
 	}
-	else if (!getKey(P1_A) && pl->aKeyDown)
+	else if (!getKey(P1_A) && pl->aKeyDown && pl->knockBackDirection == 255)
 	{
 		pl->aKeyDown = 0;
 	}
 
-	if (getKey(P1_RIGHT))
+	if (getKey(P1_RIGHT) && pl->knockBackDirection == 255)
 	{
 		if (pl->direction == 0 || pl->direction == 2)
 		{
@@ -968,22 +992,9 @@ void update_player(Player* pl, Uint32 currTime)
 			pl->offsetX -= PLAYER_WALK_SPEED/2;
 			pl->offsetY -= PLAYER_WALK_SPEED/2;
 		}
-
-		if (pl->offsetX > 16)
-		{
-			if (eastResultSize < 1)
-			{
-				xInc++;
-				pl->offsetX -= 16;
-			}
-			else
-			{
-				pl->offsetX = 16;
-			}
-		}
 	}
 	
-	if (getKey(P1_DOWN))
+	if (getKey(P1_DOWN) && pl->knockBackDirection == 255)
 	{
 		if (pl->direction == 1 || pl->direction == 3)
 		{
@@ -998,22 +1009,9 @@ void update_player(Player* pl, Uint32 currTime)
 		}
 		pl->offsetY += PLAYER_WALK_SPEED;
 		pl->direction = 2;
-		
-		if (pl->offsetY > 16)
-		{
-			if (southResultSize < 1)
-			{
-				yInc++;
-				pl->offsetY -= 16;
-			}
-			else
-			{
-				pl->offsetY = 16;
-			}
-		}
 	}
 	
-	if (getKey(P1_LEFT))
+	if (getKey(P1_LEFT) && pl->knockBackDirection == 255)
 	{
 		if (pl->direction == 0 || pl->direction == 2)
 		{
@@ -1039,23 +1037,9 @@ void update_player(Player* pl, Uint32 currTime)
 			pl->offsetX += PLAYER_WALK_SPEED/2;
 			pl->offsetY -= PLAYER_WALK_SPEED/2;
 		}
-		
-		if (pl->offsetX < 0)
-		{
-			if (westResultSize < 1)
-			{
-				xInc--;
-				pl->offsetX += 16;
-			}
-			else
-			{
-				pl->offsetX = 0;
-			}
-		}
-
 	}
 	
-	if (getKey(P1_UP))
+	if (getKey(P1_UP) && pl->knockBackDirection == 255)
 	{
 		if (pl->direction == 1 || pl->direction == 3)
 		{
@@ -1070,18 +1054,57 @@ void update_player(Player* pl, Uint32 currTime)
 		}
 		pl->offsetY -= PLAYER_WALK_SPEED;
 		pl->direction = 0;
-		
-		if (pl->offsetY < 0)
+	}
+	
+	if (pl->offsetX > 16)
+	{
+		if (eastResultSize < 1)
 		{
-			if ( northResultSize < 1)
-			{
-				yInc--;
-				pl->offsetY += 16;
-			}
-			else
-			{
-				pl->offsetY = 0;
-			}
+			xInc++;
+			pl->offsetX -= 16;
+		}
+		else
+		{
+			pl->offsetX = 16;
+		}
+	}
+
+	if (pl->offsetY > 16)
+	{
+		if (southResultSize < 1)
+		{
+			yInc++;
+			pl->offsetY -= 16;
+		}
+		else
+		{
+			pl->offsetY = 16;
+		}
+	}
+	
+	if (pl->offsetX < 0)
+	{
+		if (westResultSize < 1)
+		{
+			xInc--;
+			pl->offsetX += 16;
+		}
+		else
+		{
+			pl->offsetX = 0;
+		}
+	}
+	
+	if (pl->offsetY < 0)
+	{
+		if ( northResultSize < 1)
+		{
+			yInc--;
+			pl->offsetY += 16;
+		}
+		else
+		{
+			pl->offsetY = 0;
 		}
 	}
 
@@ -2602,6 +2625,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(1, -1);
 								northList[i]->player.knockBackDirection = enemy->AISlot2;
+								northList[i]->player.swordTimer = currTime;
+								northList[i]->player.isThrusting = 0;
 							}
 						}
 						if (northList[i]->type == PLAYER2)
@@ -2610,6 +2635,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(2, -1);
 								northList[i]->player.knockBackDirection = enemy->AISlot2;
+								northList[i]->player.swordTimer = currTime;
+								northList[i]->player.isThrusting = 0;
 							}
 						}
 					}
@@ -2623,6 +2650,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(1, -1);
 								eastList[i]->player.knockBackDirection = enemy->AISlot2;
+								eastList[i]->player.swordTimer = currTime;
+								eastList[i]->player.isThrusting = 0;
 							}
 						}
 						if (eastList[i]->type == PLAYER2)
@@ -2631,6 +2660,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(2, -1);
 								eastList[i]->player.knockBackDirection = enemy->AISlot2;
+								eastList[i]->player.swordTimer = currTime;
+								eastList[i]->player.isThrusting = 0;
 							}
 						}
 					}
@@ -2644,6 +2675,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(1, -1);
 								southList[i]->player.knockBackDirection = enemy->AISlot2;
+								southList[i]->player.swordTimer = currTime;
+								southList[i]->player.isThrusting = 0;
 							}
 						}
 						if (southList[i]->type == PLAYER2)
@@ -2652,6 +2685,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(2, -1);
 								southList[i]->player.knockBackDirection = enemy->AISlot2;
+								southList[i]->player.swordTimer = currTime;
+								southList[i]->player.isThrusting = 0;
 							}
 						}
 					}
@@ -2665,6 +2700,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(1, -1);
 								westList[i]->player.knockBackDirection = enemy->AISlot2;
+								westList[i]->player.swordTimer = currTime;
+								westList[i]->player.isThrusting = 0;
 							}
 						}
 						if (westList[i]->type == PLAYER2)
@@ -2673,6 +2710,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 							{
 								modPlayerHealth(2, -1);
 								westList[i]->player.knockBackDirection = enemy->AISlot2;
+								westList[i]->player.swordTimer = currTime;
+								westList[i]->player.isThrusting = 0;
 							}
 						}
 					}
