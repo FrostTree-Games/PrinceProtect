@@ -554,7 +554,46 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
 
-	if (pl->knockBackDirection != 255)
+	if (pl->dead == 1)
+	{
+		entRect.x = (pl->x * 16) + pl->offsetX - 8;
+		entRect.y = (pl->y * 16) + pl->offsetY - 8;
+		
+		if (getTimeSingleton() - pl->swordTimer > 1000)
+		{
+			tileRect.x = 48;
+			tileRect.y = 64;
+		}
+		else
+		{
+			switch (((getTimeSingleton() - pl->swordTimer) / 50) % 4)
+			{
+				case 0:
+				tileRect.x = 32;
+				tileRect.y = 64 + 48;
+				break;
+				case 1:
+				tileRect.x = 32;
+				tileRect.y = 64 + 16;
+				break;
+				case 2:
+				tileRect.x = 32;
+				tileRect.y = 64 + 32;
+				break;
+				case 3:
+				tileRect.x = 32;
+				tileRect.y = 64;
+				break;
+				default:
+				tileRect.x = 48;
+				tileRect.y = 64;
+				break;
+			}
+		}
+
+		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+	}
+	else if (pl->knockBackDirection != 255)
 	{
 		tileRect.x = 32;
 		tileRect.y = 64;
@@ -612,7 +651,7 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 			placementRect.y += 16;
 			SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
 			placementRect.y -= 16;
-	
+
 			placementRect.w = 1;
 			placementRect.h = 16;
 			SDL_FillRect(buffer, &placementRect, SDL_MapRGB(buffer->format, 0, 0, 0));
@@ -622,13 +661,7 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	
 		entRect.x = (pl->x * 16) + pl->offsetX - 8;
 		entRect.y = (pl->y * 16) + pl->offsetY - 8;
-		
-		if (pl->dead == 1)
-		{
-			SDL_FillRect(buffer, &entRect, SDL_MapRGB(buffer->format, 255, 255, 0));
-			return;
-		}
-	
+
 		switch (pl->direction)
 		{
 			case 0:

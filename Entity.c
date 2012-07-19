@@ -588,7 +588,10 @@ void update_player(Player* pl, Uint32 currTime)
 	
 	if (getPlayerHealth(1) < 1)
 	{
+		pl->swordTimer = currTime;
+		pl->knockBackDirection = 255;
 		pl->dead = 1;
+		return;
 	}
 	
 	//this is a quick way of preventing block timeout
@@ -628,28 +631,16 @@ void update_player(Player* pl, Uint32 currTime)
 			switch(pl->knockBackDirection)
 			{
 				case 0:
-				//if (northResultSize == 0)
-				//{
-					pl->offsetY -= 4;
-				//}
+				pl->offsetY -= 4;
 				break;
 				case 1:
-				//if (eastResultSize == 0 && pl->x + 1 < BOARD_WIDTH)
-				//{
-					pl->offsetX += 4;
-				//}
+				pl->offsetX += 4;
 				break;
 				case 2:
-				//if (southResultSize == 0)
-				//{
-					pl->offsetY += 4;
-				//}
+				pl->offsetY += 4;
 				break;
 				case 3:
-				//if (westResultSize == 0 && pl->x - 1 >= 0)
-				//{
-					pl->offsetX -= 4;
-				//}
+				pl->offsetX -= 4;
 				break;
 				default:
 				printf("Player knock back all odd! value:%d\n", pl->knockBackDirection);

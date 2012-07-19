@@ -161,7 +161,7 @@ typedef struct
 	unsigned char rightKeyDown;
 	unsigned char aKeyDown;
 	unsigned char bKeyDown;
-	Uint32 swordTimer;
+	Uint32 swordTimer; //this generally gets used as a timeout for striking, but also for getting knocked back and dying animations
 	int isThrusting; // 0 = false, 1 = true
 	int thrustHit; // 0 = false, 1 = true (prevents monster from getting damaged too many times)
 	GameBlock* holding;
