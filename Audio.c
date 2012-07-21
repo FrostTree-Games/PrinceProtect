@@ -20,12 +20,20 @@ Mix_Chunk* swordStrike;
 Mix_Chunk* teleport;
 Mix_Chunk* princessYell;
 Mix_Chunk* crash;
+Mix_Chunk* wipe_open;
+Mix_Chunk* wipe_close;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
 {
-	int returnVal = 0;
-
+	if ( (wipe_open = Mix_LoadWAV("aud/sfx/open.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading wipe 1 sound effect. Check for aud/sfx/open.wav\n");
+	}
+	if ( (wipe_close = Mix_LoadWAV("aud/sfx/close.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading wipe 2 sound effect. Check for aud/sfx/close.wav\n");
+	}
 	if ( (player_die = Mix_LoadWAV("aud/sfx/die.wav")) == NULL)
 	{
 		fprintf(stderr, "Error loading knockout sound effect. Check for aud/sfx/die.wav\n");
@@ -75,7 +83,7 @@ int loadSFXFiles()
 		fprintf(stderr, "Error loading princess yelling sound effect. Check for aud/sfx/princess.wav\n");
 	}
 
-	return returnVal;
+	return 0;
 }
 
 int setupAudio()
@@ -118,6 +126,8 @@ void clearAudio()
 	Mix_FreeChunk(teleport);
 	Mix_FreeChunk(princessYell);
 	Mix_FreeChunk(crash);
+	Mix_FreeChunk(wipe_open);
+	Mix_FreeChunk(wipe_close);
 
 	Mix_CloseAudio();
 	
@@ -179,6 +189,14 @@ void playSFX(SFXType fx)
 	if (fx == SFX_CRASH)
 	{
 		Mix_PlayChannel(-1, crash, 0);
+	}
+	if (fx == SFX_WIPE_OPEN)
+	{
+		Mix_PlayChannel(-1, wipe_open, 0);
+	}
+	if (fx == SFX_WIPE_CLOSE)
+	{
+		Mix_PlayChannel(-1, wipe_close, 0);
 	}
 }
 

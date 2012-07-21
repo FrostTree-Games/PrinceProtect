@@ -44,6 +44,18 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck);
  */
 void drawDevScreen(SDL_Surface* buffer, int devScreenNumber);
 
+/* drawToTitleWipe()
+ * Purpose: draws a to-title screen wipe; also passes a float to indicate how wide the curtains are (0.0 = no curtains, 1.0 = fully closed curtains)
+ * Returns: n/a
+ */
+void drawToTitleWipe(SDL_Surface* buffer, float curtainLength);
+
+/* drawToexitWipe()
+ * Purpose: draws a to-black screen wipe; also passes a float to indicate how wide the curtains are (0.0 = no curtains, 1.0 = fully closed curtains); draws over any current bitmap on the screen
+ * Returns: n/a
+ */
+void drawToExitWipe(SDL_Surface* buffer, float curtainLength);
+
 /* drawTitleScreen()
  * Purpose: draws the title screen; also passes in selected menu item and time since screen started
  * Returns: n/a

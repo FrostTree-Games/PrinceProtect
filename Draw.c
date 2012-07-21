@@ -404,6 +404,30 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 	}
 }
 
+void drawToTitleWipe(SDL_Surface* buffer, float curtainLength)
+{
+	drawTitleScreen(buffer, 0, 0);
+	
+	SDL_Rect leftCurtain = {0, 0, (int)(curtainLength*(SCREEN_WIDTH/2)), SCREEN_HEIGHT};
+	SDL_Rect rightCurtain = {SCREEN_WIDTH - (int)(curtainLength*(SCREEN_WIDTH/2)), 0, SCREEN_WIDTH/2, SCREEN_HEIGHT};
+	
+	SDL_FillRect(buffer, &leftCurtain, SDL_MapRGB(buffer->format, 0, 0, 0));
+	SDL_FillRect(buffer, &rightCurtain, SDL_MapRGB(buffer->format, 0, 0, 0));
+}
+
+void drawToExitWipe(SDL_Surface* buffer, float curtainLength)
+{
+	curtainLength = 1.0f - curtainLength;
+	
+	drawTitleScreen(buffer, 4, 5000);
+
+	SDL_Rect leftCurtain = {0, 0, (int)(curtainLength*(SCREEN_WIDTH/2)), SCREEN_HEIGHT};
+	SDL_Rect rightCurtain = {SCREEN_WIDTH - (int)(curtainLength*(SCREEN_WIDTH/2)), 0, SCREEN_WIDTH/2, SCREEN_HEIGHT};
+
+	SDL_FillRect(buffer, &leftCurtain, SDL_MapRGB(buffer->format, 0, 0, 0));
+	SDL_FillRect(buffer, &rightCurtain, SDL_MapRGB(buffer->format, 0, 0, 0));
+}
+
 void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 {
 	int i;

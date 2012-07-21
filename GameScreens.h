@@ -34,6 +34,18 @@ int keyConfigScreen(SDL_Surface* screen);
  */
 int preambleSplashScreen(SDL_Surface* screen);
 
+/* titleTransitionScreen()
+ * Purpose: Opens black curtains to the title screen
+ * Returns: Zero normally, 1 if the (X) button on the window was pressed
+ */
+int titleTransitionScreen(SDL_Surface* screen);
+
+/* exitTransitionScreen()
+ * Purpose: closes black curtains
+ * Returns: Zero normally, 1 if the (X) button on the window was pressed
+ */
+int exitTransitionScreen(SDL_Surface* screen);
+
 /* titleScreen()
  * Purpose: Displays the title screen in a sexy loop. After SCREEN_TIMEOUT_SECONDS the game defines
  * Returns: integer representing menu result press

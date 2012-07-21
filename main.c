@@ -35,7 +35,9 @@ typedef enum
 	INGAME,
 	INGAME2,
 	GAME_OVER,
-	ENCOURAGEMENT
+	ENCOURAGEMENT,
+	TRANSITION_TO_TITLE,
+	TRANSITION_TO_BLACK
 } screenState;
 
 // 1 of the (X) is clicked, game should then entirely exit
@@ -412,7 +414,7 @@ int testLoop(int twoPlayerGame)
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
-	currentState = TITLE; //should start at NONE
+	currentState = TRANSITION_TO_TITLE; //should start at NONE
 
 	if (init() != 0)
 	{
@@ -433,14 +435,14 @@ int main(int argc, char* argv[])
 			switch (preambleSplashScreen(screen))
 			{
 				case 0:
-				currentState = TITLE;
+				currentState = TRANSITION_TO_TITLE;
 				break;
 				case 1:
 				hardCoreQuit = 1;
 				break;
 				default:
 				fprintf(stderr, "Bad splash screen return!\n");
-				currentState = TITLE;
+				currentState = TRANSITION_TO_TITLE;
 				break;
 			}
 		}
@@ -449,7 +451,7 @@ int main(int argc, char* argv[])
 			switch (titleScreen(screen))
 			{
 				case 0:
-				//PUT NICE EXIT TRANSITION HERE
+				currentState = TRANSITION_TO_BLACK;
 				break;
 				case 1:
 				currentState = INGAME;
@@ -495,6 +497,24 @@ int main(int argc, char* argv[])
 		{
 			gameOverLoop();
 			currentState = TITLE;
+		}
+		else if (currentState == TRANSITION_TO_TITLE)
+		{
+			if (titleTransitionScreen(screen) == 1)
+			{
+				hardCoreQuit = 1;
+			}
+
+			currentState = TITLE;
+		}
+		else if (currentState == TRANSITION_TO_BLACK)
+		{
+			if (exitTransitionScreen(screen) == 1)
+			{
+				hardCoreQuit = 1;
+			}
+
+			hardCoreQuit = 1;
 		}
 	}
 
