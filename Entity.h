@@ -144,6 +144,7 @@ typedef struct
 	int x;
 	int y;
 	Uint32 startTime;
+	int population; //glue keeps track of how many enemies are stuck on it
 } FloorGlue;
 
 // players 1 and 2 entity types

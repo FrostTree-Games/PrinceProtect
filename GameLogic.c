@@ -6,6 +6,7 @@
 #include "GameLogic.h"
 #include "Pushdown.h"
 #include "Entity.h"
+#include "Audio.h"
 
 #define MAX_ONSCREEN_GAMEBLOCKS 300
 #define MAX_ONSCREEN_ENEMIES 300
@@ -340,7 +341,7 @@ int clearResetGame(int playerCount)
 	
 	for (i = 0; i < 5; i++)
 	{
-		pushEntity(GLUE, 5, BOARD_TOP_WALL + i + 1);
+		Entity* ex = pushEntity(GAMEBLOCK, 5, BOARD_TOP_WALL + i + 1);
 	}
 
 	return 0;
@@ -390,6 +391,12 @@ int getPlayerMaxHealth(int playerNo)
 
 void modPlayerHealth(int playerNo, int delta)
 {
+	
+	if (delta < 0)
+	{
+		playSFX(SFX_PLAYER_HURT);
+	}
+
 	switch (playerNo)
 	{
 		case 1:

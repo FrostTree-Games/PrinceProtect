@@ -148,6 +148,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->glue.x = newX;
 		newEntity->glue.y = newY;
 		newEntity->glue.startTime = getTimeSingleton();
+		newEntity->glue.population = 1;
 		break;
 		case ENEMY_CRAWLER:
 		newEntity->enemy.x = newX;
@@ -667,7 +668,15 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->swordTimer = currTime;
 		pl->isThrusting = 1;
 		pl->thrustHit = 1;
-		playSFX(SFX_SWORD);
+		
+		if (pl->holdingSuperHammer == 0)
+		{
+			playSFX(SFX_SWORD);
+		}
+		else
+		{
+			playSFX(SFX_EXPLOSION);
+		}
 	}
 	else if (!getKey(P1_B) && pl->bKeyDown)
 	{
@@ -723,10 +732,12 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->iBlock.health -= 1;
 						northList[i]->iBlock.startTime = currTime;
 						
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
+						pushParticle(ICE, northList[i]->iBlock.x * 16, northList[i]->iBlock.y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, northList[i]->iBlock.x * 16, northList[i]->iBlock.y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, northList[i]->iBlock.x * 16, northList[i]->iBlock.y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, northList[i]->iBlock.x * 16, northList[i]->iBlock.y * 16, -2.0f, 2.0f);
+						
+						playSFX(SFX_ICE_TINK);
 
 						pl->thrustHit = 0;
 					}
@@ -756,10 +767,12 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->iBlock.health -= 1;
 						eastList[i]->iBlock.startTime = currTime;
 
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
+						pushParticle(ICE, eastList[i]->iBlock.x * 16, eastList[i]->iBlock.y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, eastList[i]->iBlock.x * 16, eastList[i]->iBlock.y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, eastList[i]->iBlock.x * 16, eastList[i]->iBlock.y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, eastList[i]->iBlock.x * 16, eastList[i]->iBlock.y * 16, -2.0f, 2.0f);
+
+						playSFX(SFX_ICE_TINK);
 
 						pl->thrustHit = 0;
 					}
@@ -789,10 +802,12 @@ void update_player(Player* pl, Uint32 currTime)
 						southList[i]->iBlock.health -= 1;
 						southList[i]->iBlock.startTime = currTime;
 						
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
+						pushParticle(ICE, southList[i]->iBlock.x * 16, southList[i]->iBlock.y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, southList[i]->iBlock.x * 16, southList[i]->iBlock.y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, southList[i]->iBlock.x * 16, southList[i]->iBlock.y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, southList[i]->iBlock.x * 16, southList[i]->iBlock.y * 16, -2.0f, 2.0f);
+
+						playSFX(SFX_ICE_TINK);
 
 						pl->thrustHit = 0;
 					}
@@ -822,11 +837,13 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->iBlock.health -= 1;
 						westList[i]->iBlock.startTime = currTime;
 					
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, -2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, 2.0f, 2.0f);
-						pushParticle(ICE, pl->x * 16, pl->y * 16, -2.0f, 2.0f);
+						pushParticle(ICE, westList[i]->iBlock.x * 16, westList[i]->iBlock.y * 16, -2.0f, -2.0f);
+						pushParticle(ICE, westList[i]->iBlock.x * 16, westList[i]->iBlock.y * 16, 2.0f, -2.0f);
+						pushParticle(ICE, westList[i]->iBlock.x * 16, westList[i]->iBlock.y * 16, 2.0f, 2.0f);
+						pushParticle(ICE, westList[i]->iBlock.x * 16, westList[i]->iBlock.y * 16, -2.0f, 2.0f);
 						
+						playSFX(SFX_ICE_TINK);
+
 						pl->thrustHit = 0;
 					}
 				}
@@ -2264,6 +2281,8 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					default:
 					break;
 				}
+				
+				playSFX(SFX_LASER_1);
 			}
 		}
 		
@@ -3030,6 +3049,9 @@ void update_teleblock(TeleBlock* tb)
 				checkList[i]->base.y = tb->twin->y;
 				tb->twin->type = DELETE_ME_PLEASE;
 				tb->type = DELETE_ME_PLEASE;
+				
+				playSFX(SFX_TELEPORT);
+				
 				break;
 			}
 		}
@@ -3038,10 +3060,20 @@ void update_teleblock(TeleBlock* tb)
 
 void update_glue(FloorGlue* gl)
 {
-	/*if (getTimeSingleton() - gl->startTime > 30 * 1000)
+	Entity* checkList[5];
+	int checkResultSize = 0;
+	occupyingOnHere(gl->x, gl->y, checkList, 5, &checkResultSize);
+
+	if (getTimeSingleton() - gl->startTime > 30 * 1000)
 	{
 		gl->type = DELETE_ME_PLEASE;
-	}*/
+	}
+
+	if (gl->population != checkResultSize)
+	{
+		playSFX(SFX_MUD);
+		gl->population = checkResultSize;
+	}
 }
 
 void update_gameBlock(GameBlock* gb, Uint32 currTime)

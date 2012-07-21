@@ -3,6 +3,7 @@
 #include "Draw.h"
 #include "Keyboard.h"
 #include "GameScreens.h"
+#include "Audio.h"
 
 int keyConfigScreen(SDL_Surface* screen)
 {
@@ -43,6 +44,8 @@ int keyConfigScreen(SDL_Surface* screen)
 			}
 
 			leftKeyDown = 0;
+			
+			playSFX(SFX_MENU);
 		}
 
 		if (getKey(P1_RIGHT) && rightKeyDown == 0)
@@ -57,6 +60,8 @@ int keyConfigScreen(SDL_Surface* screen)
 			}
 
 			rightKeyDown = 0;
+			
+			playSFX(SFX_MENU);
 		}
 
 		if (getKey(P1_A) && aKeyDown == 0)
@@ -118,6 +123,7 @@ int keyConfigScreen(SDL_Surface* screen)
 								}
 								
 								i++;
+								playSFX(SFX_MENU);
 							}
 						}
 					}
@@ -176,8 +182,9 @@ int keyConfigScreen(SDL_Surface* screen)
 									default:
 									break;
 								}
-								
+
 								i++;
+								playSFX(SFX_MENU);
 							}
 						}
 					}
@@ -302,6 +309,8 @@ int titleScreen(SDL_Surface* screen)
 				menuPosition = 4;
 			}
 			upKeyDown = 0;
+			
+			playSFX(SFX_MENU);
 		}
 
 		if (getKey(P1_DOWN) && downKeyDown == 0)
@@ -312,6 +321,8 @@ int titleScreen(SDL_Surface* screen)
 		{
 			menuPosition = (menuPosition + 1) % 5;
 			downKeyDown = 0;
+			
+			playSFX(SFX_MENU);
 		}
 
 		if (getKey(P1_A) && aKeyDown == 0)
