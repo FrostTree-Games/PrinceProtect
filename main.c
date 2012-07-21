@@ -20,6 +20,7 @@
 #include "GameLogic.h"
 #include "GameScreens.h"
 #include "Particle.h"
+#include "Audio.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 272
@@ -74,6 +75,12 @@ int init()
 		return -1;
 	}
 	
+	if (setupAudio() != 0)
+	{
+		perror("Error setting up audio");
+		return -1;
+	}
+	
 	buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	
 	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
@@ -86,6 +93,7 @@ int deinit()
 	SDL_FreeSurface(buffer);
 	
 	clearAssets();
+	clearAudio();
 
 	TTF_Quit();
 	SDL_Quit();
@@ -406,7 +414,11 @@ int main(int argc, char* argv[])
 	srand(time(NULL));
 	currentState = TITLE; //should start at NONE
 
-	init();
+	if (init() != 0)
+	{
+		deinit();
+		return 1;
+	}	
 	
 	//init error handling will go here
 

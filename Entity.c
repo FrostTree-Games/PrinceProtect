@@ -7,6 +7,7 @@
 #include "Keyboard.h"
 #include "GameLogic.h"
 #include "Particle.h"
+#include "Audio.h"
 
 #define PLAYER_WALK_SPEED 3
 
@@ -666,6 +667,7 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->swordTimer = currTime;
 		pl->isThrusting = 1;
 		pl->thrustHit = 1;
+		playSFX(SFX_SWORD);
 	}
 	else if (!getKey(P1_B) && pl->bKeyDown)
 	{
@@ -674,6 +676,7 @@ void update_player(Player* pl, Uint32 currTime)
 
 	if (pl->isThrusting && pl->knockBackDirection == 255)
 	{
+
 		if (pl->holdingSuperHammer == 1)
 		{
 			pl->thrustHit = 0;
