@@ -341,7 +341,7 @@ int clearResetGame(int playerCount)
 	
 	for (i = 0; i < 5; i++)
 	{
-		Entity* ex = pushEntity(GAMEBLOCK, 5, BOARD_TOP_WALL + i + 1);
+		//pushEntity(GLUE, 5, BOARD_TOP_WALL + i + 1);
 	}
 
 	return 0;

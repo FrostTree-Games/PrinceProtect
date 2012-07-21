@@ -19,6 +19,8 @@ SDL_Surface* tileSheet;
 SDL_Surface* pubLogo;
 SDL_Surface* devLogo;
 SDL_Surface* gameLogo; //used on the title screen
+SDL_Surface* portrait1; //title screen portraits
+SDL_Surface* portrait2;
 
 // PIXEL MANIPULATION FUNCTIONS STOLEN FROM
 // http://lazyfoo.net/SDL_tutorials/lesson31/index.php
@@ -83,6 +85,18 @@ int setupAssets()
 		fprintf(stderr, "Error loading game logo. Check assets.\n");
 		return 1;
 	}
+	
+	if ((portrait1 = IMG_Load("gfx/port1.png")) == NULL)
+	{
+		fprintf(stderr, "Error loading first portrait. Check assets.\n");
+		return 1;
+	}
+	
+	if ((portrait2 = IMG_Load("gfx/port2.png")) == NULL)
+	{
+		fprintf(stderr, "Error loading second portrait. Check assets.\n");
+		return 1;
+	}
 
 	return 0;
 }
@@ -97,6 +111,9 @@ void clearAssets()
 	
 	SDL_FreeSurface(devLogo);
 	SDL_FreeSurface(pubLogo);
+	
+	SDL_FreeSurface(portrait1);
+	SDL_FreeSurface(portrait2);
 }
 
 void drawLatestPushDown(SDL_Surface* buffer)
@@ -387,7 +404,7 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 	}
 }
 
-void drawTitleScreen(SDL_Surface* buffer, int mSelected)
+void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 {
 	int i;
 
@@ -397,8 +414,14 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected)
 	SDL_Rect textPos = {0, 0, 0 ,0};
 	SDL_Surface* menuItemTextSurface = NULL;
 	SDL_Color textCol = {0, 0, 0, 0};
-	
-	SDL_Rect titlePos = {49, 20, 0, 0};
+
+	int titleDistance = ((int)( (delta/500.0) * 106)) - 96;
+	if (titleDistance > 20)
+	{
+		titleDistance = 20;
+	}
+
+	SDL_Rect titlePos = {49, titleDistance, 0, 0};
 
 	testMenuSelect.y = SCREEN_HEIGHT/2 + 1 + mSelected*20;
 
@@ -407,7 +430,21 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected)
 	SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
 	
 	SDL_BlitSurface(gameLogo, NULL, buffer, &titlePos);
-	
+
+	if (delta > 500)
+	{
+		int portraitDistance = 320 - ((int)( ((delta - 500)/500.0) * 180));
+		if (portraitDistance < 140)
+		{
+			portraitDistance = 140;
+		}
+		
+		SDL_Rect portrait1Pos = {SCREEN_WIDTH/8 - portrait1->w/2, portraitDistance, 0, 0};
+		SDL_Rect portrait2Pos = {7*(SCREEN_WIDTH/8) - portrait1->w/2, portraitDistance, 0, 0};
+		SDL_BlitSurface(portrait1, NULL, buffer, &portrait1Pos);
+		SDL_BlitSurface(portrait2, NULL, buffer, &portrait2Pos);
+	}
+
 	for (i = 0; i < 5; i++)
 	{
 		switch (i)

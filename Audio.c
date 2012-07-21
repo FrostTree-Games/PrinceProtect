@@ -19,6 +19,7 @@ Mix_Chunk* mudSplat;
 Mix_Chunk* swordStrike;
 Mix_Chunk* teleport;
 Mix_Chunk* princessYell;
+Mix_Chunk* crash;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
@@ -28,6 +29,10 @@ int loadSFXFiles()
 	if ( (player_die = Mix_LoadWAV("aud/sfx/die.wav")) == NULL)
 	{
 		fprintf(stderr, "Error loading knockout sound effect. Check for aud/sfx/die.wav\n");
+	}
+	if ( (crash = Mix_LoadWAV("aud/sfx/crash.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading knockout crash effect. Check for aud/sfx/crash.wav\n");
 	}
 	if ( (menuClick = Mix_LoadWAV("aud/sfx/menu.wav")) == NULL)
 	{
@@ -112,6 +117,7 @@ void clearAudio()
 	Mix_FreeChunk(swordStrike);
 	Mix_FreeChunk(teleport);
 	Mix_FreeChunk(princessYell);
+	Mix_FreeChunk(crash);
 
 	Mix_CloseAudio();
 	
@@ -169,6 +175,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_PRINCESS_YELL)
 	{
 		Mix_PlayChannel(-1, princessYell, 0);
+	}
+	if (fx == SFX_CRASH)
+	{
+		Mix_PlayChannel(-1, crash, 0);
 	}
 }
 

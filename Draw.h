@@ -45,10 +45,10 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck);
 void drawDevScreen(SDL_Surface* buffer, int devScreenNumber);
 
 /* drawTitleScreen()
- * Purpose: draws the title screen
+ * Purpose: draws the title screen; also passes in selected menu item and time since screen started
  * Returns: n/a
  */
-void drawTitleScreen(SDL_Surface* buffer, int mSelected);
+void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta);
 
 /* testDrawFunction()
  * Purpose: Getting something out the door for now.

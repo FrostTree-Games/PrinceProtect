@@ -18,7 +18,6 @@ int keyConfigScreen(SDL_Surface* screen)
 
 	SDL_Event ev;
 	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
-	Uint32 timeStamp = SDL_GetTicks();
 
 	while(quit == 0 && hardCoreQuit == 0)
 	{
@@ -278,6 +277,10 @@ int titleScreen(SDL_Surface* screen)
 	SDL_Event ev;
 	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	
+	Uint32 timeStamp = SDL_GetTicks();
+
+	int playedCrashSound = 0;
+
 	int menuPosition = 0; //0 up to 4, inclusive
 	int menuSelected = 255;
 	
@@ -296,6 +299,8 @@ int titleScreen(SDL_Surface* screen)
 		}
 
 		pollKeyboard();
+		
+		Uint32 currTime = SDL_GetTicks();
 
 		if (getKey(P1_UP) && upKeyDown == 0)
 		{
@@ -309,7 +314,7 @@ int titleScreen(SDL_Surface* screen)
 				menuPosition = 4;
 			}
 			upKeyDown = 0;
-			
+
 			playSFX(SFX_MENU);
 		}
 
@@ -355,7 +360,13 @@ int titleScreen(SDL_Surface* screen)
 			aKeyDown = 0;
 		}
 		
-		drawTitleScreen(buffer, menuPosition);
+		if (currTime - timeStamp > 500 && playedCrashSound == 0)
+		{
+			playedCrashSound = 1;
+			playSFX(SFX_CRASH);
+		}
+		
+		drawTitleScreen(buffer, menuPosition, currTime - timeStamp);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);
