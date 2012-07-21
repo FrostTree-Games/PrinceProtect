@@ -33,7 +33,8 @@ typedef enum
 	SFX_MUD,
 	SFX_SWORD,
 	SFX_TELEPORT,
-	SFX_PRINCESS_YELL
+	SFX_PRINCESS_YELL,
+	SFX_PLAYER_DEATH
 } SFXType;
 
 /* setupAudio()

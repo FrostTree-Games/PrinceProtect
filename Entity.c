@@ -593,6 +593,9 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->swordTimer = currTime;
 		pl->knockBackDirection = 255;
 		pl->dead = 1;
+		
+		playSFX(SFX_PLAYER_DEATH);
+
 		return;
 	}
 	
@@ -3051,7 +3054,7 @@ void update_teleblock(TeleBlock* tb)
 				tb->type = DELETE_ME_PLEASE;
 				
 				playSFX(SFX_TELEPORT);
-				
+
 				break;
 			}
 		}

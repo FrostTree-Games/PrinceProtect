@@ -11,6 +11,7 @@ int audioInitalized = 0;
 Mix_Chunk* menuClick;
 Mix_Chunk* explosion;
 Mix_Chunk* player_hurt;
+Mix_Chunk* player_die;
 Mix_Chunk* ice;
 Mix_Chunk* laser;
 Mix_Chunk* laser_alt;
@@ -24,6 +25,10 @@ int loadSFXFiles()
 {
 	int returnVal = 0;
 
+	if ( (player_die = Mix_LoadWAV("aud/sfx/die.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading knockout sound effect. Check for aud/sfx/die.wav\n");
+	}
 	if ( (menuClick = Mix_LoadWAV("aud/sfx/menu.wav")) == NULL)
 	{
 		fprintf(stderr, "Error loading menu sound effect. Check for aud/sfx/menu.wav\n");
@@ -128,6 +133,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_PLAYER_HURT)
 	{
 		Mix_PlayChannel(-1, player_hurt, 0);
+	}
+	if (fx == SFX_PLAYER_DEATH)
+	{
+		Mix_PlayChannel(-1, player_die, 0);
 	}
 	if (fx == SFX_ICE_TINK)
 	{
