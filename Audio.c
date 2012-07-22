@@ -22,6 +22,8 @@ Mix_Chunk* princessYell;
 Mix_Chunk* crash;
 Mix_Chunk* wipe_open;
 Mix_Chunk* wipe_close;
+Mix_Chunk* enemy_die;
+Mix_Chunk* enemy_hurt;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
@@ -82,6 +84,14 @@ int loadSFXFiles()
 	{
 		fprintf(stderr, "Error loading princess yelling sound effect. Check for aud/sfx/princess.wav\n");
 	}
+	if ( (enemy_die = Mix_LoadWAV("aud/sfx/enemyKill.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading enemy death sound effect. Check for aud/sfx/enemyKill.wav\n");
+	}
+	if ( (enemy_hurt = Mix_LoadWAV("aud/sfx/enemyHurt.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading enemy damage sound effect. Check for aud/sfx/enemyHurt.wav\n");
+	}
 
 	return 0;
 }
@@ -128,6 +138,8 @@ void clearAudio()
 	Mix_FreeChunk(crash);
 	Mix_FreeChunk(wipe_open);
 	Mix_FreeChunk(wipe_close);
+	Mix_FreeChunk(enemy_die);
+	Mix_FreeChunk(enemy_hurt);
 
 	Mix_CloseAudio();
 	
@@ -197,6 +209,14 @@ void playSFX(SFXType fx)
 	if (fx == SFX_WIPE_CLOSE)
 	{
 		Mix_PlayChannel(-1, wipe_close, 0);
+	}
+	if (fx == SFX_ENEMY_DIE)
+	{
+		Mix_PlayChannel(-1, enemy_die, 0);
+	}
+	if (fx == SFX_ENEMY_HURT)
+	{
+		Mix_PlayChannel(-1, enemy_hurt, 0);
 	}
 }
 

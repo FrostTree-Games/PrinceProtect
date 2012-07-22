@@ -739,6 +739,7 @@ void update_player(Player* pl, Uint32 currTime)
 						pushParticle(BLOOD, (northList[i]->enemy.x * 16) + northList[i]->enemy.offsetX, (northList[i]->enemy.y * 16) + northList[i]->enemy.offsetY, -2.0f, 2.0f);
 						pushParticle(BLOOD, (northList[i]->enemy.x * 16) + northList[i]->enemy.offsetX, (northList[i]->enemy.y * 16) + northList[i]->enemy.offsetY, 2.0f, 2.0f);
 
+						playSFX(SFX_ENEMY_HURT);
 
 						pl->thrustHit = 0;
 					}
@@ -779,6 +780,8 @@ void update_player(Player* pl, Uint32 currTime)
 						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, 2.0f, -2.0f);
 						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, -2.0f, 2.0f);
 						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, 2.0f, 2.0f);
+
+						playSFX(SFX_ENEMY_HURT);
 
 						pl->thrustHit = 0;
 					}
@@ -859,6 +862,8 @@ void update_player(Player* pl, Uint32 currTime)
 						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, 2.0f, -2.0f);
 						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, -2.0f, 2.0f);
 						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, 2.0f, 2.0f);
+
+						playSFX(SFX_ENEMY_HURT);
 
 						pl->thrustHit = 0;
 					}
@@ -1729,7 +1734,7 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 		enemy->lastFrameUpdate = currTime;
 	}
 	
-	if(enemy->health < 1)
+	if(enemy->health < 1 && enemy->knockBackDirection == 255)
 	{
 		enemy->type = POOF;
 		((Entity*)enemy)->poof.colour = 0;
@@ -1742,6 +1747,8 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 		}
 		
 		addScore(50);
+		
+		playSFX(SFX_ENEMY_DIE);
 
 		return;
 	}
@@ -2075,7 +2082,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
 	
-	if(enemy->health < 1)
+	if(enemy->health < 1 && enemy->knockBackDirection == 255)
 	{
 		enemy->type = POOF;
 		((Entity*)enemy)->poof.colour = 0;
@@ -2085,9 +2092,12 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			enemy->cream->x = enemy->x;
 			enemy->cream->y = enemy->y;
-
-			addScore(50);
 		}
+		
+		addScore(50);
+		
+		playSFX(SFX_ENEMY_DIE);
+
 		return;
 	}
 
@@ -2477,7 +2487,7 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 	}
 	
 
-	if(enemy->health < 1)
+	if(enemy->health < 1 && enemy->knockBackDirection == 255)
 	{
 		enemy->type = POOF;
 		((Entity*)enemy)->poof.colour = 0;
@@ -2488,8 +2498,10 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = enemy->x;
 			enemy->cream->y = enemy->y;
 		}
-		
+
 		addScore(50);
+		
+		playSFX(SFX_ENEMY_DIE);
 
 		return;
 	}
