@@ -267,26 +267,34 @@ void whimsyBlocks()
 			case RED_BLOCK:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
 			en = pushEntity(POOF, x, y);
-			en->poof.colour = 1;
 			en->poof.birthed = 1;
+			en->poof.offsetX = 8;
+			en->poof.offsetY = 8;
+			en->poof.colour = 1;
 			break;
 			case GREEN_BLOCK:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
 			en = pushEntity(POOF, x, y);
-			en->poof.colour = 3;
 			en->poof.birthed = 1;
+			en->poof.offsetX = 8;
+			en->poof.offsetY = 8;
+			en->poof.colour = 3;
 			break;
 			case BLUE_BLOCK:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
 			en = pushEntity(POOF, x, y);
-			en->poof.colour = 2;
 			en->poof.birthed = 1;
+			en->poof.offsetX = 8;
+			en->poof.offsetY = 8;
+			en->poof.colour = 2;
 			break;
 			case YELLOW_BLOCK:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
 			en = pushEntity(POOF, x, y);
-			en->poof.colour = 4;
 			en->poof.birthed = 1;
+			en->poof.offsetX = 8;
+			en->poof.offsetY = 8;
+			en->poof.colour = 4;
 			break;
 			default:
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
