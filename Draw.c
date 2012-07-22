@@ -634,7 +634,7 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 
 	SDL_Rect textPos = {0, 0, 0 ,0};
 	SDL_Surface* menuItemTextSurface = NULL;
-	SDL_Color textCol = {0, 0, 0, 0};
+	SDL_Color textCol = {255, 255, 240, 0};
 
 	int titleDistance = ((int)( (delta/500.0) * 106)) - 96;
 	if (titleDistance > 20)
@@ -649,6 +649,18 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
 	SDL_FillRect(buffer, &testMenuBox, SDL_MapRGB(buffer->format, 58, 58, 255));
 	SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
+	
+	for (i = 0; i < 4; i++)
+	{
+		if (i == mSelected)
+		{
+			fillGUIBox(buffer, 6, 8 + 2*i, 8, 2, 1);
+		}
+		else
+		{
+			fillGUIBox(buffer, 6, 8 + 2*i, 8, 2, 0);
+		}
+	}
 	
 	SDL_BlitSurface(gameLogo, NULL, buffer, &titlePos);
 
@@ -666,7 +678,7 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 		SDL_BlitSurface(portrait2, NULL, buffer, &portrait2Pos);
 	}
 
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < 4; i++)
 	{
 		switch (i)
 		{
@@ -680,9 +692,6 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "KEY CONFIG", textCol);
 			break;
 			case 3:
-			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "ETC CONFIG", textCol);
-			break;
-			case 4:
 			menuItemTextSurface = TTF_RenderText_Solid(pushNotificationFont, "EXIT", textCol);
 			break;
 			default:
@@ -690,7 +699,7 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 		}
 
 		textPos.x = SCREEN_WIDTH/2 - menuItemTextSurface->w/2;
-		textPos.y = SCREEN_HEIGHT/2 + 1 + i*20;
+		textPos.y = SCREEN_HEIGHT/2 + 1 + i*32;
 		
 		if (menuItemTextSurface != NULL)
 		{

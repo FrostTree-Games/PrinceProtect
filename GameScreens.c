@@ -401,7 +401,7 @@ int titleScreen(SDL_Surface* screen)
 			menuPosition -= 1;
 			if (menuPosition < 0)
 			{
-				menuPosition = 4;
+				menuPosition = 3;
 			}
 			upKeyDown = 0;
 
@@ -414,7 +414,7 @@ int titleScreen(SDL_Surface* screen)
 		}
 		else if (!getKey(P1_DOWN) && downKeyDown == 1)
 		{
-			menuPosition = (menuPosition + 1) % 5;
+			menuPosition = (menuPosition + 1) % 4;
 			downKeyDown = 0;
 			
 			playSFX(SFX_MENU);
@@ -438,7 +438,7 @@ int titleScreen(SDL_Surface* screen)
 				menuSelected = 3;
 				break;
 				case 3:
-				menuSelected = 4;
+				menuSelected = 0;
 				break;
 				case 4:
 				menuSelected = 0;
