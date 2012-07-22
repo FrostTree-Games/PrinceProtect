@@ -145,7 +145,7 @@ void updateWave()
 					break;
 					case 0:
 					default:
-					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
+					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
 					break;
 				}
 				en->direction = 1;
@@ -214,6 +214,26 @@ void updateWave()
 	{
 		restPeriod = 1;
 		restPeriodStart = getTimeSingleton();
+		
+		switch (rand() % 5)
+		{
+			case 0:
+			pushNewMessage("NICE ONE! WAVE COMPLETE!");
+			break;
+			case 1:
+			pushNewMessage("WAVE COMPLETE! PARTY ROCK!");
+			break;
+			case 2:
+			pushNewMessage("SO MUCH WAVE COMPLETE RIGHT NOW!");
+			break;
+			case 3:
+			pushNewMessage("BOYFRIENDS SAFE! WAVE COMPLETE!");
+			break;
+			case 4:
+			pushNewMessage("WAVE COMPLETE! MOMS LOVE YOU!");
+			default:
+			break;
+		}
 	}
 
 	if (iceCreamCount < numberOfIceCreams && iceCreamCount > 0)

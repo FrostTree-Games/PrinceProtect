@@ -1776,6 +1776,8 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			enemy->cream = (IceCream*)currList[i];
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
+			
+			playSFX(SFX_PRINCESS_YELL);
 		}
 		
 		if (currList[i]->type == GLUE)
@@ -2096,6 +2098,8 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			enemy->cream = (IceCream*)currList[i];
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
+			
+			playSFX(SFX_PRINCESS_YELL);
 		}
 		
 		if (currList[i]->type == GLUE)
@@ -2321,7 +2325,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 					break;
 				}
 				
-				playSFX(SFX_LASER_1);
+				if (xrand() % 2 == 0)
+				{
+					playSFX(SFX_LASER_1);
+				}
+				else
+				{
+					playSFX(SFX_LASER_2);
+				}
 			}
 		}
 		
@@ -2513,6 +2524,8 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			enemy->cream = (IceCream*)currList[i];
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
+			
+			playSFX(SFX_PRINCESS_YELL);
 		}
 		
 		if (currList[i]->type == GLUE)
@@ -2964,12 +2977,20 @@ void update_laser(Laser* block, Uint32 currTime)
 			if (currList[i]->type == PLAYER1)
 			{
 				modPlayerHealth(1, -1);
+
 			}
 
 			if (currList[i]->type == PLAYER2)
 			{
 				modPlayerHealth(2, -1);
 			}
+			
+			playSFX(SFX_PLAYER_HURT);
+
+			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, -2.0f, 2.0f);
+			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, 2.0f, 2.0f);
+			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, -2.0f, -2.0f);
+			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, 2.0f, -2.0f);
 
 			block->type = DELETE_ME_PLEASE;
 			return;
