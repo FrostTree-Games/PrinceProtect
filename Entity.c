@@ -832,6 +832,8 @@ void update_player(Player* pl, Uint32 currTime)
 						pushParticle(BLOOD, (southList[i]->enemy.x * 16) + southList[i]->enemy.offsetX, (southList[i]->enemy.y * 16) + southList[i]->enemy.offsetY, 2.0f, -2.0f);
 						pushParticle(BLOOD, (southList[i]->enemy.x * 16) + southList[i]->enemy.offsetX, (southList[i]->enemy.y * 16) + southList[i]->enemy.offsetY, 2.0f, 2.0f);
 
+						playSFX(SFX_ENEMY_HURT);
+
 						pl->thrustHit = 0;
 					}
 					

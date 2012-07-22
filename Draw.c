@@ -126,15 +126,31 @@ void drawLatestPushDown(SDL_Surface* buffer)
 
 	SDL_Surface* text_surface;
 	SDL_Color cl = {255, 255, 0, 0};
+	switch ((getTimeSingleton() - latestMessage->startTime / 100) % 3)
+	{
+		case 0:
+		cl.r = 255;
+		cl.g = 255;
+		cl.b = 255;
+		break;
+		case 1:
+		cl.r = 255;
+		cl.g = 150;
+		cl.b = 0;
+		break;
+		default:
+		break;
+	}
+
 	text_surface = TTF_RenderText_Solid(pushNotificationFont, latestMessage->message, cl);
 	
-	SDL_Rect msgPos = {(buffer->w - text_surface->w)/2, 30, 0, 0};
+	SDL_Rect msgPos = {(buffer->w - text_surface->w)/2, 50, 0, 0};
 
 	if (getTimeSingleton() - latestMessage->startTime < 500)
 	{
-		msgPos.y = (Sint16)(30 * (getTimeSingleton() - latestMessage->startTime)/500.0);
+		msgPos.y = (Sint16)(50 * (getTimeSingleton() - latestMessage->startTime)/500.0);
 	}
-	
+
 	if (getTimeSingleton() - latestMessage->startTime >= 1000)
 	{
 		if ( ((getTimeSingleton() - latestMessage->startTime)/250) % 2 == 0)
@@ -175,13 +191,13 @@ void drawHealthScores(SDL_Surface* buffer)
 
 	sprintf(p1HealthText, "ICECREAM: %.2d", getIceCreamCount());
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
-	SDL_Rect iceCreamNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 25, 0, 0};
+	SDL_Rect iceCreamNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 20, 0, 0};
 	SDL_BlitSurface(health_surface, NULL, buffer, &iceCreamNumbers);
 	SDL_FreeSurface(health_surface);
 	
 	sprintf(p1HealthText, "SCORE: %.6d", getScore());
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
-	SDL_Rect scoreNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 40, 0, 0};
+	SDL_Rect scoreNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 35, 0, 0};
 	SDL_BlitSurface(health_surface, NULL, buffer, &scoreNumbers);
 	SDL_FreeSurface(health_surface);
 }
@@ -1453,6 +1469,37 @@ void testDraw(SDL_Surface* buffer)
 				tileRect.x = 160;
 				tileRect.y = 0;
 			}
+			else if (j == BOARD_TOP_WALL)
+			{
+				if (i == 0)
+				{
+					tileRect.x = 192;
+					tileRect.y = 112;
+				}
+				else if (i == BOARD_WIDTH - 1)
+				{
+					tileRect.x = 176;
+					tileRect.y = 112;
+				}
+				else
+				{
+					tileRect.x = 160;
+					tileRect.y = 112;
+				}
+			}
+			else if (j < BOARD_TOP_WALL && j > BOARD_TOP_WALL - 3)
+			{
+				if (j == BOARD_TOP_WALL - 1 && (i == 5 || i == 10 || i == 15))
+				{
+					tileRect.x = 176;
+					tileRect.y = 96;
+				}
+				else
+				{
+					tileRect.x = 160;
+					tileRect.y = 96;
+				}
+			}
 			else
 			{
 				tileRect.x = 160;
@@ -1468,8 +1515,8 @@ void testDraw(SDL_Surface* buffer)
 	
 	entRect.x = 0;
 	entRect.y = (BOARD_TOP_WALL + 1) * 16;
-	tileRect.x = 176;
-	tileRect.y = 0;
+	tileRect.x = 192;
+	tileRect.y = 128;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	entRect.x = 0;
 	entRect.y = (BOARD_BOTTOM_WALL - 1) * 16;
@@ -1478,8 +1525,8 @@ void testDraw(SDL_Surface* buffer)
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	entRect.x = (BOARD_WIDTH*16) - 16;
 	entRect.y = (BOARD_TOP_WALL + 1) * 16;
-	tileRect.x = 192;
-	tileRect.y = 0;
+	tileRect.x = 176;
+	tileRect.y = 128;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	entRect.x = (BOARD_WIDTH*16) - 16;
 	entRect.y = (BOARD_BOTTOM_WALL - 1) * 16;
