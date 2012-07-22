@@ -1354,6 +1354,14 @@ void drawParticles(SDL_Surface* buffer)
 			px2Offset[1] = 255;
 			px2Offset[2] = 200;
 			break;
+			case TELESPARK:
+			pxOffset[0] = 47;
+			pxOffset[1] = 250;
+			pxOffset[2] = 54;
+			px2Offset[0] = 128;
+			px2Offset[1] = 255;
+			px2Offset[2] = 232;
+			break;
 			case MUD:
 			pxOffset[0] = 0;
 			pxOffset[1] = 200;
@@ -1381,6 +1389,13 @@ void drawParticles(SDL_Surface* buffer)
 			put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px);
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y + 1, px);
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y - 1, px);
+			break;
+			case TELESPARK:
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
+			put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y, px2);
+			put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px2);
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y + 1, px2);
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y - 1, px2);
 			break;
 			case BLOOD:
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);

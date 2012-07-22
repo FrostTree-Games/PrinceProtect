@@ -3155,7 +3155,17 @@ void update_teleblock(TeleBlock* tb)
 				checkList[i]->base.y = tb->twin->y;
 				tb->twin->type = DELETE_ME_PLEASE;
 				tb->type = DELETE_ME_PLEASE;
+
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, -2.0f, -2.0f);
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, 2.0f, -2.0f);
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, -2.0f, 2.0f);
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, 2.0f, 2.0f);
 				
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, -2.0f, -4.0f);
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, 2.0f, -4.0f);
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, -2.0f, 4.0f);
+				pushParticle(TELESPARK, (tb->x * 16) + 8, (tb->y * 16) + 8, 2.0f, 4.0f);
+
 				playSFX(SFX_TELEPORT);
 
 				break;

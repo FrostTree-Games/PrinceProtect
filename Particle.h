@@ -23,6 +23,7 @@ typedef enum
 	BLOOD,
 	SWEAT,
 	TEARS, //not used, but funny
+	TELESPARK
 } ParticleType;
 
 typedef struct

@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include <SDL/SDL.h>
 
 #include "Entity.h" // for time singleton
@@ -50,12 +52,22 @@ void updateParticles()
 			continue;
 		}
 		
-		particleList[i].x += particleList[i].xVelo;
-		particleList[i].y += particleList[i].yVelo;
+		if (particleList[i].type != TELESPARK)
+		{
+			particleList[i].x += particleList[i].xVelo;
+			particleList[i].y += particleList[i].yVelo;
+		}
+		else
+		{
+			Uint32 delta = (getTimeSingleton() - particleList[i].startTime)/100;
+			particleList[i].x += particleList[i].xVelo;
+			particleList[i].y += (delta + exp(0.20 * delta) * sin(10.0 * delta)) * particleList[i].yVelo/2.0f;
+		}
 
 		//update any logic necessary
 		switch(particleList[i].type)
 		{
+			case TELESPARK:
 			case ICE:
 			if (getTimeSingleton() - particleList[i].startTime > 250)
 			{
@@ -64,7 +76,6 @@ void updateParticles()
 			break;
 			case BLOOD:
 			case SWEAT:
-			
 			particleList[i].yVelo += 0.4f;
 
 			if (getTimeSingleton() - particleList[i].startTime > 200)
