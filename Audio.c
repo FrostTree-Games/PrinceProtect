@@ -16,6 +16,7 @@ Mix_Chunk* ice;
 Mix_Chunk* laser;
 Mix_Chunk* laser_alt;
 Mix_Chunk* mudSplat;
+Mix_Chunk* mudSplat2;
 Mix_Chunk* swordStrike;
 Mix_Chunk* teleport;
 Mix_Chunk* princessYell;
@@ -24,6 +25,7 @@ Mix_Chunk* wipe_open;
 Mix_Chunk* wipe_close;
 Mix_Chunk* enemy_die;
 Mix_Chunk* enemy_hurt;
+Mix_Chunk* get_hammer;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
@@ -70,7 +72,11 @@ int loadSFXFiles()
 	}
 	if ( (mudSplat = Mix_LoadWAV("aud/sfx/mud.wav")) == NULL)
 	{
-		fprintf(stderr, "Error loading glue sound effect. Check for aud/sfx/mud.wav\n");
+		fprintf(stderr, "Error loading poof sound effect. Check for aud/sfx/mud.wav\n");
+	}
+	if ( (mudSplat2 = Mix_LoadWAV("aud/sfx/mud2.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading glue sound effect. Check for aud/sfx/mud2.wav\n");
 	}
 	if ( (swordStrike = Mix_LoadWAV("aud/sfx/sword.wav")) == NULL)
 	{
@@ -91,6 +97,10 @@ int loadSFXFiles()
 	if ( (enemy_hurt = Mix_LoadWAV("aud/sfx/enemyHurt.wav")) == NULL)
 	{
 		fprintf(stderr, "Error loading enemy damage sound effect. Check for aud/sfx/enemyHurt.wav\n");
+	}
+	if ( (get_hammer = Mix_LoadWAV("aud/sfx/getHammer.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading hammer sound effect. Check for aud/sfx/getHammer.wav\n");
 	}
 
 	return 0;
@@ -132,6 +142,7 @@ void clearAudio()
 	Mix_FreeChunk(laser);
 	Mix_FreeChunk(laser_alt);
 	Mix_FreeChunk(mudSplat);
+	Mix_FreeChunk(mudSplat2);
 	Mix_FreeChunk(swordStrike);
 	Mix_FreeChunk(teleport);
 	Mix_FreeChunk(princessYell);
@@ -140,6 +151,7 @@ void clearAudio()
 	Mix_FreeChunk(wipe_close);
 	Mix_FreeChunk(enemy_die);
 	Mix_FreeChunk(enemy_hurt);
+	Mix_FreeChunk(get_hammer);
 
 	Mix_CloseAudio();
 	
@@ -186,6 +198,10 @@ void playSFX(SFXType fx)
 	{
 		Mix_PlayChannel(-1, mudSplat, 0);
 	}
+	if (fx == SFX_MUD2)
+	{
+		Mix_PlayChannel(-1, mudSplat2, 0);
+	}
 	if (fx == SFX_SWORD)
 	{
 		Mix_PlayChannel(-1, swordStrike, 0);
@@ -217,6 +233,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_ENEMY_HURT)
 	{
 		Mix_PlayChannel(-1, enemy_hurt, 0);
+	}
+	if (fx == SFX_GET_HAMMER)
+	{
+		Mix_PlayChannel(-1, get_hammer, 0);
 	}
 }
 

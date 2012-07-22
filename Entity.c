@@ -7,6 +7,7 @@
 #include "Keyboard.h"
 #include "GameLogic.h"
 #include "Particle.h"
+#include "Pushdown.h"
 #include "Audio.h"
 
 #define PLAYER_WALK_SPEED 3
@@ -670,6 +671,14 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			pl->holdingSuperHammer = 1;
 			currList[i]->type = DELETE_ME_PLEASE;
+			
+			playSFX(SFX_GET_HAMMER);
+			
+			if (xrand() % 10 == 0)
+			{
+				pushNewMessage("Hammertime!"); //obligatory
+			}
+
 			break;
 		}
 	}
@@ -857,7 +866,7 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->enemy.offsetY = 8;
 						westList[i]->enemy.health -= 1;
 						westList[i]->enemy.timer = currTime;
-						
+
 						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, -2.0f, -2.0f);
 						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, 2.0f, -2.0f);
 						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, -2.0f, 2.0f);
@@ -3168,7 +3177,7 @@ void update_glue(FloorGlue* gl)
 
 	if (gl->population != checkResultSize)
 	{
-		//playSFX(SFX_MUD);
+		playSFX(SFX_MUD2);
 		gl->population = checkResultSize;
 	}
 }
