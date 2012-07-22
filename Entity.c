@@ -199,6 +199,14 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.lastFrameUpdate = getTimeSingleton();
 		newEntity->enemy.frame = 0;
 		break;
+		case POOF:
+		newEntity->poof.x = newX;
+		newEntity->poof.y = newY;
+		newEntity->poof.startTime = getTimeSingleton();
+		newEntity->poof.offsetX = 8;
+		newEntity->poof.offsetY = 8;
+		newEntity->poof.colour = 0;
+		break;
 		default:
 		free(newEntity);
 		return NULL;
@@ -567,7 +575,7 @@ void update_player(Player* pl, Uint32 currTime)
 	filterOccupyWallsForPlayer(pl->x + 1, pl->y, eastList, 5, &eastResultSize);
 	filterOccupyWallsForPlayer(pl->x - 1, pl->y, westList, 5, &westResultSize);
 	occupyingOnHere(pl->x, pl->y, currList, 5, &currResultSize);
-	
+
 	//quick and hasty animation
 	if (currTime - pl->lastFrameUpdate > 250)
 	{
@@ -1701,7 +1709,10 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	
 	if(enemy->health < 1)
 	{
-		enemy->type = DELETE_ME_PLEASE;
+		enemy->type = POOF;
+		((Entity*)enemy)->poof.colour = 0;
+		((Entity*)enemy)->poof.startTime = currTime;
+
 		if (enemy->cream != NULL)
 		{
 			enemy->cream->x = enemy->x;
@@ -2042,7 +2053,10 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	
 	if(enemy->health < 1)
 	{
-		enemy->type = DELETE_ME_PLEASE;
+		enemy->type = POOF;
+		((Entity*)enemy)->poof.colour = 0;
+		((Entity*)enemy)->poof.startTime = currTime;
+		
 		if (enemy->cream != NULL)
 		{
 			enemy->cream->x = enemy->x;
@@ -2432,7 +2446,10 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 
 	if(enemy->health < 1)
 	{
-		enemy->type = DELETE_ME_PLEASE;
+		enemy->type = POOF;
+		((Entity*)enemy)->poof.colour = 0;
+		((Entity*)enemy)->poof.startTime = currTime;
+
 		if (enemy->cream != NULL)
 		{
 			enemy->cream->x = enemy->x;
@@ -3159,6 +3176,14 @@ void update_gameBlock(GameBlock* gb, Uint32 currTime)
 	}
 }
 
+void update_poof(Poof* pf)
+{
+	if (getTimeSingleton() - pf->startTime > 250)
+	{
+		pf->type = DELETE_ME_PLEASE;
+	}
+}
+
 void update_entity(Entity* entity, Uint32 currTime)
 {
 	// just in terrible, terrible, case
@@ -3207,6 +3232,9 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_glue( (FloorGlue*)entity);
 		break;
 		case ICECREAM:
+		break;
+		case POOF:
+		update_poof( (Poof*)entity);
 		break;
 		default:
 		printf("unregognized entity type updated: %d\n", entity->type);

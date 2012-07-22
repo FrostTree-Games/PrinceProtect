@@ -112,6 +112,17 @@ void sortEntitiesForDrawing()
 		Entity* en1 = *(Entity**)elem1;
 		Entity* en2 = *(Entity**)elem2;
 		
+		// poofs are always on top
+		if (en1->type == POOF)
+		{
+			return 1;
+		}
+		else if (en2->type == POOF)
+		{
+			return -1;
+		}
+		
+		//glues are always on bottom
 		if (en1->type == GLUE)
 		{
 			return -1;
@@ -120,7 +131,7 @@ void sortEntitiesForDrawing()
 		{
 			return 1;
 		}
-
+		
 		if (en1->base.y < en2->base.y)
 		{
 			return -1;
@@ -414,7 +425,7 @@ int testLoop(int twoPlayerGame)
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
-	currentState = TRANSITION_TO_TITLE; //should start at NONE
+	currentState = TITLE; //should start at NONE
 
 	if (init() != 0)
 	{

@@ -1290,6 +1290,36 @@ void drawLaser(SDL_Surface* buffer, Laser* ls)
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
 
+void drawPoof(SDL_Surface* buffer, Poof* pf)
+{
+	SDL_Rect tileRect = {128, 32, 16, 16};
+	SDL_Rect entRect = {pf->x * 16 + pf->offsetX - 8, pf->y * 16 + pf->offsetY - 8, 16, 16};
+	
+	switch(pf->colour)
+	{
+		case 4:
+		tileRect.y += 16;
+		case 3:
+		tileRect.y += 16;
+		case 2:
+		tileRect.y += 16;
+		case 1:
+		tileRect.y += 16;
+		case 0:
+		break;
+		default:
+		fprintf(stderr, "Strange poof colour: %d\n", pf->colour);
+		break;
+	}
+	
+	if (getTimeSingleton() - pf->startTime > 125)
+	{
+		tileRect.x += 16;
+	}
+	
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+}
+
 void drawParticles(SDL_Surface* buffer)
 {
 	int i;
@@ -1476,6 +1506,9 @@ void testDraw(SDL_Surface* buffer)
 			break;
 			case ENEMY_BOXERGREG:
 			drawBoxerGreg(buffer, (Enemy*)entList[i]);
+			break;
+			case POOF:
+			drawPoof(buffer, (Poof*)entList[i]);
 			break;
 			default:
 			break;

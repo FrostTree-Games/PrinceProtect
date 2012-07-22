@@ -35,6 +35,7 @@ typedef enum
 	ICECREAM,
 	SUPERHAMMER,
 	GLUE,
+	POOF,
 	DELETE_ME_PLEASE
 } EntityType;
 
@@ -111,6 +112,17 @@ typedef struct
 	int y;
 	Uint32 startTime;
 } Explosion;
+
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
+	Uint32 startTime;
+	int offsetX;
+	int offsetY;
+	int colour; //0 -> plain, 1 -> red, 2 -> blue, 3 -> green, 4 -> yellow, 5 ->purple
+} Poof;
 
 typedef struct TeleBlock
 {
@@ -210,6 +222,7 @@ typedef union
 	SuperHammer hammer;
 	FloorGlue glue;
 	Enemy enemy;
+	Poof poof;
 } Entity;
 
 /* initEntityList()
