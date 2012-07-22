@@ -1038,6 +1038,24 @@ void drawPlayer2(SDL_Surface* buffer, Player* pl)
 	}
 }
 
+void drawIceCream (SDL_Surface* buffer, IceCream* cream, int x, int y, int carry)
+{
+	SDL_Rect tileRect = {160, 192, 16, 16};
+	SDL_Rect entRect = {x, y, 0, 0};
+
+	if (cream->frame == 1)
+	{
+		tileRect.x += 16;
+	}
+	
+	if (carry == 1)
+	{
+		tileRect.y += 16;
+	}	
+
+	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+}
+
 void drawCrawler(SDL_Surface* buffer, Enemy* en)
 {
 	SDL_Rect entRect = {0, 0, 16, 16};
@@ -1089,11 +1107,8 @@ void drawCrawler(SDL_Surface* buffer, Enemy* en)
 	if (en->cream != NULL)
 	{
 		entRect.y -= 16;
-		
-		tileRect.x = 208;
-		tileRect.y = 16;
 
-		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		drawIceCream(buffer, en->cream, entRect.x, entRect.y, 1);
 	}
 }
 
@@ -1206,11 +1221,8 @@ void drawBoxerGreg(SDL_Surface* buffer, Enemy* en)
 	if (en->cream != NULL)
 	{
 		entRect.y -= 16;
-		
-		tileRect.x = 208;
-		tileRect.y = 16;
 
-		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		drawIceCream(buffer, en->cream, entRect.x, entRect.y, 1);
 	}
 }
 
@@ -1266,10 +1278,7 @@ void drawShooter(SDL_Surface* buffer, Enemy* en)
 	{
 		entRect.y -= 16;
 		
-		tileRect.x = 208;
-		tileRect.y = 16;
-
-		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		drawIceCream(buffer, en->cream, entRect.x, entRect.y, 1);
 	}
 }
 
@@ -1583,11 +1592,7 @@ void testDraw(SDL_Surface* buffer)
 			drawTeleBlock(buffer, (TeleBlock*)entList[i]);
 			break;
 			case ICECREAM:
-			entRect.x = entList[i]->iceCream.x * 16;
-			entRect.y = entList[i]->iceCream.y * 16;
-			tileRect.x = 208;
-			tileRect.y = 16;
-			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			drawIceCream(buffer, (IceCream*)entList[i], entRect.x = entList[i]->iceCream.x * 16, entRect.y = entList[i]->iceCream.y * 16, 0);
 			break;
 			case SUPERHAMMER:
 			entRect.x = entList[i]->hammer.x * 16;

@@ -140,6 +140,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		case ICECREAM:
 		newEntity->iceCream.x = newX;
 		newEntity->iceCream.y = newY;
+		newEntity->iceCream.frame = 0;
+		newEntity->iceCream.lastFrameUpdateTime = getTimeSingleton();
 		break;
 		case SUPERHAMMER:
 		newEntity->hammer.x = newX;
@@ -3305,6 +3307,16 @@ void update_poof(Poof* pf)
 	}
 }
 
+void update_iceCream(IceCream* cream)
+{
+	if (getTimeSingleton() - cream->lastFrameUpdateTime > 255)
+	{
+		cream->frame = (cream->frame + 1) % 2;
+		
+		cream->lastFrameUpdateTime = getTimeSingleton();
+	}
+}
+
 void update_entity(Entity* entity, Uint32 currTime)
 {
 	// just in terrible, terrible, case
@@ -3353,6 +3365,7 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_glue( (FloorGlue*)entity);
 		break;
 		case ICECREAM:
+		update_iceCream( (IceCream*)entity);
 		break;
 		case POOF:
 		update_poof( (Poof*)entity);

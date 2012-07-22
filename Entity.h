@@ -142,6 +142,8 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
+	int frame; //0 or 1
+	Uint32 lastFrameUpdateTime;
 } IceCream;
 
 typedef struct
