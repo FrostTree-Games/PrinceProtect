@@ -1323,9 +1323,13 @@ void drawPoof(SDL_Surface* buffer, Poof* pf)
 void drawParticles(SDL_Surface* buffer)
 {
 	int i;
+
 	Uint32 px = 0;
-	Uint8* pxOffset = (Uint8*)&px;;
+	Uint8* pxOffset = (Uint8*)&px;
 	
+	Uint32 px2 = 0;
+	Uint8* px2Offset = (Uint8*)&px2;
+
 	Particle* pList = getParticleList();
 	
 	if (pList == NULL)
@@ -1344,13 +1348,26 @@ void drawParticles(SDL_Surface* buffer)
 		{
 			case ICE:
 			pxOffset[0] = 255;
-			pxOffset[1] = 255;
+			pxOffset[1] = 240;
 			pxOffset[2] = 0;
+			px2Offset[0] = 255;
+			px2Offset[1] = 255;
+			px2Offset[2] = 200;
 			break;
 			case MUD:
 			pxOffset[0] = 0;
 			pxOffset[1] = 200;
 			pxOffset[2] = 200;
+			break;
+			case BLOOD:
+			pxOffset[0] = 4;
+			pxOffset[1] = 4;
+			pxOffset[2] = 196;
+			break;
+			case SWEAT:
+			pxOffset[0] = 255;
+			pxOffset[1] = 255;
+			pxOffset[2] = 255;
 			break;
 			default:
 			break;
@@ -1359,11 +1376,37 @@ void drawParticles(SDL_Surface* buffer)
 		switch (pList[i].type)
 		{
 			case ICE:
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px2);
+			put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y, px);
+			put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px);
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y + 1, px);
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y - 1, px);
+			break;
+			case BLOOD:
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
 			put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y, px);
 			put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px);
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y + 1, px);
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y - 1, px);
+			break;
+			case SWEAT:
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
+			if (pList[i].xVelo > 0)
+			{
+				put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px);
+			}
+			else
+			{
+				put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y, px);
+			}
+			if (pList[i].yVelo > 0)
+			{
+				put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y + 1, px);
+			}
+			else
+			{
+				put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y - 1, px);
+			}
 			break;
 			case MUD:
                         put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);

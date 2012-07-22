@@ -338,11 +338,6 @@ int clearResetGame(int playerCount)
 		is2PlayerGame = 0;
 		break;
 	}
-	
-	for (i = 0; i < 5; i++)
-	{
-		pushEntity(POOF, 5, BOARD_TOP_WALL + i + 1);
-	}
 
 	return 0;
 }

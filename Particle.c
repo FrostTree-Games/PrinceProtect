@@ -44,7 +44,7 @@ void updateParticles()
 			continue;
 		}
 		
-		if (particleList[i].x > SCREEN_WIDTH - 3 || particleList[i].x < 3 || particleList[i].y > SCREEN_HEIGHT - 3 || particleList[i].y < 3)
+		if (particleList[i].x > SCREEN_WIDTH - 3 || particleList[i].x < 1 || particleList[i].y > SCREEN_HEIGHT - 3 || particleList[i].y < 3)
 		{
 			particleList[i].type = NONE;
 			continue;
@@ -62,6 +62,17 @@ void updateParticles()
 				particleList[i].type = NONE;
 			}
 			break;
+			case BLOOD:
+			case SWEAT:
+			
+			particleList[i].yVelo += 0.4f;
+
+			if (getTimeSingleton() - particleList[i].startTime > 200)
+			{
+				particleList[i].type = NONE;
+			}
+			break;
+			case TEARS:
 			case MUD:
 			if (getTimeSingleton() - particleList[i].startTime > 100)
 			{

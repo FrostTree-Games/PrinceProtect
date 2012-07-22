@@ -680,7 +680,7 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->swordTimer = currTime;
 		pl->isThrusting = 1;
 		pl->thrustHit = 1;
-		
+
 		if (pl->holdingSuperHammer == 0)
 		{
 			playSFX(SFX_SWORD);
@@ -734,6 +734,12 @@ void update_player(Player* pl, Uint32 currTime)
 						northList[i]->enemy.health -= 1;
 						northList[i]->enemy.timer = currTime;
 
+						pushParticle(BLOOD, (northList[i]->enemy.x * 16) + northList[i]->enemy.offsetX, (northList[i]->enemy.y * 16) + northList[i]->enemy.offsetY, -2.0f, -2.0f);
+						pushParticle(BLOOD, (northList[i]->enemy.x * 16) + northList[i]->enemy.offsetX, (northList[i]->enemy.y * 16) + northList[i]->enemy.offsetY, 2.0f, -2.0f);
+						pushParticle(BLOOD, (northList[i]->enemy.x * 16) + northList[i]->enemy.offsetX, (northList[i]->enemy.y * 16) + northList[i]->enemy.offsetY, -2.0f, 2.0f);
+						pushParticle(BLOOD, (northList[i]->enemy.x * 16) + northList[i]->enemy.offsetX, (northList[i]->enemy.y * 16) + northList[i]->enemy.offsetY, 2.0f, 2.0f);
+
+
 						pl->thrustHit = 0;
 					}
 					
@@ -768,6 +774,11 @@ void update_player(Player* pl, Uint32 currTime)
 						eastList[i]->enemy.offsetY = 8;
 						eastList[i]->enemy.health -= 1;
 						eastList[i]->enemy.timer = currTime;
+						
+						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, -2.0f, -2.0f);
+						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, 2.0f, -2.0f);
+						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, -2.0f, 2.0f);
+						pushParticle(BLOOD, (eastList[i]->enemy.x * 16) + eastList[i]->enemy.offsetX, (eastList[i]->enemy.y * 16) + eastList[i]->enemy.offsetY, 2.0f, 2.0f);
 
 						pl->thrustHit = 0;
 					}
@@ -803,6 +814,11 @@ void update_player(Player* pl, Uint32 currTime)
 						southList[i]->enemy.offsetY = 7;
 						southList[i]->enemy.health -= 1;
 						southList[i]->enemy.timer = currTime;
+						
+						pushParticle(BLOOD, (southList[i]->enemy.x * 16) + southList[i]->enemy.offsetX, (southList[i]->enemy.y * 16) + southList[i]->enemy.offsetY, -2.0f, -2.0f);
+						pushParticle(BLOOD, (southList[i]->enemy.x * 16) + southList[i]->enemy.offsetX, (southList[i]->enemy.y * 16) + southList[i]->enemy.offsetY, 2.0f, -2.0f);
+						pushParticle(BLOOD, (southList[i]->enemy.x * 16) + southList[i]->enemy.offsetX, (southList[i]->enemy.y * 16) + southList[i]->enemy.offsetY, 2.0f, -2.0f);
+						pushParticle(BLOOD, (southList[i]->enemy.x * 16) + southList[i]->enemy.offsetX, (southList[i]->enemy.y * 16) + southList[i]->enemy.offsetY, 2.0f, 2.0f);
 
 						pl->thrustHit = 0;
 					}
@@ -838,6 +854,11 @@ void update_player(Player* pl, Uint32 currTime)
 						westList[i]->enemy.offsetY = 8;
 						westList[i]->enemy.health -= 1;
 						westList[i]->enemy.timer = currTime;
+						
+						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, -2.0f, -2.0f);
+						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, 2.0f, -2.0f);
+						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, -2.0f, 2.0f);
+						pushParticle(BLOOD, (westList[i]->enemy.x * 16) + westList[i]->enemy.offsetX, (westList[i]->enemy.y * 16) + westList[i]->enemy.offsetY, 2.0f, 2.0f);
 
 						pl->thrustHit = 0;
 					}
@@ -2523,8 +2544,6 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 		
 			if (enemy->knockBackDirection < 255 && xor((enemy->offsetY == 8) && (enemy->knockBackDirection == 0 || enemy->knockBackDirection == 2), (enemy->offsetX == 8) && (enemy->knockBackDirection == 1 || enemy->knockBackDirection == 3)))
 			{
-				/*enemy->direction = enemy->knockBackDirection;
-				enemy->knockBackDirection = 255;   */
 				enemy->direction = 4;
 				switch (enemy->knockBackDirection)
 				{
@@ -2661,6 +2680,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								northList[i]->player.knockBackDirection = enemy->AISlot2;
 								northList[i]->player.swordTimer = currTime;
 								northList[i]->player.isThrusting = 0;
+
+								pushParticle(SWEAT, (northList[i]->player.x * 16) + northList[i]->player.offsetX, (northList[i]->player.y * 16) + northList[i]->player.offsetY + 8, -2.0f, -2.0f);
+								pushParticle(SWEAT, (northList[i]->player.x * 16) + northList[i]->player.offsetX, (northList[i]->player.y * 16) + northList[i]->player.offsetY + 8, 2.0f, -2.0f);
 							}
 						}
 						if (northList[i]->type == PLAYER2)
@@ -2671,6 +2693,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								northList[i]->player.knockBackDirection = enemy->AISlot2;
 								northList[i]->player.swordTimer = currTime;
 								northList[i]->player.isThrusting = 0;
+								
+								pushParticle(SWEAT, (northList[i]->player.x * 16) + northList[i]->player.offsetX, (northList[i]->player.y * 16) + northList[i]->player.offsetY + 8, -2.0f, -2.0f);
+								pushParticle(SWEAT, (northList[i]->player.x * 16) + northList[i]->player.offsetX, (northList[i]->player.y * 16) + northList[i]->player.offsetY + 8, 2.0f, -2.0f);
 							}
 						}
 					}
@@ -2686,6 +2711,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								eastList[i]->player.knockBackDirection = enemy->AISlot2;
 								eastList[i]->player.swordTimer = currTime;
 								eastList[i]->player.isThrusting = 0;
+							
+								pushParticle(SWEAT, (eastList[i]->player.x * 16) + eastList[i]->player.offsetX, (eastList[i]->player.y * 16) + eastList[i]->player.offsetY, -2.0f, -2.0f);
+								pushParticle(SWEAT, (eastList[i]->player.x * 16) + eastList[i]->player.offsetX, (eastList[i]->player.y * 16) + eastList[i]->player.offsetY, -2.0f, 2.0f);
 							}
 						}
 						if (eastList[i]->type == PLAYER2)
@@ -2696,6 +2724,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								eastList[i]->player.knockBackDirection = enemy->AISlot2;
 								eastList[i]->player.swordTimer = currTime;
 								eastList[i]->player.isThrusting = 0;
+								
+								pushParticle(SWEAT, (eastList[i]->player.x * 16) + eastList[i]->player.offsetX, (eastList[i]->player.y * 16) + eastList[i]->player.offsetY, -2.0f, -2.0f);
+								pushParticle(SWEAT, (eastList[i]->player.x * 16) + eastList[i]->player.offsetX, (eastList[i]->player.y * 16) + eastList[i]->player.offsetY, -2.0f, 2.0f);
 							}
 						}
 					}
@@ -2711,6 +2742,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								southList[i]->player.knockBackDirection = enemy->AISlot2;
 								southList[i]->player.swordTimer = currTime;
 								southList[i]->player.isThrusting = 0;
+								
+								pushParticle(SWEAT, (southList[i]->player.x * 16) + southList[i]->player.offsetX, (southList[i]->player.y * 16) + southList[i]->player.offsetY - 8, -2.0f, 2.0f);
+								pushParticle(SWEAT, (southList[i]->player.x * 16) + southList[i]->player.offsetX, (southList[i]->player.y * 16) + southList[i]->player.offsetY - 8, 2.0f, 2.0f);
 							}
 						}
 						if (southList[i]->type == PLAYER2)
@@ -2721,6 +2755,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								southList[i]->player.knockBackDirection = enemy->AISlot2;
 								southList[i]->player.swordTimer = currTime;
 								southList[i]->player.isThrusting = 0;
+							
+								pushParticle(SWEAT, (southList[i]->player.x * 16) + southList[i]->player.offsetX, (southList[i]->player.y * 16) + southList[i]->player.offsetY, -2.0f, 2.0f);
+								pushParticle(SWEAT, (southList[i]->player.x * 16) + southList[i]->player.offsetX, (southList[i]->player.y * 16) + southList[i]->player.offsetY, 2.0f, 2.0f);
 							}
 						}
 					}
@@ -2736,6 +2773,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								westList[i]->player.knockBackDirection = enemy->AISlot2;
 								westList[i]->player.swordTimer = currTime;
 								westList[i]->player.isThrusting = 0;
+								
+								pushParticle(SWEAT, (westList[i]->player.x * 16) + westList[i]->player.offsetX, (westList[i]->player.y * 16) + westList[i]->player.offsetY, 2.0f, -2.0f);
+								pushParticle(SWEAT, (westList[i]->player.x * 16) + westList[i]->player.offsetX, (westList[i]->player.y * 16) + westList[i]->player.offsetY, 2.0f, 2.0f);
 							}
 						}
 						if (westList[i]->type == PLAYER2)
@@ -2746,6 +2786,9 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 								westList[i]->player.knockBackDirection = enemy->AISlot2;
 								westList[i]->player.swordTimer = currTime;
 								westList[i]->player.isThrusting = 0;
+								
+								pushParticle(SWEAT, (westList[i]->player.x * 16) + westList[i]->player.offsetX, (westList[i]->player.y * 16) + westList[i]->player.offsetY, 2.0f, -2.0f);
+								pushParticle(SWEAT, (westList[i]->player.x * 16) + westList[i]->player.offsetX, (westList[i]->player.y * 16) + westList[i]->player.offsetY, 2.0f, 2.0f);
 							}
 						}
 					}
@@ -3092,7 +3135,7 @@ void update_glue(FloorGlue* gl)
 
 	if (gl->population != checkResultSize)
 	{
-		playSFX(SFX_MUD);
+		//playSFX(SFX_MUD);
 		gl->population = checkResultSize;
 	}
 }

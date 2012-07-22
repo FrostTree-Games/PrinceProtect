@@ -19,7 +19,10 @@ typedef enum
 {
 	NONE = 0,
 	ICE,
-	MUD
+	MUD,
+	BLOOD,
+	SWEAT,
+	TEARS, //not used, but funny
 } ParticleType;
 
 typedef struct

@@ -235,33 +235,6 @@ void whimsyBlocks()
 			return;
 		}
 
-		//turn the block into it's designated type
-		/*switch (b)
-		{
-			case RED_BLOCK:
-			gameBlockGrid[x][y]->type = SUPERHAMMER;
-			break;
-			case GREEN_BLOCK:
-			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
-			pushEntity(TELEBLOCK, x, y);
-			break;
-			case BLUE_BLOCK:
-			gameBlockGrid[x][y]->type = ICEBLOCK;
-			gameBlockGrid[x][y]->iBlock.moving = 0;
-			gameBlockGrid[x][y]->iBlock.direction = 0;
-			gameBlockGrid[x][y]->iBlock.offsetX = 8;
-			gameBlockGrid[x][y]->iBlock.offsetY = 8;
-			gameBlockGrid[x][y]->iBlock.health = 3;
-			gameBlockGrid[x][y]->iBlock.startTime = getTimeSingleton() - ((rand() % 7) * 100);
-			break;
-			case YELLOW_BLOCK:
-			gameBlockGrid[x][y]->type = GLUE;
-			break;
-			default:
-			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
-			printf("Unrecognized block pattern destroyed: %d\n", b);
-			break;
-		}   */
 		switch (b)
 		{
 			case RED_BLOCK:
@@ -343,6 +316,8 @@ void whimsyBlocks()
 				
 				if (connectedBlockCounter > 3)
 				{
+					playSFX(SFX_MUD);
+
 					clearConnectedBlocks(i, j, gameBlockGrid[i][j]->gBlock.bType);
 					
 					addScore(75);
