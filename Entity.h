@@ -122,6 +122,7 @@ typedef struct
 	int offsetX;
 	int offsetY;
 	int colour; //0 -> plain, 1 -> red, 2 -> blue, 3 -> green, 4 -> yellow, 5 ->purple
+	int birthed; //to determine if a coloured poof has created an entity yet; 0 -> yes/uncoloured, 1 -> no
 } Poof;
 
 typedef struct TeleBlock

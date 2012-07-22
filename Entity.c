@@ -206,6 +206,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->poof.offsetX = 8;
 		newEntity->poof.offsetY = 8;
 		newEntity->poof.colour = 0;
+		newEntity->poof.birthed = 0;
 		break;
 		default:
 		free(newEntity);
@@ -3059,7 +3060,7 @@ void update_teleblock(TeleBlock* tb)
 	{
 		for (i = 0; i < checkResultSize; i++)
 		{
-			if (checkList[i]->type == TELEBLOCK || checkList[i]->type == DELETE_ME_PLEASE || checkList[i]->type == EXPLOSION)
+			if (checkList[i]->type == TELEBLOCK || checkList[i]->type == DELETE_ME_PLEASE || checkList[i]->type == EXPLOSION || checkList[i]->type == POOF)
 			{
 				continue;
 			}
@@ -3178,6 +3179,29 @@ void update_gameBlock(GameBlock* gb, Uint32 currTime)
 
 void update_poof(Poof* pf)
 {
+	if (pf->birthed == 1 && getTimeSingleton() - pf->startTime > 125)
+	{
+		switch (pf->colour)
+		{
+			case 1:
+			pushEntity(SUPERHAMMER, pf->x, pf->y);
+			break;
+			case 2:
+			pushEntity(ICEBLOCK, pf->x, pf->y);
+			break;
+			case 3:
+			pushEntity(TELEBLOCK, pf->x, pf->y);
+			break;
+			case 4:
+			pushEntity(GLUE, pf->x, pf->y);
+			break;
+			default:
+			break;
+		}
+
+		pf->birthed = 0;
+	}
+
 	if (getTimeSingleton() - pf->startTime > 250)
 	{
 		pf->type = DELETE_ME_PLEASE;
@@ -3235,6 +3259,8 @@ void update_entity(Entity* entity, Uint32 currTime)
 		break;
 		case POOF:
 		update_poof( (Poof*)entity);
+		break;
+		case DELETE_ME_PLEASE:
 		break;
 		default:
 		printf("unregognized entity type updated: %d\n", entity->type);

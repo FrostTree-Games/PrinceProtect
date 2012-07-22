@@ -131,7 +131,7 @@ void sortEntitiesForDrawing()
 		{
 			return 1;
 		}
-		
+
 		if (en1->base.y < en2->base.y)
 		{
 			return -1;
@@ -213,6 +213,8 @@ void whimsyBlocks()
 	
 	void clearConnectedBlocks(int x, int y, BlockType b)
 	{
+		Entity* en;
+
 		if (x < 0 || y < 0 || x > BOARD_WIDTH || y > BOARD_HEIGHT)
 		{
 			return;
@@ -234,7 +236,7 @@ void whimsyBlocks()
 		}
 
 		//turn the block into it's designated type
-		switch (b)
+		/*switch (b)
 		{
 			case RED_BLOCK:
 			gameBlockGrid[x][y]->type = SUPERHAMMER;
@@ -259,7 +261,39 @@ void whimsyBlocks()
 			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
 			printf("Unrecognized block pattern destroyed: %d\n", b);
 			break;
+		}   */
+		switch (b)
+		{
+			case RED_BLOCK:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			en = pushEntity(POOF, x, y);
+			en->poof.colour = 1;
+			en->poof.birthed = 1;
+			break;
+			case GREEN_BLOCK:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			en = pushEntity(POOF, x, y);
+			en->poof.colour = 3;
+			en->poof.birthed = 1;
+			break;
+			case BLUE_BLOCK:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			en = pushEntity(POOF, x, y);
+			en->poof.colour = 2;
+			en->poof.birthed = 1;
+			break;
+			case YELLOW_BLOCK:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			en = pushEntity(POOF, x, y);
+			en->poof.colour = 4;
+			en->poof.birthed = 1;
+			break;
+			default:
+			gameBlockGrid[x][y]->type = DELETE_ME_PLEASE;
+			printf("Unrecognized block pattern destroyed: %d\n", b);
+			break;
 		}
+
 		gameBlockGrid[x][y] = NULL;
 
 		clearConnectedBlocks(x + 1, y, b);
