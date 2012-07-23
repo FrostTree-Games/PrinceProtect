@@ -270,19 +270,19 @@ void drawHealthScores(SDL_Surface* buffer)
 	SDL_FreeSurface(health_surface);
 	
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p2HealthText, cl);
-	p1HpPos.x += 200;
+	p1HpPos.x += 230;
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 	SDL_FreeSurface(health_surface);
 
 	sprintf(p1HealthText, "ICECREAM: %.2d", getIceCreamCount());
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
-	SDL_Rect iceCreamNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 20, 0, 0};
+	SDL_Rect iceCreamNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 5, 0, 0};
 	SDL_BlitSurface(health_surface, NULL, buffer, &iceCreamNumbers);
 	SDL_FreeSurface(health_surface);
 	
 	sprintf(p1HealthText, "SCORE: %.6d", getScore());
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
-	SDL_Rect scoreNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 35, 0, 0};
+	SDL_Rect scoreNumbers = {SCREEN_WIDTH/2 - health_surface->w/2, 15, 0, 0};
 	SDL_BlitSurface(health_surface, NULL, buffer, &scoreNumbers);
 	SDL_FreeSurface(health_surface);
 }
@@ -561,11 +561,11 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 
 		if (i == menuPosition)
 		{
-			fillGUIBox(buffer, 2 + 2*i + i*3, 12, 4, 4, 1);
+			fillGUIBox(buffer, 2 + 2*i + i*3, 11, 4, 4, 1);
 		}
 		else
 		{
-			fillGUIBox(buffer, 2 + 2*i + i*3, 12, 4, 4, 0);
+			fillGUIBox(buffer, 2 + 2*i + i*3, 11, 4, 4, 0);
 		}
 
 		switch (i)
@@ -629,36 +629,29 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 {
 	int i;
 
-	SDL_Rect testMenuBox = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2, 80, 102};
-	SDL_Rect testMenuSelect = {SCREEN_WIDTH/2 - 40, SCREEN_HEIGHT/2 + 1, 80, 20};
-
 	SDL_Rect textPos = {0, 0, 0 ,0};
 	SDL_Surface* menuItemTextSurface = NULL;
 	SDL_Color textCol = {255, 255, 240, 0};
 
-	int titleDistance = ((int)( (delta/500.0) * 106)) - 96;
-	if (titleDistance > 20)
+	int titleDistance = ((int)( (delta/500.0) * (gameLogo->h + 10))) - gameLogo->h;
+	if (titleDistance > 10)
 	{
-		titleDistance = 20;
+		titleDistance = 10;
 	}
 
 	SDL_Rect titlePos = {49, titleDistance, 0, 0};
 
-	testMenuSelect.y = SCREEN_HEIGHT/2 + 1 + mSelected*20;
-
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
-	SDL_FillRect(buffer, &testMenuBox, SDL_MapRGB(buffer->format, 58, 58, 255));
-	SDL_FillRect(buffer, &testMenuSelect, SDL_MapRGB(buffer->format, 255, 255, 20));
-	
+
 	for (i = 0; i < 4; i++)
 	{
 		if (i == mSelected)
 		{
-			fillGUIBox(buffer, 6, 8 + 2*i, 8, 2, 1);
+			fillGUIBox(buffer, 6, 6 + 2*i, 8, 2, 1);
 		}
 		else
 		{
-			fillGUIBox(buffer, 6, 8 + 2*i, 8, 2, 0);
+			fillGUIBox(buffer, 6, 6 + 2*i, 8, 2, 0);
 		}
 	}
 	
@@ -699,7 +692,7 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 		}
 
 		textPos.x = SCREEN_WIDTH/2 - menuItemTextSurface->w/2;
-		textPos.y = SCREEN_HEIGHT/2 + 1 + i*32;
+		textPos.y = SCREEN_HEIGHT/2 - 16 + i*32;
 		
 		if (menuItemTextSurface != NULL)
 		{
@@ -1656,7 +1649,7 @@ void testDraw(SDL_Surface* buffer)
 	//used for default drawing
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
-	
+
 	tileRect.x = 160;
 	tileRect.y = 0;
 	for (i = 0; i < SCREEN_WIDTH/16; i++)
@@ -1707,11 +1700,11 @@ void testDraw(SDL_Surface* buffer)
 
 			entRect.x = i*16;
 			entRect.y = j*16;
-			
+
 			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 		}
 	}
-	
+
 	entRect.x = 0;
 	entRect.y = (BOARD_TOP_WALL + 1) * 16;
 	tileRect.x = 192;
@@ -1814,18 +1807,20 @@ void testDraw(SDL_Surface* buffer)
 			break;
 		}
 	}
+	
+	fillGUIBox(buffer, 0, 0, 20, 2, 0);
 
 	drawParticles(buffer);
-	
+
 	drawHealthScores(buffer);
-	
+
 	drawLatestPushDown(buffer);
 }
 
 void drawGameOverScreen(SDL_Surface* buffer)
 {
 	SDL_Color cl = {255, 255, 255, 0};
-	
+
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
 
 	char p1HealthText[50];

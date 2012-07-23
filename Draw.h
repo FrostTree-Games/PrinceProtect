@@ -10,7 +10,7 @@
 #define DRAW_H
 
 #define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 272
+#define SCREEN_HEIGHT 240
 
 #include <SDL/SDL.h>
 
