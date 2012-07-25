@@ -5,6 +5,51 @@
 #include "GameScreens.h"
 #include "Audio.h"
 
+int getReadyScreen(SDL_Surface* screen, int playerCount)
+{
+	int hardCoreQuit = 0;
+	
+	SDL_Event ev;
+	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+	
+	Uint32 timeStamp = SDL_GetTicks();
+	
+	playSFX(SFX_READY_JINGLE);
+
+	while(hardCoreQuit == 0)
+	{
+		while(SDL_PollEvent(&ev))
+		{
+			if (ev.type == SDL_QUIT)
+			{
+				hardCoreQuit = 1;
+			}
+		}
+		
+		Uint32 currTime = SDL_GetTicks();
+		
+		if (currTime - timeStamp > 4000)
+		{
+			break;
+		}
+
+		drawGetReadyScreen(buffer, playerCount);
+
+		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_Flip(screen);
+		SDL_Delay(17);
+	}
+	
+	SDL_FreeSurface(buffer);
+	
+	if (hardCoreQuit == 1)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
 int titleTransitionScreen(SDL_Surface* screen)
 {
 	int hardCoreQuit = 0;

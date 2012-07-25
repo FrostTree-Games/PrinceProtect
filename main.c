@@ -32,6 +32,8 @@ typedef enum
 	TITLE,
 	KEY_CONFIG,
 	ETC_CONFIG,
+	GETREADY,
+	GETREADY2,
 	INGAME,
 	INGAME2,
 	GAME_OVER,
@@ -528,10 +530,10 @@ int main(int argc, char* argv[])
 				currentState = TRANSITION_TO_BLACK;
 				break;
 				case 1:
-				currentState = INGAME;
+				currentState = GETREADY;
 				break;
 				case 2:
-				currentState = INGAME2;
+				currentState = GETREADY2;
 				break;
 				case 3:
 				currentState = KEY_CONFIG;
@@ -557,6 +559,18 @@ int main(int argc, char* argv[])
 			testLoop(1);
 			
 			currentState = GAME_OVER;
+		}
+		else if (currentState == GETREADY)
+		{
+			getReadyScreen(screen, 1);
+
+			currentState = INGAME;
+		}
+		else if (currentState == GETREADY2)
+		{
+			getReadyScreen(screen, 2);
+
+			currentState = INGAME2;
 		}
 		else if (currentState == KEY_CONFIG)
 		{

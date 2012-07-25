@@ -625,6 +625,18 @@ void drawToExitWipe(SDL_Surface* buffer, float curtainLength)
 	SDL_FillRect(buffer, &rightCurtain, SDL_MapRGB(buffer->format, 0, 0, 0));
 }
 
+void drawGetReadyScreen(SDL_Surface* buffer, int playerCount)
+{
+	if (playerCount == 1)
+	{
+		SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 255, 0, 0));
+	}
+	else if (playerCount == 2)
+	{
+		SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 255, 255));
+	}	
+}
+
 void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 {
 	int i;

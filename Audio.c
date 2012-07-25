@@ -26,6 +26,7 @@ Mix_Chunk* wipe_close;
 Mix_Chunk* enemy_die;
 Mix_Chunk* enemy_hurt;
 Mix_Chunk* get_hammer;
+Mix_Chunk* readyJingle;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
@@ -102,6 +103,10 @@ int loadSFXFiles()
 	{
 		fprintf(stderr, "Error loading hammer sound effect. Check for aud/sfx/getHammer.wav\n");
 	}
+	if ( (readyJingle = Mix_LoadWAV("aud/sfx/ready.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading ready Jingle effect. Check for aud/sfx/getHammer.wav\n");
+	}
 
 	return 0;
 }
@@ -152,6 +157,7 @@ void clearAudio()
 	Mix_FreeChunk(enemy_die);
 	Mix_FreeChunk(enemy_hurt);
 	Mix_FreeChunk(get_hammer);
+	Mix_FreeChunk(readyJingle);
 
 	Mix_CloseAudio();
 	
@@ -237,6 +243,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_GET_HAMMER)
 	{
 		Mix_PlayChannel(-1, get_hammer, 0);
+	}
+	if (fx == SFX_READY_JINGLE)
+	{
+		Mix_PlayChannel(-1, readyJingle, 0);
 	}
 }
 

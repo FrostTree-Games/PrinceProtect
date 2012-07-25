@@ -46,6 +46,12 @@ int titleTransitionScreen(SDL_Surface* screen);
  */
 int exitTransitionScreen(SDL_Surface* screen);
 
+/* getReadyScreen()
+ * Purpose: peps the player up; pass in 1 or 2 for playerCount
+ * Returns: Zero normally, 1 if the (X) button on the window was pressed
+ */
+int getReadyScreen(SDL_Surface* screen, int playerCount);
+
 /* titleScreen()
  * Purpose: Displays the title screen in a sexy loop. After SCREEN_TIMEOUT_SECONDS the game defines
  * Returns: integer representing menu result press

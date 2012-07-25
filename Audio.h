@@ -41,7 +41,8 @@ typedef enum
 	SFX_WIPE_CLOSE,
 	SFX_ENEMY_DIE,
 	SFX_ENEMY_HURT,
-	SFX_GET_HAMMER
+	SFX_GET_HAMMER,
+	SFX_READY_JINGLE
 } SFXType;
 
 /* setupAudio()
