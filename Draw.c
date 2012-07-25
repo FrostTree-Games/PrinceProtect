@@ -627,13 +627,25 @@ void drawToExitWipe(SDL_Surface* buffer, float curtainLength)
 
 void drawGetReadyScreen(SDL_Surface* buffer, int playerCount)
 {
+	//delete this line if you can compile this code
+	
+	SDL_Color textcol = {255, 255, 240, 0};
+	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
+	SDL_Surface* encourageText = TTF_RenderText_Solid(pushNotificationFont, "GET READY!", textCol);
+	SDL_Rect text1Position = {SCREEN_WIDTH/2 - encourageText->w/2, SCREEN_HEIGHT/4, 0, 0};
+	
+	if (encourageText != NULL)
+	{
+		SDL_BlitSurface(encourageText, NULL, buffer, &text1Position);
+	}
+	
 	if (playerCount == 1)
 	{
-		SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 255, 0, 0));
+		//draw P1 only
 	}
 	else if (playerCount == 2)
 	{
-		SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 255, 255));
+		//draw P1 and P2
 	}	
 }
 
