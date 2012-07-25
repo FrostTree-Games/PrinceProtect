@@ -637,6 +637,7 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount)
 	if (encourageText != NULL)
 	{
 		SDL_BlitSurface(encourageText, NULL, buffer, &text1Position);
+		SDL_FreeSurface(encourageText);
 	}
 	
 	if (playerCount == 1)
