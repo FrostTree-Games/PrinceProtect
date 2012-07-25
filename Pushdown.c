@@ -25,7 +25,7 @@ void updatePushMessages()
 		return;
 	}
 
-	if (getTimeSingleton() - messageQueue[0].startTime > 5000)
+	if (getTimeSingleton() - messageQueue[0].startTime > 2500)
 	{
 		for (i = 0; i < queueRear; i++)
 		{

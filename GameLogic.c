@@ -391,6 +391,10 @@ int beginGame()
 	restPeriod = 1;
 	
 	numberOfIceCreams = 8; //quick fix
+	
+	setTimeSingleton(SDL_GetTicks());
+	pushNewMessage("NINJAS WANT YOUR BOYFRIENDS!");
+	pushNewMessage("YOU MUST PROTECT THEM!");
 
 	return 0;
 }
