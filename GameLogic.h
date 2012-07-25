@@ -36,9 +36,15 @@ void updateGameLogic();
 
 /* getGameState()
  * Purpose: Returns the game state
- * Returns: 0 = no game; 1 = single player game; 2 = two player game
+ * Returns: 0 -> no game running, 1 -> regular game play, 2 -> player health depleted, 3 -> ice cream depleted
  */
 int getGameState();
+
+/* getPlayerCount()
+ * Purpose: Returns the number of players ingame
+ * Returns: 0 -> no game running, 1 -> 1 player, 2 -> 2 players
+ */
+int getPlayerCount();
 
 /* [various player health methods]
  * Purpose: APIs for modifying player health attributes (1 = player 1; 2 = player 2)

@@ -1817,8 +1817,10 @@ void testDraw(SDL_Surface* buffer)
 	drawLatestPushDown(buffer);
 }
 
-void drawGameOverScreen(SDL_Surface* buffer)
+void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
 {
+	int i;
+
 	SDL_Color cl = {255, 255, 255, 0};
 
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
@@ -1841,10 +1843,42 @@ void drawGameOverScreen(SDL_Surface* buffer)
 		sprintf(p1HealthText, "THE GOODS GOT AWAY! HOW COULD YOU?");
 		break;
 	}
-
+	
 	textPos.y += 50;
 	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
 	SDL_BlitSurface(gameOverText, NULL, buffer, &textPos);
 	SDL_FreeSurface(gameOverText);
+
+	for (i = 0; i < 2; i++)
+	{
+		if (i == menuOption)
+		{
+			fillGUIBox(buffer, 1, 8 + 2*i, 5, 2, 1);
+		}
+		else
+		{
+			fillGUIBox(buffer, 1, 8 + 2*i, 5, 2, 0);
+		}
+		
+		SDL_Rect menuTextBoxPos = {23, 138 + 32*i, 0, 0};
+		switch(i)
+		{
+			case 0:
+			gameOverText = TTF_RenderText_Solid(pushNotificationFont, "PLAY AGAIN", cl);
+			break;
+			case 1:
+			gameOverText = TTF_RenderText_Solid(pushNotificationFont, "TO TITLE", cl);
+			break;
+			default:
+			gameOverText = TTF_RenderText_Solid(pushNotificationFont, "MENU PROBLEM", cl);
+			break;
+		}
+		
+		if (gameOverText != NULL)
+		{
+			SDL_BlitSurface(gameOverText, NULL, buffer, &menuTextBoxPos);
+			SDL_FreeSurface(gameOverText);
+		}
+	}
 }
 

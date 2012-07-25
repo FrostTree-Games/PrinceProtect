@@ -327,14 +327,16 @@ void whimsyBlocks()
 	}
 }
 
-int gameOverLoop()
+int gameOverLoop(SDL_Surface* screen)
 {
 	int quit = 0;
+	int hardCoreQuit = 0;
 	SDL_Event ev;
 	
-	setTimeSingleton(SDL_GetTicks());
-	
-	Uint32 gameOverHang = getTimeSingleton();
+	int menuItem = 0;
+	int upKeyDown = 0;
+	int downKeyDown = 0;
+	int aKeyDown = 0;
 	
 	while (!quit && !hardCoreQuit)
 	{
@@ -346,21 +348,65 @@ int gameOverLoop()
 			}
 		}
 		
-		setTimeSingleton(SDL_GetTicks());
-		
-		if (getTimeSingleton() - gameOverHang > 6 * 1000)
+		if (getKey(P1_UP) && upKeyDown == 0)
 		{
-			quit = 1;
+			upKeyDown = 1;
 		}
-		
-		drawGameOverScreen(buffer);
+		else if (!getKey(P1_UP) && upKeyDown == 1)
+		{
+			upKeyDown = 0;
+			
+			menuItem = (menuItem + 1) % 2;
+
+			playSFX(SFX_MENU);
+		}
+
+		if (getKey(P1_DOWN) && downKeyDown == 0)
+		{
+			downKeyDown = 1;
+		}
+		else if (!getKey(P1_DOWN) && downKeyDown == 1)
+		{
+			downKeyDown = 0;
+			
+			menuItem = (menuItem + 1) % 2;
+			
+			playSFX(SFX_MENU);
+		}
+
+		if (getKey(P1_A) && aKeyDown == 0)
+		{
+			aKeyDown = 1;
+		}
+		else if (!getKey(P1_A) && aKeyDown == 1)
+		{
+			aKeyDown = 0;
+			
+			quit = 1;
+			
+			playSFX(SFX_MENU);
+		}
+
+		drawGameOverScreen(buffer, menuItem);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);
 		SDL_Delay(17); //crude 60fps
 	}
 	
-	return 0;
+	if (hardCoreQuit == 1)
+	{
+		return -1;
+	}
+
+	switch (menuItem)
+	{
+		case 0:
+		return 0;
+		case 1:
+		default:
+		return 1;
+	}
 }
 
 int testLoop(int twoPlayerGame)
@@ -523,8 +569,32 @@ int main(int argc, char* argv[])
 		}
 		else if (currentState == GAME_OVER)
 		{
-			gameOverLoop();
-			currentState = TITLE;
+			switch(gameOverLoop(screen))
+			{
+				case -1:
+				hardCoreQuit = 1;
+				break;
+				case 0:
+				switch (getPlayerCount())
+				{
+					case 1:
+					currentState = INGAME;
+					break;
+					case 2:
+					currentState = INGAME2;
+					break;
+					default:
+					currentState = TITLE;
+					break;
+				}
+				break;
+				case 1:
+				currentState = TITLE;
+				break;
+				default:
+				currentState = TITLE;
+				break;
+			}
 		}
 		else if (currentState == TRANSITION_TO_TITLE)
 		{

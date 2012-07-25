@@ -27,10 +27,10 @@ int setupAssets();
 void clearAssets();
 
 /* drawGameOverScreen()
- * Purpose: Draw a game over screen to the buffer
+ * Purpose: Draw a game over screen to the buffer; menuoption is either 1 or 2
  * Returns: n/a
  */
-void drawGameOverScreen(SDL_Surface* buffer);
+void drawGameOverScreen(SDL_Surface* buffer, int menuOption);
 
 /* drawKeyConfigScreen()
  * Purpose: Draws the key config screen onto a buffer

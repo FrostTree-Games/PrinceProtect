@@ -215,7 +215,7 @@ void updateWave()
 		restPeriod = 1;
 		restPeriodStart = getTimeSingleton();
 		
-		switch (rand() % 5)
+		switch (rand() % 10)
 		{
 			case 0:
 			pushNewMessage("NICE ONE! WAVE COMPLETE!");
@@ -231,7 +231,24 @@ void updateWave()
 			break;
 			case 4:
 			pushNewMessage("WAVE COMPLETE! MOMS LOVE YOU!");
+			break;
+                        case 5:
+			pushNewMessage("WAVE IS COMPLETE AND PRINCES STILL EXIST!");
+			break;
+			case 6:
+			pushNewMessage("YOU JUST COMPLETED THAT WAVE! NO WAY!");
+			break;
+			case 7:
+			pushNewMessage("WAVE OF BADDIES BUSTED!");
+			break;
+			case 8:
+			pushNewMessage("THIS WAVE IS SO OVER YOU GUYS!");
+			break;
+			case 9:
+			pushNewMessage("WAVE CONQUERED AND STUFF!");
+			break;
 			default:
+			pushNewMessage("WAVE COMPLETE!");
 			break;
 		}
 	}
@@ -482,6 +499,23 @@ int getIceCreamCount()
 int getGameState()
 {
 	return gameState;
+}
+
+int getPlayerCount()
+{
+	if (gameState == 0)
+	{
+		return 0;
+	}
+	
+	if (is2PlayerGame)
+	{
+		return 2;
+	}
+	else
+	{
+		return 1;
+	}	
 }
 
 int getScore()
