@@ -597,8 +597,15 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->lastFrameUpdate = currTime;
 	}
 	
-	if (pl->dead == 1)
+	if (pl->dead > 0)
 	{
+		if (pl->dead == 1 && currTime - pl->swordTimer > 1850)
+		{
+			pushParticle(SWEAT, pl->x * 16 + pl->offsetX, pl->y * 16 + pl->offsetY - 4, -2.0f, -2.0f);
+			pushParticle(SWEAT, pl->x * 16 + pl->offsetX, pl->y * 16 + pl->offsetY - 4, 2.0f, -2.0f);
+			
+			pl->dead = 2;
+		}
 		return;
 	}
 	

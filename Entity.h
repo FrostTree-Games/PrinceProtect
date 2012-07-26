@@ -186,7 +186,7 @@ typedef struct
 	Uint32 lastFrameUpdate;
 	int frame; //0 -> first frame ; 1 -> second frame
 	int holdingSuperHammer; //0 -> false; 1 -> true
-	int dead; //0 -> false ; 1 -> true
+	int dead; //0 -> false ; 1 -> true ; 2 -> true
 } Player;
 
 typedef struct

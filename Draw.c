@@ -931,12 +931,12 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
 
-	if (pl->dead == 1)
+	if (pl->dead > 0)
 	{
 		entRect.x = (pl->x * 16) + pl->offsetX - 8;
 		entRect.y = (pl->y * 16) + pl->offsetY - 8;
 		
-		if (getTimeSingleton() - pl->swordTimer > 1300)
+		if (getTimeSingleton() - pl->swordTimer > 1900)
 		{
 			tileRect.x = 48;
 			tileRect.y = 64;
