@@ -1902,11 +1902,22 @@ void testDraw(SDL_Surface* buffer)
 			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;
 			case GLUE:
-			entRect.x = entList[i]->iceCream.x * 16;
-			entRect.y = entList[i]->iceCream.y * 16;
+			entRect.x = entList[i]->glue.x * 16;
+			entRect.y = entList[i]->glue.y * 16;
 			tileRect.x = 240;
 			tileRect.y = 16;
-			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			// flickering
+			if (getTimeSingleton() - entList[i]->glue.startTime > 26 * 1000)
+			{
+				if ( ((getTimeSingleton() - entList[i]->glue.startTime - (9 * 1000)) / 100) % 2 == 0)
+				{
+					SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+				}
+			}
+			else
+			{
+				SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			}
 			break;
 			case ENEMY_CRAWLER:
 			drawCrawler(buffer, (Enemy*)entList[i]);
