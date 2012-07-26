@@ -10,11 +10,13 @@
 #include "Pushdown.h"
 #include "Audio.h"
 
+#define MAX_GAME_ENTITY_POPULATION 552
+
 #define PLAYER_WALK_SPEED 3
 
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
-const int entityListMaxSize = 552; // the area is a 32 by 16 tile zone (plus 40 extra overhead locations)
+const int entityListMaxSize = MAX_GAME_ENTITY_POPULATION;
 int entityListCurrentSize = 0;
 
 // THESE SHOULD BE EVENTUALLY MOVED

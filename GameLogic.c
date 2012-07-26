@@ -12,9 +12,9 @@
 #define MAX_ONSCREEN_ENEMIES 300
 #define MAX_ONSCREEN_ICECREAM 30
 
-#define BETWEEN_WAVE_DELAY 3000
 #define INITAL_SECONDS_BETWEEN_ROBOTS 3000
-#define REST_PERIOD_LENGTH 5000
+#define REST_PERIOD_LENGTH 5500
+#define INITAL_ROBOT_LIMIT_AMOUNT 5
 
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
 
@@ -37,9 +37,10 @@ int gameScore = 0;
 int waveNumber = 0;
 int restPeriod = 0; //0 = not between waves; 1 = between waves
 Uint32 restPeriodStart = 0;
-Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 Uint32 sinceLastEnemyOutput = 0;
 int enemiesLeftToPush = 0;
+int maxOnScreenRobots = INITAL_ROBOT_LIMIT_AMOUNT;
+Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 
 int gameEnding = 0; //0 false, 1 true
 Uint32 endGameDelta;
@@ -106,7 +107,7 @@ void updateWave()
 	{
 		unsigned int val = xrand() % 10000;
 
-		if (enemyCount < 5 && enemiesLeftToPush > 0)
+		if (enemyCount < maxOnScreenRobots && enemiesLeftToPush > 0)
 		{
 			if (getTimeSingleton() - sinceLastEnemyOutput > enemyPushInterval)
 			{
@@ -324,12 +325,15 @@ int clearResetGame(int playerCount)
 
 	player1Health = 10;
 	player2Health = 10;
-	
+
 	gameScore = 0;
 	gameEnding = 0;
 	
 	waveNumber = 0;
 	
+	maxOnScreenRobots = INITAL_ROBOT_LIMIT_AMOUNT;
+	enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
+
 	if (getEntityList() != NULL)
 	{
 		freeEntityList();
