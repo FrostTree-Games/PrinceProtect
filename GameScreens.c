@@ -15,6 +15,8 @@ int getReadyScreen(SDL_Surface* screen, int playerCount)
 	Uint32 timeStamp = SDL_GetTicks();
 	
 	playSFX(SFX_READY_JINGLE);
+	
+	int seed = rand() % 10;
 
 	while(hardCoreQuit == 0)
 	{
@@ -33,7 +35,7 @@ int getReadyScreen(SDL_Surface* screen, int playerCount)
 			break;
 		}
 
-		drawGetReadyScreen(buffer, playerCount);
+		drawGetReadyScreen(buffer, playerCount, seed);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);

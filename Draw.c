@@ -625,29 +625,121 @@ void drawToExitWipe(SDL_Surface* buffer, float curtainLength)
 	SDL_FillRect(buffer, &rightCurtain, SDL_MapRGB(buffer->format, 0, 0, 0));
 }
 
-void drawGetReadyScreen(SDL_Surface* buffer, int playerCount)
+void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 {
-	//delete this line if you can compile this code
-	
-	SDL_Color textcol = {255, 255, 240, 0};
+	SDL_Color textCol = {255, 255, 240, 0};
 	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
 	SDL_Surface* encourageText = TTF_RenderText_Solid(pushNotificationFont, "GET READY!", textCol);
 	SDL_Rect text1Position = {SCREEN_WIDTH/2 - encourageText->w/2, SCREEN_HEIGHT/4, 0, 0};
+	SDL_Rect playerPosition = {SCREEN_WIDTH/2 - 8, SCREEN_HEIGHT/2 - 8, 0, 0};
 	
 	if (encourageText != NULL)
 	{
 		SDL_BlitSurface(encourageText, NULL, buffer, &text1Position);
 		SDL_FreeSurface(encourageText);
 	}
-	
+
 	if (playerCount == 1)
 	{
-		//draw P1 only
+		SDL_Rect spritePosition = {0, 0, 16, 16};
+		SDL_BlitSurface(tileSheet, &spritePosition, buffer, &playerPosition);
 	}
 	else if (playerCount == 2)
 	{
-		//draw P1 and P2
-	}	
+		SDL_Rect spritePosition = {0, 0, 16, 16};
+		playerPosition.x -= 16;
+		SDL_BlitSurface(tileSheet, &spritePosition, buffer, &playerPosition);
+		playerPosition.x += 32;
+		spritePosition.x += 64;
+		SDL_BlitSurface(tileSheet, &spritePosition, buffer, &playerPosition);
+	}
+	
+	encourageText = TTF_RenderText_Solid(pushNotificationFont, "ENCOURAGEMENT:", textCol);
+
+	if (encourageText != NULL)
+	{
+		text1Position.x = SCREEN_WIDTH/2 - encourageText->w/2;
+		text1Position.y = 3*(SCREEN_HEIGHT/4);
+
+		SDL_BlitSurface(encourageText, NULL, buffer, &text1Position);
+		SDL_FreeSurface(encourageText);
+	}
+
+	switch (seed + (10*(playerCount - 1)))
+	{
+		//1 player encouragement
+		case 0:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Please win and stuff", textCol);
+		break;
+		case 1:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Whoa now, don't be too awesome", textCol);
+		break;
+		case 2:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "You have a nice haircut", textCol);
+		break;
+		case 3:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Remember your sensei's words", textCol);
+		break;
+		case 4:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "I like your key config", textCol);
+		break;
+		case 5:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "If you were a meal you would be expensive", textCol);
+		break;
+		case 6:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Follow your heart's gut", textCol);
+		break;
+		case 7:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "For our proud nation", textCol);
+		break;
+		case 8:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "You are very attractive", textCol);
+		break;
+		case 9:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "You're bucket", textCol);
+		break;
+
+		//2 player encouragement
+		case 10:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "It's great seeing one friend sacrifice for another", textCol);
+		break;
+		case 11:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Where did you find each other? The awesome store?", textCol);
+		break;
+		case 12:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Sorry, the game only supports one super player", textCol);
+		break;
+		case 13:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "I believe in most of you", textCol);
+		break;
+		case 14:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Good class! A+!", textCol);
+		break;
+		case 15:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Now with 100% more misogyny!", textCol);
+		break;
+		case 16:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Straight out of Compton", textCol);
+		break;
+		case 17:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "For our proud nation", textCol);
+		break;
+		case 18:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "You are both very attractive", textCol);
+		break;
+		default:
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "I've never seen a better team", textCol);
+		break;
+	}
+	
+	if (encourageText != NULL)
+	{
+		text1Position.x = SCREEN_WIDTH/2 - encourageText->w/2;
+		text1Position.y = 3*(SCREEN_HEIGHT/4) + 15;
+
+		SDL_BlitSurface(encourageText, NULL, buffer, &text1Position);
+		SDL_FreeSurface(encourageText);
+	}
 }
 
 void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)

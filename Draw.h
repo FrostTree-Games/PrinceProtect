@@ -60,7 +60,7 @@ void drawToExitWipe(SDL_Surface* buffer, float curtainLength);
  * Purpose: draws the pep talk screen; woot!
  * Returns: n/a
  */
-void drawGetReadyScreen(SDL_Surface* buffer, int playerCount);
+void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed);
 
 /* drawTitleScreen()
  * Purpose: draws the title screen; also passes in selected menu item and time since screen started
