@@ -562,13 +562,19 @@ int main(int argc, char* argv[])
 		}
 		else if (currentState == GETREADY)
 		{
-			getReadyScreen(screen, 1);
+			if (getReadyScreen(screen, 1) == 1)
+			{
+				hardCoreQuit = 1;
+			}
 
 			currentState = INGAME;
 		}
 		else if (currentState == GETREADY2)
 		{
-			getReadyScreen(screen, 2);
+			if (getReadyScreen(screen, 2) == 1)
+			{
+				hardCoreQuit = 1;
+			}
 
 			currentState = INGAME2;
 		}
