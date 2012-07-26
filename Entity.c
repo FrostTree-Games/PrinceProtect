@@ -467,6 +467,46 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 	}
 }
 
+int filterOccupyWallsAndIceCream(int x, int y, Entity** list, int listMaxSize, int* returnedSize)
+{
+	int i;
+	*returnedSize = 0;
+
+	if (list == NULL)
+	{
+		return 0;
+	}
+
+	Entity* en;
+	for (i = 0; i < entityListCurrentSize; i++)
+	{
+		en = entityList[i];
+
+		if (en->base.x == x && en->base.y == y)
+		{
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER || en->type == PLAYER1 || en->type == PLAYER2 || en->type == ICECREAM))
+			{
+				list[(*returnedSize)] = en;
+				(*returnedSize)++;
+			}
+
+			if ((*returnedSize) >= listMaxSize)
+			{
+				return 1;
+			}
+		}
+	}
+
+	if ((*returnedSize) == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
 // je suis lazy
 int filterOccupyWallsForPlayer(int x, int y, Entity** list, int listMaxSize, int* returnedSize)
 {
@@ -1735,11 +1775,22 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	int eastResultSize;
 	int westResultSize;
 	int currListSize;
+	
+	if (enemy->cream == NULL)
+	{
+		filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+		filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+		filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+		filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	}
+	else
+	{
+		filterOccupyWallsAndIceCream(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+		filterOccupyWallsAndIceCream(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+		filterOccupyWallsAndIceCream(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+		filterOccupyWallsAndIceCream(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	}
 
-	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
-	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
-	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
-	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
 	
 	if (currTime - enemy->lastFrameUpdate > 150)
@@ -2098,10 +2149,20 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	int westResultSize;
 	int currListSize;
 
-	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
-	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
-	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
-	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	if (enemy->cream == NULL)
+	{
+		filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+		filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+		filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+		filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	}
+	else
+	{
+		filterOccupyWallsAndIceCream(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+		filterOccupyWallsAndIceCream(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+		filterOccupyWallsAndIceCream(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+		filterOccupyWallsAndIceCream(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	}
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
 	
 	if(enemy->health < 1 && enemy->knockBackDirection == 255)
@@ -2488,10 +2549,21 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 	int westResultSize;
 	int currListSize;
 
-	filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
-	filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
-	filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
-	filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	if (enemy->cream == NULL)
+	{
+		filterOccupyWalls(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+		filterOccupyWalls(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+		filterOccupyWalls(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+		filterOccupyWalls(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	}
+	else
+	{
+		filterOccupyWallsAndIceCream(enemy->x, enemy->y - 1, northList, 5, &northResultSize);
+		filterOccupyWallsAndIceCream(enemy->x, enemy->y + 1, southList, 5, &southResultSize);
+		filterOccupyWallsAndIceCream(enemy->x + 1, enemy->y, eastList, 5, &eastResultSize);
+		filterOccupyWallsAndIceCream(enemy->x - 1, enemy->y, westList, 5, &westResultSize);
+	}
+
 	occupyingOnHere(enemy->x, enemy->y, currList, 5, &currListSize);
 	
 	if (currTime - enemy->lastFrameUpdate > 150)
@@ -2900,10 +2972,10 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 		pushParticle(ICE, block->x * 16, block->y * 16, -2.0f, 1.9f);
 	}
 
-	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
-	filterOccupyWalls(block->x, block->y + 1, southList, 5, &southResultSize);
-	filterOccupyWalls(block->x + 1, block->y, eastList, 5, &eastResultSize);
-	filterOccupyWalls(block->x - 1, block->y, westList, 5, &westResultSize);
+	filterOccupyWallsAndIceCream(block->x, block->y - 1, northList, 5, &northResultSize);
+	filterOccupyWallsAndIceCream(block->x, block->y + 1, southList, 5, &southResultSize);
+	filterOccupyWallsAndIceCream(block->x + 1, block->y, eastList, 5, &eastResultSize);
+	filterOccupyWallsAndIceCream(block->x - 1, block->y, westList, 5, &westResultSize);
 
 	if (delta / 32 > 0 && block->moving == 1)
 	{
@@ -2998,10 +3070,10 @@ void update_laser(Laser* block, Uint32 currTime)
 	int westResultSize;
 	int currResultSize;
 
-	filterOccupyWalls(block->x, block->y - 1, northList, 5, &northResultSize);
-	filterOccupyWalls(block->x, block->y + 1, southList, 5, &southResultSize);
-	filterOccupyWalls(block->x + 1, block->y, eastList, 5, &eastResultSize);
-	filterOccupyWalls(block->x - 1, block->y, westList, 5, &westResultSize);
+	filterOccupyWallsAndIceCream(block->x, block->y - 1, northList, 5, &northResultSize);
+	filterOccupyWallsAndIceCream(block->x, block->y + 1, southList, 5, &southResultSize);
+	filterOccupyWallsAndIceCream(block->x + 1, block->y, eastList, 5, &eastResultSize);
+	filterOccupyWallsAndIceCream(block->x - 1, block->y, westList, 5, &westResultSize);
 	occupyingOnHere(block->x, block->y, currList, 5, &currResultSize);
 
 	for (i = 0; i < currResultSize; i++)
