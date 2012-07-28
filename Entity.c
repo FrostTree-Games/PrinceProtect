@@ -528,7 +528,7 @@ int filterOccupyWallsForPlayer(int x, int y, Entity** list, int listMaxSize, int
 		if (en->base.x == x && en->base.y == y)
 		{
 
-			if ((en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER))
+			if ((en->type == LASER || en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -826,6 +826,13 @@ void update_player(Player* pl, Uint32 currTime)
 
 						pl->thrustHit = 0;
 					}
+					
+					if (northList[i]->type == LASER)
+					{
+						playSFX(SFX_LASER_1);
+
+						northList[i]->laser.direction = 0;
+					}
 				}
 			}
 			break;
@@ -867,6 +874,13 @@ void update_player(Player* pl, Uint32 currTime)
 						playSFX(SFX_ICE_TINK);
 
 						pl->thrustHit = 0;
+					}
+					
+					if (eastList[i]->type == LASER)
+					{
+						playSFX(SFX_LASER_1);
+
+						eastList[i]->laser.direction = 1;
 					}
 				}
 			}
@@ -910,6 +924,13 @@ void update_player(Player* pl, Uint32 currTime)
 
 						pl->thrustHit = 0;
 					}
+					
+					if (southList[i]->type == LASER)
+					{
+						playSFX(SFX_LASER_1);
+
+						southList[i]->laser.direction = 2;
+					}
 				}
 			}
 			break;
@@ -951,6 +972,13 @@ void update_player(Player* pl, Uint32 currTime)
 						playSFX(SFX_ICE_TINK);
 
 						pl->thrustHit = 0;
+					}
+					
+					if (westList[i]->type == LASER)
+					{
+						playSFX(SFX_LASER_1);
+
+						westList[i]->laser.direction = 3;
 					}
 				}
 			}
@@ -3129,7 +3157,7 @@ void update_laser(Laser* block, Uint32 currTime)
 			return;
 		}
 		
-		if ((block->allegiance == 1) && (currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_SHOOTER))
+		if ((currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_SHOOTER))
 		{
 			currList[i]->enemy.health -= 3;
 
