@@ -1702,6 +1702,14 @@ void drawParticles(SDL_Surface* buffer)
 			pxOffset[1] = 255;
 			pxOffset[2] = 255;
 			break;
+			case FIRE:
+			pxOffset[0] = 5;
+			pxOffset[1] = 60;
+			pxOffset[2] = 255;
+			px2Offset[0] = 240;
+			px2Offset[1] = 120;
+			px2Offset[2] = 0;
+			break;
 			default:
 			break;
 		}
@@ -1751,6 +1759,17 @@ void drawParticles(SDL_Surface* buffer)
 			case MUD:
                         put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
                         put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y + 1, px);
+			case FIRE:
+			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px);
+			if (pList[i].xVelo < 0)
+			{
+				put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y + 1, px);
+			}
+			else
+			{
+				put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y + 1, px);
+			}
+			break;
 			default:
 			break;
 		}

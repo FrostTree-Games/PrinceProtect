@@ -52,16 +52,22 @@ void updateParticles()
 			continue;
 		}
 		
-		if (particleList[i].type != TELESPARK)
+		if (particleList[i].type == FIRE)
 		{
-			particleList[i].x += particleList[i].xVelo;
-			particleList[i].y += particleList[i].yVelo;
+			Uint32 delta = (getTimeSingleton() - particleList[i].startTime);
+			particleList[i].xVelo = (float)(3*sin(delta));
 		}
-		else
+
+		if (particleList[i].type == TELESPARK)
 		{
 			Uint32 delta = (getTimeSingleton() - particleList[i].startTime)/100;
 			particleList[i].x += particleList[i].xVelo;
 			particleList[i].y += (delta + exp(0.20 * delta) * sin(10.0 * delta)) * particleList[i].yVelo/2.0f;
+		}
+		else
+		{
+			particleList[i].x += particleList[i].xVelo;
+			particleList[i].y += particleList[i].yVelo;
 		}
 
 		//update any logic necessary
@@ -86,6 +92,12 @@ void updateParticles()
 			case TEARS:
 			case MUD:
 			if (getTimeSingleton() - particleList[i].startTime > 100)
+			{
+				particleList[i].type = NONE;
+			}
+			break;
+			case FIRE:
+			if (getTimeSingleton() - particleList[i].startTime > 350)
 			{
 				particleList[i].type = NONE;
 			}

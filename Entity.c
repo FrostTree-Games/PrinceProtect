@@ -636,7 +636,7 @@ void update_player(Player* pl, Uint32 currTime)
 		
 		pl->lastFrameUpdate = currTime;
 	}
-	
+
 	if (pl->dead > 0)
 	{
 		if (pl->dead == 1 && currTime - pl->swordTimer > 1850)
@@ -664,6 +664,11 @@ void update_player(Player* pl, Uint32 currTime)
 	if (pl->holding != NULL)
 	{
 		pl->holding->startTime = getTimeSingleton();
+	}
+	
+	if (pl->holdingSuperHammer == 1)
+	{
+		pushParticle(FIRE, (16 * pl->x) + pl->offsetX + ((xrand() % 17) - 8), (16 * pl->y) + pl->offsetY - 8, 2.0f, -2.0f);
 	}
 
 	// if the player gets completely knocked back, then he/she cannot do logic for that iteration
@@ -757,7 +762,6 @@ void update_player(Player* pl, Uint32 currTime)
 
 	if (pl->isThrusting && pl->knockBackDirection == 255)
 	{
-
 		if (pl->holdingSuperHammer == 1)
 		{
 			pl->thrustHit = 0;
