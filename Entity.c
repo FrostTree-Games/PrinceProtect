@@ -3445,6 +3445,10 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_boxergreg( (Enemy*)entity, currTime);
 		break;
 		case SUPERHAMMER:
+		if (xrand() % 5 == 0)
+		{
+			pushParticle(FIRE, (16 * entity->base.x) + (xrand() % 17), (16 * entity->base.y), 2.0f, -1.2f);
+		}
 		break;
 		case GLUE:
 		update_glue( (FloorGlue*)entity);
