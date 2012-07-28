@@ -103,6 +103,8 @@ typedef struct
 	int offsetY;
 	Uint32 lastMovementUpdate;
 	unsigned char allegiance; //0 -> damagers player; 1 -> damagers enemies
+	int frame; //0 or 1
+	Uint32 lastFrameUpdate;
 } Laser;
 
 typedef struct

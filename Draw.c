@@ -1590,7 +1590,7 @@ void drawLaser(SDL_Surface* buffer, Laser* ls)
 	entRect.x = (ls->x * 16) + ls->offsetX - 8;
 	entRect.y = (ls->y * 16) + ls->offsetY - 8;
 
-	if (ls->allegiance == 0)
+	if (ls->frame == 0)
 	{
 		tileRect.y += 16;
 	}

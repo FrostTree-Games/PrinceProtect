@@ -123,6 +123,8 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->laser.offsetX = 8;
 		newEntity->laser.offsetY = 8;
 		newEntity->laser.allegiance = 0;
+		newEntity->laser.frame = newEntity->laser.frame % 2;
+		newEntity->laser.lastFrameUpdate = getTimeSingleton();
 		break;
 		case TELEBLOCK:
 		newEntity->tBlock.x = newX;
@@ -3133,6 +3135,13 @@ void update_laser(Laser* block, Uint32 currTime)
 			return;
 		}
 	}
+	
+	if (getTimeSingleton() - block->lastFrameUpdate > 250)
+	{
+		block->frame = (block->frame + 1) % 2;
+		
+		block->lastFrameUpdate = getTimeSingleton();
+	}	
 
 	if (delta / 32 > 0)
 	{
