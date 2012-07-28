@@ -27,6 +27,7 @@ Mix_Chunk* enemy_die;
 Mix_Chunk* enemy_hurt;
 Mix_Chunk* get_hammer;
 Mix_Chunk* readyJingle;
+Mix_Chunk* losePrincess;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
@@ -89,7 +90,7 @@ int loadSFXFiles()
 	}
 	if ( (princessYell = Mix_LoadWAV("aud/sfx/princess.wav")) == NULL)
 	{
-		fprintf(stderr, "Error loading princess yelling sound effect. Check for aud/sfx/princess.wav\n");
+		fprintf(stderr, "Error loading prince yelling sound effect. Check for aud/sfx/princess.wav\n");
 	}
 	if ( (enemy_die = Mix_LoadWAV("aud/sfx/enemyKill.wav")) == NULL)
 	{
@@ -105,7 +106,11 @@ int loadSFXFiles()
 	}
 	if ( (readyJingle = Mix_LoadWAV("aud/sfx/ready.wav")) == NULL)
 	{
-		fprintf(stderr, "Error loading ready Jingle effect. Check for aud/sfx/getHammer.wav\n");
+		fprintf(stderr, "Error loading ready Jingle effect. Check for aud/sfx/ready.wav\n");
+	}
+	if ( (losePrincess = Mix_LoadWAV("aud/sfx/losePrincess.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading prince escape effect. Check for aud/sfx/losePrincess.wav\n");
 	}
 
 	return 0;
@@ -158,6 +163,7 @@ void clearAudio()
 	Mix_FreeChunk(enemy_hurt);
 	Mix_FreeChunk(get_hammer);
 	Mix_FreeChunk(readyJingle);
+	Mix_FreeChunk(losePrincess);
 
 	Mix_CloseAudio();
 	
@@ -247,6 +253,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_READY_JINGLE)
 	{
 		Mix_PlayChannel(-1, readyJingle, 0);
+	}
+	if (fx == SFX_LOSE_PRINCESS)
+	{
+		Mix_PlayChannel(-1, losePrincess, 0);
 	}
 }
 

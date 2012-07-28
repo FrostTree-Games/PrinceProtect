@@ -256,7 +256,9 @@ void updateWave()
 
 	if (iceCreamCount < numberOfIceCreams && iceCreamCount > 0)
 	{
-		pushNewMessage("ICE CREAM LOST!");
+		pushNewMessage("PRINCE BOYFRIEND LOST!");
+		
+		playSFX(SFX_LOSE_PRINCESS);
 	}
 	numberOfIceCreams = iceCreamCount;
 }

@@ -2976,6 +2976,8 @@ void update_iceBlock(IceBlock* block, Uint32 currTime)
 		pushParticle(ICE, block->x * 16, block->y * 16, 2.0f, -1.9f);
 		pushParticle(ICE, block->x * 16, block->y * 16, 2.0f, 1.9f);
 		pushParticle(ICE, block->x * 16, block->y * 16, -2.0f, 1.9f);
+		
+		playSFX(SFX_ICE_TINK);
 	}
 
 	filterOccupyWallsAndIceCream(block->x, block->y - 1, northList, 5, &northResultSize);
@@ -3141,7 +3143,7 @@ void update_laser(Laser* block, Uint32 currTime)
 		block->frame = (block->frame + 1) % 2;
 		
 		block->lastFrameUpdate = getTimeSingleton();
-	}	
+	}
 
 	if (delta / 32 > 0)
 	{
