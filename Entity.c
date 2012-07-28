@@ -831,6 +831,9 @@ void update_player(Player* pl, Uint32 currTime)
 					{
 						playSFX(SFX_LASER_1);
 
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX + 8, pl->y * 16 + pl->offsetY - 10, -2.0f, -2.0f);
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX + 8, pl->y * 16 + pl->offsetY - 10, 2.0f, -2.0f);
+
 						northList[i]->laser.direction = 0;
 					}
 				}
@@ -879,6 +882,9 @@ void update_player(Player* pl, Uint32 currTime)
 					if (eastList[i]->type == LASER)
 					{
 						playSFX(SFX_LASER_1);
+						
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX + 10, pl->y * 16 + pl->offsetY - 8, 2.0f, 2.0f);
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX + 10, pl->y * 16 + pl->offsetY - 8, 2.0f, -2.0f);
 
 						eastList[i]->laser.direction = 1;
 					}
@@ -928,6 +934,9 @@ void update_player(Player* pl, Uint32 currTime)
 					if (southList[i]->type == LASER)
 					{
 						playSFX(SFX_LASER_1);
+						
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX - 8, pl->y * 16 + pl->offsetY + 8, 2.0f, 2.0f);
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX - 8, pl->y * 16 + pl->offsetY + 8, -2.0f, 2.0f);
 
 						southList[i]->laser.direction = 2;
 					}
@@ -977,6 +986,9 @@ void update_player(Player* pl, Uint32 currTime)
 					if (westList[i]->type == LASER)
 					{
 						playSFX(SFX_LASER_1);
+						
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX - 2, pl->y * 16 + pl->offsetY - 8, -2.0f, 2.0f);
+						pushParticle(SWEAT, pl->x * 16 + pl->offsetX - 2, pl->y * 16 + pl->offsetY - 8, -2.0f, -2.0f);
 
 						westList[i]->laser.direction = 3;
 					}
@@ -3129,10 +3141,10 @@ void update_laser(Laser* block, Uint32 currTime)
 			
 			playSFX(SFX_PLAYER_HURT);
 
-			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, -2.0f, 2.0f);
-			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, 2.0f, 2.0f);
-			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, -2.0f, -2.0f);
-			pushParticle(SWEAT, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, 2.0f, -2.0f);
+			pushParticle(BLOOD, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, -2.0f, 2.0f);
+			pushParticle(BLOOD, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, 2.0f, 2.0f);
+			pushParticle(BLOOD, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, -2.0f, -2.0f);
+			pushParticle(BLOOD, (currList[i]->player.x * 16) + currList[i]->player.offsetX, (currList[i]->player.y * 16) + currList[i]->player.offsetY + 8, 2.0f, -2.0f);
 
 			block->type = DELETE_ME_PLEASE;
 			return;
@@ -3159,6 +3171,11 @@ void update_laser(Laser* block, Uint32 currTime)
 		
 		if ((currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_SHOOTER))
 		{
+			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, -2.0f, -2.0f);
+			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, 2.0f, -2.0f);
+			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, -2.0f, 2.0f);
+			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, 2.0f, 2.0f);
+
 			currList[i]->enemy.health -= 3;
 
 			block->type = DELETE_ME_PLEASE;
