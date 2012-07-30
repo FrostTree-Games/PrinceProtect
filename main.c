@@ -490,7 +490,7 @@ int testLoop(int twoPlayerGame)
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
-	currentState = TITLE; //should start at NONE
+	currentState = NONE; //should start at NONE
 
 	if (init() != 0)
 	{

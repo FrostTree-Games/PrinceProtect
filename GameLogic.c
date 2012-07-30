@@ -146,7 +146,7 @@ void updateWave()
 					break;
 					case 0:
 					default:
-					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
+					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
 					break;
 				}
 				en->direction = 1;
