@@ -12,7 +12,7 @@
 #include "Particle.h"
 #include "Keyboard.h"
 
-int pushNotificationFontSize = 10;
+int pushNotificationFontSize = 7;
 TTF_Font* pushNotificationFont = NULL;
 
 SDL_Surface* tileSheet;
