@@ -47,9 +47,58 @@ Uint32 endGameDelta;
 
 Uint32 lastUpdateTime = 0;
 
+BGMType currentBGM = BGM_NONE;
+
 unsigned int xrand(void)
 {
 	return rand () * (RAND_MAX + 1) + rand ();
+}
+
+BGMType randomizeBGM(BGMType bg)
+{
+	if (bg != BGM_1 && bg != BGM_2 && bg != BGM_3)
+	{
+		return BGM_1;
+	}
+	
+	if (bg == BGM_1)
+	{
+		switch (xrand() % 2)
+		{
+			case 0:
+			return BGM_2;
+			case 1:
+			return BGM_3;
+			default:
+			return BGM_1;
+		}
+	}
+	else if (bg == BGM_2)
+	{
+		switch (xrand() % 2)
+		{
+			case 0:
+			return BGM_1;
+			case 1:
+			return BGM_3;
+			default:
+			return BGM_2;
+		}
+	}
+	else if (bg == BGM_3)
+	{
+		switch (xrand() % 2)
+		{
+			case 0:
+			return BGM_1;
+			case 1:
+			return BGM_2;
+			default:
+			return BGM_3;
+		}
+	}
+	
+	return BGM_1;
 }
 
 void updateRestPeriod()
@@ -68,6 +117,12 @@ void updateRestPeriod()
 		char msg[49];
 		sprintf(msg, "WAVE %.2d", waveNumber);
 		pushNewMessage(msg);
+		
+		if (waveNumber > 1)
+		{
+			currentBGM = randomizeBGM(currentBGM);
+			playBGM(currentBGM);
+		}
 	}
 }
 
@@ -252,6 +307,8 @@ void updateWave()
 			pushNewMessage("WAVE COMPLETE!");
 			break;
 		}
+		
+		fadeBGM();
 	}
 
 	if (iceCreamCount < numberOfIceCreams && iceCreamCount > 0)
@@ -333,6 +390,8 @@ int clearResetGame(int playerCount)
 	
 	waveNumber = 0;
 	
+	currentBGM = BGM_NONE;
+	
 	maxOnScreenRobots = INITAL_ROBOT_LIMIT_AMOUNT;
 	enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 
@@ -401,6 +460,9 @@ int beginGame()
 	setTimeSingleton(SDL_GetTicks());
 	pushNewMessage("NINJAS WANT YOUR BOYFRIENDS!");
 	pushNewMessage("YOU MUST PROTECT THEM!");
+	
+	currentBGM = BGM_1;
+	playBGM(currentBGM);
 
 	return 0;
 }

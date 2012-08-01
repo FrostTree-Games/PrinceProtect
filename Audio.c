@@ -325,3 +325,8 @@ void stopBGM()
 	Mix_HaltMusic();
 }
 
+void fadeBGM()
+{
+	Mix_FadeOutMusic(2000);
+}
+

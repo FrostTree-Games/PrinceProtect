@@ -430,8 +430,6 @@ int testLoop(int twoPlayerGame)
 	}
 
 	beginGame();
-	
-	playBGM(BGM_1);
 
 	while (!quit && !hardCoreQuit)
 	{

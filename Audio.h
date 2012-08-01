@@ -74,4 +74,9 @@ void playBGM(BGMType bg);
  */
 void stopBGM();
 
+/* fadeBGM()
+ * Purpose: Stops any BGM playing with a sexy quick fadeout
+ */
+void fadeBGM();
+
 #endif
