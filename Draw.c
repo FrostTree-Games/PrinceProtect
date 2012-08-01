@@ -316,7 +316,7 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 {
 	int i;
 	SDL_Color textCol = {255, 255, 240, 0};
-	SDL_Rect buttonTextPosition = {48, 204, 0, 0};
+	SDL_Rect buttonTextPosition = {40, 188, 0, 0};
 	SDL_Surface* buttonText;
 
 	SDL_Rect controlsPosition = {0, 0, 0, 0};
@@ -338,7 +338,7 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 	controlsPosition.y = 80;
 	for (i = 0; i < 6; i++)
 	{
-		SDL_Rect labelPosition = {16, 80 + i*16, 0, 0};
+		SDL_Rect labelPosition = {10, 76 + i*16, 0, 0};
 		
 		switch (i)
 		{
@@ -419,7 +419,7 @@ void drawKeyConfigScreen(SDL_Surface* buffer, int menuPosition, int keyCheck)
 	controlsPosition.y = 80;
 	for (i = 0; i < 6; i++)
 	{
-		SDL_Rect labelPosition = {176, 80 + i*16, 0, 0};
+		SDL_Rect labelPosition = {170, 76 + i*16, 0, 0};
 
 		switch (i)
 		{
