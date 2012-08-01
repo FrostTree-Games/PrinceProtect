@@ -63,6 +63,12 @@ void clearAudio();
  */
 void playSFX(SFXType fx);
 
+/* stopAllSFX()
+ * Purpose: Halts any sound effects currently playing
+ * Returns: n/a
+ */
+void stopAllSFX();
+
 /* playBGM()
  * Purpose: Stops any BGM playing and starts a new one depending on the specified BGMType
  * Returns: n/a

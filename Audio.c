@@ -297,6 +297,11 @@ void playSFX(SFXType fx)
 	}
 }
 
+void stopAllSFX()
+{
+	Mix_HaltChannel(-1);
+}
+
 void playBGM(BGMType bg)
 {
 	Mix_HaltMusic();

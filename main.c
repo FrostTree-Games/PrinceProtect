@@ -396,6 +396,8 @@ int gameOverLoop(SDL_Surface* screen)
 		SDL_Delay(17); //crude 60fps
 	}
 	
+	stopAllSFX();
+	
 	if (hardCoreQuit == 1)
 	{
 		return -1;

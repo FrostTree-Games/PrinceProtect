@@ -512,7 +512,8 @@ int titleScreen(SDL_Surface* screen)
 	}
 
 	SDL_FreeSurface(buffer);
-	
+
+	stopAllSFX();
 	stopBGM();
 	
 	if (hardCoreQuit == 1)
