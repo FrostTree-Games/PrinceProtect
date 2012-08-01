@@ -15,9 +15,9 @@ typedef enum
 {
 	BGM_NONE = 0,
 	BGM_ANGSTY,
-	BGM_ARTIFICAL,
-	BGM_WEEDS,
-	BGM_GRASS,
+	BGM_1,
+	BGM_2,
+	BGM_3,
 	BGM_TITLE
 } BGMType;
 
@@ -45,7 +45,6 @@ typedef enum
 	SFX_READY_JINGLE,
 	SFX_LOSE_PRINCESS
 } SFXType;
-
 /* setupAudio()
  * Purpose: Loads the necessary OGG BGM music and WAV SFX; do this on startup
  * Returns: 0 on success, 1 on failure

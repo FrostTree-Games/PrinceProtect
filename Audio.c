@@ -29,6 +29,11 @@ Mix_Chunk* get_hammer;
 Mix_Chunk* readyJingle;
 Mix_Chunk* losePrincess;
 
+Mix_Music* bgm1;
+Mix_Music* bgm2;
+Mix_Music* bgm3;
+Mix_Music* titleSong;
+
 //disgusting implementation? perhaps.
 int loadSFXFiles()
 {
@@ -116,10 +121,32 @@ int loadSFXFiles()
 	return 0;
 }
 
+int loadBGMFiles()
+{
+	if ( (bgm1 = Mix_LoadMUS("aud/bgm/artifical_turf.it")) == NULL)
+	{
+		fprintf(stderr, "Error loading background music 1. Check for aud/sfx/artifical_turf.it\n");
+	}
+	if ( (bgm2 = Mix_LoadMUS("aud/bgm/pretty_weeds.it")) == NULL)
+	{
+		fprintf(stderr, "Error loading background music 2. Check for aud/sfx/pretty_weeds.it\n");
+	}
+	if ( (bgm3 = Mix_LoadMUS("aud/bgm/real_grass.it")) == NULL)
+	{
+		fprintf(stderr, "Error loading background music 2. Check for aud/sfx/real_grass.it\n");
+	}
+	if ( (titleSong = Mix_LoadMUS("aud/bgm/title.ogg")) == NULL)
+	{
+		fprintf(stderr, "Error loading title screen music! Oh no! Check for aud/sfx/title.ogg\n");
+	}
+
+	return 0;
+}
+
 int setupAudio()
 {
 	// load support for the OGG sample/music formats
-	int flags=MIX_INIT_OGG;
+	int flags=MIX_INIT_OGG | MIX_INIT_MOD;
 	int initted=Mix_Init(flags);
 	if((initted & flags) != flags)
 	{
@@ -135,6 +162,11 @@ int setupAudio()
 	}
 	
 	if (loadSFXFiles() == 1)
+	{
+		return 1;
+	}
+	
+	if (loadBGMFiles() == 1)
 	{
 		return 1;
 	}
@@ -164,6 +196,11 @@ void clearAudio()
 	Mix_FreeChunk(get_hammer);
 	Mix_FreeChunk(readyJingle);
 	Mix_FreeChunk(losePrincess);
+	
+	Mix_FreeMusic(bgm1);
+	Mix_FreeMusic(bgm2);
+	Mix_FreeMusic(bgm3);
+	Mix_FreeMusic(titleSong);
 
 	Mix_CloseAudio();
 	
@@ -258,5 +295,33 @@ void playSFX(SFXType fx)
 	{
 		Mix_PlayChannel(-1, losePrincess, 0);
 	}
+}
+
+void playBGM(BGMType bg)
+{
+	Mix_HaltMusic();
+
+	switch (bg)
+	{
+		case BGM_1:
+		Mix_PlayMusic(bgm1, -1);
+		break;
+		case BGM_2:
+		Mix_PlayMusic(bgm2, -1);
+		break;
+		case BGM_3:
+		Mix_PlayMusic(bgm3, -1);
+		break;
+		case BGM_TITLE:
+		Mix_PlayMusic(titleSong, 0);
+		break;
+		default:
+		break;
+	}
+}
+
+void stopBGM()
+{
+	Mix_HaltMusic();
 }
 

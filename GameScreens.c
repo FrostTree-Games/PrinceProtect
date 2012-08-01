@@ -497,10 +497,11 @@ int titleScreen(SDL_Surface* screen)
 			aKeyDown = 0;
 		}
 		
-		if (currTime - timeStamp > 500 && playedCrashSound == 0)
+		if (currTime - timeStamp > 450 && playedCrashSound == 0)
 		{
 			playedCrashSound = 1;
 			playSFX(SFX_CRASH);
+			playBGM(BGM_TITLE);
 		}
 		
 		drawTitleScreen(buffer, menuPosition, currTime - timeStamp);
@@ -511,6 +512,8 @@ int titleScreen(SDL_Surface* screen)
 	}
 
 	SDL_FreeSurface(buffer);
+	
+	stopBGM();
 	
 	if (hardCoreQuit == 1)
 	{

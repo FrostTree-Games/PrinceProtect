@@ -430,6 +430,8 @@ int testLoop(int twoPlayerGame)
 	}
 
 	beginGame();
+	
+	playBGM(BGM_1);
 
 	while (!quit && !hardCoreQuit)
 	{
@@ -483,6 +485,8 @@ int testLoop(int twoPlayerGame)
 	freeEntityList();
 	
 	freeParticleList();
+	
+	stopBGM();
 
 	return 0;
 }
