@@ -113,7 +113,12 @@ void updateRestPeriod()
 	{
 		waveNumber++;
 		restPeriod = 0;
-		enemiesLeftToPush = 10;
+		enemiesLeftToPush = 20;
+		if (waveNumber == 4)
+		{
+			enemiesLeftToPush = 40;
+			maxOnScreenRobots += 3;
+		}
 		char msg[49];
 		sprintf(msg, "WAVE %.2d", waveNumber);
 		pushNewMessage(msg);
@@ -167,43 +172,75 @@ void updateWave()
 			if (getTimeSingleton() - sinceLastEnemyOutput > enemyPushInterval)
 			{
 				Enemy* en;
-				int enemyMod = 0;
-				
-				if (waveNumber > 2)
+
+				if (waveNumber >= 5)
 				{
-					unsigned int highDifVal = val % 100;
-					if (highDifVal < 10)
+					int enemyMod = 0;
+					
+					int val = xrand() % 100;
+					
+					if (val < 50)
+					{
+						enemyMod = 0;
+					}
+					else if (val < 75)
+					{
+						enemyMod = 1;
+					}
+					else
 					{
 						enemyMod = 2;
 					}
-					else if (highDifVal < 40)
-					{
-						enemyMod = 1;
-					}
-				}
-				else if (waveNumber > 1)
-				{
-					unsigned int medDifVal = val % 100;
-					
-					if (medDifVal < 30)
-					{
-						enemyMod = 1;
-					}
-				}
 
-				switch (enemyMod)
-				{
-					case 2:
-					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
-					break;
-					case 1:
-					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
-					break;
-					case 0:
-					default:
-					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
-					break;
+					switch (enemyMod)
+					{
+						case 2:
+						en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
+						break;
+						case 1:
+						en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
+						break;
+						case 0:
+						default:
+						en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+						break;
+					}
 				}
+				else
+				{
+					switch (waveNumber)
+					{
+						case 1:
+						en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+						break;
+						case 2:
+						if (xrand() % 5 == 0)
+						{
+							en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
+						}
+						else
+						{
+							en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+						}
+						break;
+						case 3:
+						if (xrand() % 3 == 0)
+						{
+							en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+						}
+						else
+						{
+							en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
+						}
+						break;
+						case 4:
+						en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+						break;
+						default:
+						break;
+					}
+				}
+				
 				en->direction = 1;
 				
 				if (xrand() % 2 == 0)
@@ -213,11 +250,16 @@ void updateWave()
 				}
 
 				sinceLastEnemyOutput = getTimeSingleton();
+				if (waveNumber == 4)
+				{
+					sinceLastEnemyOutput -= 1500;
+				}
+
 				enemiesLeftToPush--;
 			}
 		}
 
-		if (gameBlockCount < 20)
+		if (gameBlockCount < 20 && waveNumber > 1)
 		{
 			if(val / 20 < 4)
 			{
@@ -236,27 +278,57 @@ void updateWave()
 					if (checkResultSize == 0)
 					{
 						Entity* newBlock;
-						switch (xrand() % 4)
+						
+						if (waveNumber >= 5)
 						{
-							case 0:
-							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = RED_BLOCK;
-					                break;
-							case 1:
-							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = BLUE_BLOCK;
-					                break;
-							case 2:
-							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = GREEN_BLOCK;
-					                break;
-							case 3:
-							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = YELLOW_BLOCK;
-					                break;
-							default:
-							break;
+							switch (xrand() % 4)
+							{
+								case 0:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+						                newBlock->gBlock.bType = RED_BLOCK;
+						                break;
+								case 1:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+						                newBlock->gBlock.bType = BLUE_BLOCK;
+						                break;
+								case 2:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+						                newBlock->gBlock.bType = GREEN_BLOCK;
+						                break;
+								case 3:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+						                newBlock->gBlock.bType = YELLOW_BLOCK;
+						                break;
+								default:
+								break;
+							}
 						}
+						else
+						{
+							switch (waveNumber)
+							{
+								case 2:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+						                newBlock->gBlock.bType = GREEN_BLOCK;
+								break;
+								case 3:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+						                newBlock->gBlock.bType = RED_BLOCK;
+								break;
+								case 4:
+								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+								if (xrand() % 2 == 0)
+								{
+									newBlock->gBlock.bType = YELLOW_BLOCK;
+								}
+								else
+								{
+									newBlock->gBlock.bType = BLUE_BLOCK;
+								}
+								break;
+							}
+						}
+
 						break;
 					}
 				}

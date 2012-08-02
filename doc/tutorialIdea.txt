@@ -1,0 +1,23 @@
+Teaching the player to play the game
+-----------------------------------------
+Throwing in all the game elements at can be frustrating for the player. Frustrating the player can be good if they try to grow and improve,
+but nobody likes my games enough yet to do that. I'm not like Derek Yu or Miyamoto or someone cool.
+
+The plan is to teach the elements of the game one-by-one to the player, kind of like Portal or Mario or any other game indie folks still like.
+Once the player feels comfortable with each element, combining them together will seem interesting and perhaps earn me the "emergent gameplay
+designer" badge.
+
+Some blocks work well with certain enimies. The Super Hammer is really effective against Boxer Greg, while Glue works great on slowing down
+the Shooter. By perhaps introducing a block-enemy pair for the first few levels, the game will seem more interesting.
+
+This may be a drawback for experienced players, but hopefully they'll feel awesome clearing through the first inital waves.
+
+First Four Waves:
+------
+WAVE 1: Only crawlers. Allows the player to get a good sense of swinging the sword.
+WAVE 2: Crawlers, Shooters, and green blocks
+WAVE 3: Crawlers, Boxer Gregs, and red blocks
+WAVE 4: Crawlers, yellow blocks, and blue blocks. A lot of Crawlers are thrown at the player.
+------
+
+After the fourth wave, the enemies come in their default random setting.
