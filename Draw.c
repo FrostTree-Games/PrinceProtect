@@ -12,7 +12,7 @@
 #include "Particle.h"
 #include "Keyboard.h"
 
-int pushNotificationFontSize = 7;
+int pushNotificationFontSize = 7; //this font should be 7x7 pixels
 TTF_Font* pushNotificationFont = NULL;
 
 SDL_Surface* tileSheet;
@@ -210,21 +210,12 @@ void drawLatestPushDown(SDL_Surface* buffer)
 	}
 
 	SDL_Surface* text_surface;
-	SDL_Color cl = {255, 255, 0, 0};
-	switch ((getTimeSingleton() - latestMessage->startTime / 100) % 3)
+	SDL_Color cl = {255, 0, 0, 0};
+	if ((getTimeSingleton() / 5) % 2 == 0)
 	{
-		case 0:
 		cl.r = 255;
 		cl.g = 255;
-		cl.b = 255;
-		break;
-		case 1:
-		cl.r = 255;
-		cl.g = 150;
 		cl.b = 0;
-		break;
-		default:
-		break;
 	}
 
 	text_surface = TTF_RenderText_Solid(pushNotificationFont, latestMessage->message, cl);
@@ -236,18 +227,27 @@ void drawLatestPushDown(SDL_Surface* buffer)
 		msgPos.y = (Sint16)(50 * (getTimeSingleton() - latestMessage->startTime)/500.0);
 	}
 
-	if (getTimeSingleton() - latestMessage->startTime >= 1000)
+	SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
+
+	SDL_FreeSurface(text_surface);
+	
+
+	if (cl.g < 255)
 	{
-		if ( ((getTimeSingleton() - latestMessage->startTime)/250) % 2 == 0)
-		{
-			SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
-		}
+		cl.g = 255;
 	}
 	else
 	{
-		SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
+		cl.g = 0;
 	}
-
+	text_surface = TTF_RenderText_Solid(pushNotificationFont, latestMessage->message, cl);
+	msgPos.x += 1;
+	msgPos.y += 1;
+	if (getTimeSingleton() - latestMessage->startTime < 500)
+	{
+		msgPos.y = (Sint16)(50 * (getTimeSingleton() - latestMessage->startTime)/500.0);
+	}
+	SDL_BlitSurface(text_surface, NULL, buffer, &msgPos);
 	SDL_FreeSurface(text_surface);
 }
 
@@ -270,7 +270,7 @@ void drawHealthScores(SDL_Surface* buffer)
 	SDL_FreeSurface(health_surface);
 	
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p2HealthText, cl);
-	p1HpPos.x += 230;
+	p1HpPos.x += 220;
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 	SDL_FreeSurface(health_surface);
 
