@@ -744,7 +744,7 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 
 void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 {
-	int i;
+	int i,j;
 
 	SDL_Rect textPos = {0, 0, 0 ,0};
 	SDL_Surface* menuItemTextSurface = NULL;
@@ -756,9 +756,18 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 		titleDistance = 10;
 	}
 
-	SDL_Rect titlePos = {49, titleDistance, 0, 0};
-
-	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 58, 197, 190));
+	SDL_Rect titlePos = {SCREEN_WIDTH/2 - gameLogo->w/2, titleDistance, 0, 0};
+	
+	SDL_Rect bgTilePos = {160, 0, 16, 16};
+	for (i = 0; i < SCREEN_WIDTH/16; i++)
+	{
+		for (j = 0; j < SCREEN_HEIGHT/16; j++)
+		{
+			SDL_Rect tileSpot = {16*i, 16*j, 0, 0};
+			
+			SDL_BlitSurface(tileSheet, &bgTilePos, buffer, &tileSpot);
+		}
+	}
 
 	for (i = 0; i < 4; i++)
 	{
@@ -771,18 +780,18 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 			fillGUIBox(buffer, 6, 6 + 2*i, 8, 2, 0);
 		}
 	}
-	
+
 	SDL_BlitSurface(gameLogo, NULL, buffer, &titlePos);
 
 	if (delta > 500)
 	{
-		int portraitDistance = 320 - ((int)( ((delta - 500)/500.0) * 180));
-		if (portraitDistance < 140)
+		int portraitDistance = 320 - ((int)( ((delta - 500)/500.0) * 100));
+		if (portraitDistance < 90)
 		{
-			portraitDistance = 140;
+			portraitDistance = 90;
 		}
 		
-		SDL_Rect portrait1Pos = {SCREEN_WIDTH/8 - portrait1->w/2, portraitDistance, 0, 0};
+		SDL_Rect portrait1Pos = {SCREEN_WIDTH/8 - portrait1->w/2 + 10, portraitDistance, 0, 0};
 		SDL_Rect portrait2Pos = {7*(SCREEN_WIDTH/8) - portrait1->w/2, portraitDistance, 0, 0};
 		SDL_BlitSurface(portrait1, NULL, buffer, &portrait1Pos);
 		SDL_BlitSurface(portrait2, NULL, buffer, &portrait2Pos);

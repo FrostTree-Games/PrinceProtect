@@ -425,7 +425,7 @@ void updateGameLogic()
 	{
 		if (gameEnding == 0)
 		{
-			pushNewMessage("Ice Cream Depleted!");
+			pushNewMessage("no more princes!");
 			gameEnding = 1;
 			endGameDelta = getTimeSingleton();
 		}
