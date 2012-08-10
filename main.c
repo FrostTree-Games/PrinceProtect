@@ -344,11 +344,97 @@ int gameOverLoop(SDL_Surface* screen)
  
 	if(isHighScore(getScore()))
 	{
+		char playerNameInput[3];
+		playerNameInput[0] = 'A';
+		playerNameInput[1] = 'A';
+		playerNameInput[2] = 'A';
+		int currentlySelected = 0;  //between 0 and 2
+
+		while (!quit && !hardCoreQuit)
+		{
+			SDL_Event ev2;
+			
+			while (SDL_PollEvent(&ev2))
+			{
+				if (ev2.type == SDL_QUIT)
+				{
+					hardCoreQuit = 1;
+				}
+			}
+			
+			pollKeyboard();
+			
+			if (getKey(P1_UP) && upKeyDown == 0)
+			{
+				upKeyDown = 1;
+			}
+			else if (!getKey(P1_UP) && upKeyDown == 1)
+			{
+				upKeyDown = 0;
+				
+				playerNameInput[currentlySelected] -= 1;
+				
+				if (playerNameInput[currentlySelected] < 'A')
+				{
+					playerNameInput[currentlySelected] = '_';
+				}
+
+				playSFX(SFX_MENU);
+			}
+
+			if (getKey(P1_DOWN) && downKeyDown == 0)
+			{
+				downKeyDown = 1;
+			}
+			else if (!getKey(P1_DOWN) && downKeyDown == 1)
+			{
+				downKeyDown = 0;
+
+				playerNameInput[currentlySelected] += 1;
+
+				if (playerNameInput[currentlySelected] > '_')
+				{
+					playerNameInput[currentlySelected] = 'A';
+				}
+
+
+				playSFX(SFX_MENU);
+			}
+			
+			if (getKey(P1_A) && aKeyDown == 0)
+			{
+				aKeyDown = 1;
+			}
+			else if (!getKey(P1_A) && aKeyDown == 1)
+			{
+				aKeyDown = 0;
+				
+				currentlySelected++;
+				if (currentlySelected > 2)
+				{
+					quit = 1;
+				}
+	
+				playSFX(SFX_MENU);
+			}
+			
+			drawGameOverScreen(buffer, menuItem, currentlySelected, playerNameInput);
+
+			SDL_SoftStretch(buffer, NULL, screen, NULL);
+			SDL_Flip(screen);
+			SDL_Delay(17); //crude 60fps
+		}
+
 		HighScore h;
 		h.playerCount = 1;
-		h.name[0] = 'A'; h.name[1] = 'A'; h.name[2] = 'A';
+		h.name[0] = playerNameInput[0]; h.name[1] = playerNameInput[1]; h.name[2] = playerNameInput[2];
 		h.score = getScore();
 		pushHighScore(h);
+
+		upKeyDown = 0;
+		downKeyDown = 0;
+		aKeyDown = 0;
+		quit = 0;
 	}
 	
 	saveHighScores();
@@ -362,6 +448,8 @@ int gameOverLoop(SDL_Surface* screen)
 				hardCoreQuit = 1;
 			}
 		}
+		
+		pollKeyboard();
 		
 		if (getKey(P1_UP) && upKeyDown == 0)
 		{
@@ -402,7 +490,7 @@ int gameOverLoop(SDL_Surface* screen)
 			playSFX(SFX_MENU);
 		}
 
-		drawGameOverScreen(buffer, menuItem);
+		drawGameOverScreen(buffer, menuItem, -1, NULL);
 
 		SDL_SoftStretch(buffer, NULL, screen, NULL);
 		SDL_Flip(screen);

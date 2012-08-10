@@ -1974,7 +1974,7 @@ void testDraw(SDL_Surface* buffer)
 	drawLatestPushDown(buffer);
 }
 
-void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
+void drawGameOverScreen(SDL_Surface* buffer, int menuOption, int selectedHighScoreCharacter, char* characters)
 {
 	int i,j;
 
@@ -2062,6 +2062,45 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
 		if (highScoreTextSurface != NULL)
 		{
 			SDL_BlitSurface(highScoreTextSurface, NULL, buffer, &scorePosition);
+		}
+		
+		SDL_FreeSurface(highScoreTextSurface);
+	}
+	
+	if (selectedHighScoreCharacter != -1)
+	{
+		fillGUIBox(buffer, 3, 8, SCREEN_WIDTH/16 - 6, 4, 0);
+		
+		SDL_Rect nameEnterPosition = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 48, 0, 0};
+		char nameCharacters[5];
+		sprintf(nameCharacters, "%c%c%c", characters[0], characters[1], characters[2]);
+
+		SDL_Surface* nameEnterTextSurface = TTF_RenderText_Solid(pushNotificationFont, nameCharacters, cl);
+		if (nameEnterTextSurface != NULL)
+		{
+			nameEnterPosition.x = SCREEN_WIDTH/2 - nameEnterTextSurface->w/2;
+			SDL_BlitSurface(nameEnterTextSurface, NULL, buffer, &nameEnterPosition);
+			SDL_FreeSurface(nameEnterTextSurface);
+		}
+		SDL_Rect underlineBox = {nameEnterPosition.x + 8*selectedHighScoreCharacter, nameEnterPosition.y += 8, 7, 3};
+		SDL_FillRect(buffer, &underlineBox, SDL_MapRGB(buffer->format, 255, 255, 255));
+
+		nameEnterPosition.y -= 32;
+		nameEnterTextSurface = TTF_RenderText_Solid(pushNotificationFont, "you did good and stuff!", cl);
+		if (nameEnterTextSurface != NULL)
+		{
+			nameEnterPosition.x = SCREEN_WIDTH/2 - nameEnterTextSurface->w/2;
+			SDL_BlitSurface(nameEnterTextSurface, NULL, buffer, &nameEnterPosition);
+			SDL_FreeSurface(nameEnterTextSurface);
+		}
+		
+		nameEnterPosition.y += 8;
+		nameEnterTextSurface = TTF_RenderText_Solid(pushNotificationFont, "Enter name for high score!", cl);
+		if (nameEnterTextSurface != NULL)
+		{
+			nameEnterPosition.x = SCREEN_WIDTH/2 - nameEnterTextSurface->w/2;
+			SDL_BlitSurface(nameEnterTextSurface, NULL, buffer, &nameEnterPosition);
+			SDL_FreeSurface(nameEnterTextSurface);
 		}
 	}
 }

@@ -458,7 +458,7 @@ int clearResetGame(int playerCount)
 	player1Health = 0;
 	player2Health = 10;
 
-	gameScore = 0;
+	gameScore = 30;
 	gameEnding = 0;
 	
 	waveNumber = 0;
