@@ -21,6 +21,7 @@
 #include "GameScreens.h"
 #include "Particle.h"
 #include "Audio.h"
+#include "HighScore.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -503,6 +504,8 @@ int main(int argc, char* argv[])
 	}	
 	
 	//init error handling will go here
+	
+	loadHighScores();
 
 	while (hardCoreQuit == 0)
 	{
@@ -593,6 +596,8 @@ int main(int argc, char* argv[])
 		}
 		else if (currentState == GAME_OVER)
 		{
+			saveHighScores();
+
 			switch(gameOverLoop(screen))
 			{
 				case -1:

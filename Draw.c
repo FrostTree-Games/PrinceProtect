@@ -11,6 +11,7 @@
 #include "GameLogic.h"
 #include "Particle.h"
 #include "Keyboard.h"
+#include "HighScore.h"
 
 int pushNotificationFontSize = 7; //this font should be 7x7 pixels
 TTF_Font* pushNotificationFont = NULL;
@@ -764,7 +765,7 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 		for (j = 0; j < SCREEN_HEIGHT/16; j++)
 		{
 			SDL_Rect tileSpot = {16*i, 16*j, 0, 0};
-			
+
 			SDL_BlitSurface(tileSheet, &bgTilePos, buffer, &tileSpot);
 		}
 	}
@@ -1975,15 +1976,28 @@ void testDraw(SDL_Surface* buffer)
 
 void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
 {
-	int i;
+	int i,j;
 
 	SDL_Color cl = {255, 255, 255, 0};
+	
+	SDL_Rect bgTilePos = {160, 0, 16, 16};
+	for (i = 0; i < SCREEN_WIDTH/16; i++)
+	{
+		for (j = 0; j < SCREEN_HEIGHT/16; j++)
+		{
+			SDL_Rect tileSpot = {16*i, 16*j, 0, 0};
 
-	SDL_FillRect(buffer, NULL, SDL_MapRGB(buffer->format, 0, 0, 0));
+			SDL_BlitSurface(tileSheet, &bgTilePos, buffer, &tileSpot);
+		}
+	}
+	
+	fillGUIBox(buffer, 1, 1, SCREEN_WIDTH/16 - 2, SCREEN_HEIGHT/16 - 2, 0);
 
 	char p1HealthText[50];
 	sprintf(p1HealthText, "GAME OVER");
 	SDL_Surface* gameOverText;
+	
+	HighScore highScores[3];
 
 	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
 	SDL_Rect textPos = {buffer->w/2 - gameOverText->w/2, 50, 0, 0};
@@ -2034,6 +2048,20 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
 		{
 			SDL_BlitSurface(gameOverText, NULL, buffer, &menuTextBoxPos);
 			SDL_FreeSurface(gameOverText);
+		}
+	}
+	
+	getHighScoreList(highScores);
+	for (i = 0; i < NUMBER_OF_HIGH_SCORE_SLOTS; i++)
+	{
+		SDL_Rect scorePosition = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + i*10, 0, 0};
+		char scoreTerms[30];
+		sprintf(scoreTerms, "%d: %d %c%c%c %d\n", i + 1, highScores[i].playerCount, highScores[i].name[0], highScores[i].name[1], highScores[i].name[2], highScores[i].score);
+		
+		SDL_Surface* highScoreTextSurface = TTF_RenderText_Solid(pushNotificationFont, scoreTerms, cl);
+		if (highScoreTextSurface != NULL)
+		{
+			SDL_BlitSurface(highScoreTextSurface, NULL, buffer, &scorePosition);
 		}
 	}
 }

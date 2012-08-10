@@ -7,6 +7,7 @@
 #include "Pushdown.h"
 #include "Entity.h"
 #include "Audio.h"
+#include "HighScore.h"
 
 #define MAX_ONSCREEN_GAMEBLOCKS 300
 #define MAX_ONSCREEN_ENEMIES 300
@@ -454,7 +455,7 @@ int clearResetGame(int playerCount)
 
 	gameState = 0;
 
-	player1Health = 10;
+	player1Health = 0;
 	player2Health = 10;
 
 	gameScore = 0;

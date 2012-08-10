@@ -1,5 +1,5 @@
-all: main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o Particle.o Audio.o
-	gcc -Wall -o whimsy.exe main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o Particle.o GameScreens.o Audio.o -lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer
+all: main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o Particle.o Audio.o HighScore.o
+	gcc -Wall -o whimsy.exe main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o Particle.o HighScore.o GameScreens.o Audio.o -lmingw32 -lSDLmain -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer
 
 main.o:
 	gcc -g -Wall -c main.c
@@ -28,5 +28,8 @@ Particle.o:
 Audio.o:
 	gcc -g -Wall -c Audio.c
 
+HighScore.o:
+	gcc -g -Wall -c HighScore.c
+
 clean:
-	rm main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o Particle.o Audio.o whimsy.exe
+	rm main.o Entity.o Keyboard.o Draw.o Pushdown.o GameLogic.o GameScreens.o Particle.o Audio.o HighScore.o whimsy.exe

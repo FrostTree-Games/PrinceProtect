@@ -19,6 +19,10 @@
 *.tar
 *.zip
 
+# Binaries not to be included in the repository #
+#################################################
+*.xcf
+
 # Logs and databases #
 ######################
 *.log
