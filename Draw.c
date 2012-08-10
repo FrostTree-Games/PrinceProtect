@@ -819,7 +819,7 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 		}
 
 		textPos.x = SCREEN_WIDTH/2 - menuItemTextSurface->w/2;
-		textPos.y = SCREEN_HEIGHT/2 - 16 + i*32;
+		textPos.y = SCREEN_HEIGHT/2 - 16 + i*32 + 3;
 		
 		if (menuItemTextSurface != NULL)
 		{
