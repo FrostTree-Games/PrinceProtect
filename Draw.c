@@ -2023,11 +2023,11 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
 	{
 		if (i == menuOption)
 		{
-			fillGUIBox(buffer, 1, 8 + 2*i, 5, 2, 1);
+			fillGUIBox(buffer, 1, 8 + 2*i, 6, 2, 1);
 		}
 		else
 		{
-			fillGUIBox(buffer, 1, 8 + 2*i, 5, 2, 0);
+			fillGUIBox(buffer, 1, 8 + 2*i, 6, 2, 0);
 		}
 		
 		SDL_Rect menuTextBoxPos = {23, 138 + 32*i, 0, 0};
@@ -2056,7 +2056,7 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption)
 	{
 		SDL_Rect scorePosition = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + i*10, 0, 0};
 		char scoreTerms[30];
-		sprintf(scoreTerms, "%d: %d %c%c%c %d\n", i + 1, highScores[i].playerCount, highScores[i].name[0], highScores[i].name[1], highScores[i].name[2], highScores[i].score);
+		sprintf(scoreTerms, "%d: %d %c%c%c %.6d", i + 1, highScores[i].playerCount, highScores[i].name[0], highScores[i].name[1], highScores[i].name[2], highScores[i].score);
 		
 		SDL_Surface* highScoreTextSurface = TTF_RenderText_Solid(pushNotificationFont, scoreTerms, cl);
 		if (highScoreTextSurface != NULL)

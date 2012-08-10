@@ -336,11 +336,23 @@ int gameOverLoop(SDL_Surface* screen)
 	int hardCoreQuit = 0;
 	SDL_Event ev;
 	
+	int newHighScore = 0;
 	int menuItem = 0;
 	int upKeyDown = 0;
 	int downKeyDown = 0;
 	int aKeyDown = 0;
+ 
+	if(isHighScore(getScore()))
+	{
+		HighScore h;
+		h.playerCount = 1;
+		h.name[0] = 'A'; h.name[1] = 'A'; h.name[2] = 'A';
+		h.score = getScore();
+		pushHighScore(h);
+	}
 	
+	saveHighScores();
+
 	while (!quit && !hardCoreQuit)
 	{
 		while (SDL_PollEvent(&ev))
@@ -386,7 +398,7 @@ int gameOverLoop(SDL_Surface* screen)
 			aKeyDown = 0;
 			
 			quit = 1;
-			
+
 			playSFX(SFX_MENU);
 		}
 
@@ -596,8 +608,6 @@ int main(int argc, char* argv[])
 		}
 		else if (currentState == GAME_OVER)
 		{
-			saveHighScores();
-
 			switch(gameOverLoop(screen))
 			{
 				case -1:
