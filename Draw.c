@@ -731,7 +731,7 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 		playerPosition.x -= 16;
 		SDL_BlitSurface(tileSheet, &spritePosition, buffer, &playerPosition);
 		playerPosition.x += 32;
-		spritePosition.x += 64;
+		spritePosition.x += 64 + 16;
 		SDL_BlitSurface(tileSheet, &spritePosition, buffer, &playerPosition);
 	}
 	
@@ -765,7 +765,7 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 		encourageText = TTF_RenderText_Solid(pushNotificationFont, "I like your key config", textCol);
 		break;
 		case 5:
-		encourageText = TTF_RenderText_Solid(pushNotificationFont, "If you were a meal you would be expensive", textCol);
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "If you were food you would be expensive", textCol);
 		break;
 		case 6:
 		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Follow your heart's gut", textCol);
@@ -782,13 +782,13 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 
 		//2 player encouragement
 		case 10:
-		encourageText = TTF_RenderText_Solid(pushNotificationFont, "It's great seeing one friend sacrifice for another", textCol);
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "together you can't lose!", textCol);
 		break;
 		case 11:
-		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Where did you find each other? The awesome store?", textCol);
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "The awesome squad you are? Perhaps!", textCol);
 		break;
 		case 12:
-		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Sorry, the game only supports one super player", textCol);
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "a truly sexy team", textCol);
 		break;
 		case 13:
 		encourageText = TTF_RenderText_Solid(pushNotificationFont, "I believe in most of you", textCol);
@@ -797,7 +797,7 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Good class! A+!", textCol);
 		break;
 		case 15:
-		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Now with 100% more misogyny!", textCol);
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Now with more misogyny!", textCol);
 		break;
 		case 16:
 		encourageText = TTF_RenderText_Solid(pushNotificationFont, "Straight out of Compton", textCol);
@@ -809,7 +809,7 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 		encourageText = TTF_RenderText_Solid(pushNotificationFont, "You are both very attractive", textCol);
 		break;
 		default:
-		encourageText = TTF_RenderText_Solid(pushNotificationFont, "I've never seen a better team", textCol);
+		encourageText = TTF_RenderText_Solid(pushNotificationFont, "you're both arcade material", textCol);
 		break;
 	}
 	
