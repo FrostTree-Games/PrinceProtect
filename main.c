@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include <SDL/SDL.h>
@@ -594,6 +595,8 @@ int testLoop(int twoPlayerGame)
 
 int main(int argc, char* argv[])
 {
+	int i;
+
 	srand(time(NULL));
 	currentState = TITLE; //should start at NONE
 
@@ -601,9 +604,26 @@ int main(int argc, char* argv[])
 	{
 		deinit();
 		return 1;
-	}	
-	
+	}
+
 	//init error handling will go here
+	
+	for (i = 0; i < argc; i++)
+	{
+		if (argv[i] == NULL)
+		{
+			continue;
+		}
+		
+		if (strcmp(argv[i], "nobgm") == 0)
+		{
+			toggleBGM(0);
+		}
+		if (strcmp(argv[i], "nosfx") == 0)
+		{
+			toggleSFX(0);
+		}
+	}
 	
 	loadHighScores();
 

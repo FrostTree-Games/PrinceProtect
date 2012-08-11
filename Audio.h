@@ -85,4 +85,16 @@ void stopBGM();
  */
 void fadeBGM();
 
+/* toggleBGM()
+ * Purpose: Can disable new BGM from playing. 
+ * Returns: n/a
+ */
+void toggleBGM(int aud);
+
+/* toggleSFX()
+ * Purpose: Turns SFX on/off
+ * Returns: n/a
+ */
+void toggleSFX(int aud);
+
 #endif

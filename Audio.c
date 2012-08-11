@@ -8,6 +8,9 @@
 
 int audioInitalized = 0;
 
+int muteBGM = 0;
+int muteSFX = 0;
+
 Mix_Chunk* menuClick;
 Mix_Chunk* explosion;
 Mix_Chunk* player_hurt;
@@ -211,6 +214,11 @@ void clearAudio()
 
 void playSFX(SFXType fx)
 {
+	if (muteSFX == 1)
+	{
+		return;
+	}
+
 	if (fx == SFX_NONE)
 	{
 		return;
@@ -304,6 +312,11 @@ void stopAllSFX()
 
 void playBGM(BGMType bg)
 {
+	if (muteBGM == 1)
+	{
+		return;
+	}
+
 	Mix_HaltMusic();
 
 	switch (bg)
@@ -333,5 +346,29 @@ void stopBGM()
 void fadeBGM()
 {
 	Mix_FadeOutMusic(2000);
+}
+
+void toggleBGM(int aud)
+{
+	if (aud == 0)
+	{
+		muteBGM = 1;
+	}
+	else
+	{
+		muteBGM = 0;
+	}
+}
+
+void toggleSFX(int aud)
+{
+	if (aud == 0)
+	{
+		muteSFX = 1;
+	}
+	else
+	{
+		muteSFX = 0;
+	}
 }
 
