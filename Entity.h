@@ -34,6 +34,7 @@ typedef enum
 	ENEMY_BOXERGREG,
 	ICECREAM,
 	SUPERHAMMER,
+	SHIRUKEN,
 	GLUE,
 	POOF,
 	DELETE_ME_PLEASE
@@ -153,6 +154,13 @@ typedef struct
 	EntityType type;
 	int x;
 	int y;
+} Shiruken;
+
+typedef struct
+{
+	EntityType type;
+	int x;
+	int y;
 } SuperHammer;
 
 typedef struct
@@ -187,7 +195,7 @@ typedef struct
 	unsigned char knockBackDirection; //0->N, 1->E, 2->S, 3->W, 255->NOT KNOCKED BACK
 	Uint32 lastFrameUpdate;
 	int frame; //0 -> first frame ; 1 -> second frame
-	int holdingSuperHammer; //0 -> false; 1 -> true
+	int holdingSuperHammer; //0 -> false; -1 -> true; 1... -> number of shiruken on hand
 	int dead; //0 -> false ; 1 -> true ; 2 -> true
 } Player;
 
@@ -225,6 +233,7 @@ typedef union
 	TeleBlock tBlock;
 	IceCream iceCream;
 	SuperHammer hammer;
+	Shiruken shiruken;
 	FloorGlue glue;
 	Enemy enemy;
 	Poof poof;

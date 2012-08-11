@@ -270,10 +270,13 @@ void drawHealthScores(SDL_Surface* buffer)
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 	SDL_FreeSurface(health_surface);
 	
-	health_surface = TTF_RenderText_Solid(pushNotificationFont, p2HealthText, cl);
-	p1HpPos.x += 220;
-	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
-	SDL_FreeSurface(health_surface);
+	if (getPlayerCount() > 1)
+	{
+		health_surface = TTF_RenderText_Solid(pushNotificationFont, p2HealthText, cl);
+		p1HpPos.x += 220;
+		SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
+		SDL_FreeSurface(health_surface);
+	}
 
 	sprintf(p1HealthText, "PRINCES: %.2d", getIceCreamCount());
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
@@ -1147,7 +1150,7 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 		
 		tileRect.y += 64;
 		
-		if (pl->holdingSuperHammer == 1)
+		if (pl->holdingSuperHammer == -1)
 		{
 			tileRect.y += 64;
 		}
@@ -1171,7 +1174,10 @@ void drawPlayer1(SDL_Surface* buffer, Player* pl)
 			break;
 		}
 		
-		SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		if (pl->holdingSuperHammer <= 0)
+		{
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+		}	
 	}
 }
 
@@ -1927,6 +1933,13 @@ void testDraw(SDL_Surface* buffer)
 			entRect.x = entList[i]->hammer.x * 16;
 			entRect.y = entList[i]->hammer.y * 16;
 			tileRect.x = 224;
+			tileRect.y = 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			case SHIRUKEN:
+			entRect.x = entList[i]->hammer.x * 16;
+			entRect.y = entList[i]->hammer.y * 16;
+			tileRect.x = 208;
 			tileRect.y = 16;
 			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;

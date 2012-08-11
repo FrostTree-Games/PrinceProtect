@@ -151,6 +151,10 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->hammer.x = newX;
 		newEntity->hammer.y = newY;
 		break;
+		case SHIRUKEN:
+		newEntity->shiruken.x = newX;
+		newEntity->shiruken.y = newY;
+		break;
 		case GLUE:
 		newEntity->glue.x = newX;
 		newEntity->glue.y = newY;
@@ -668,7 +672,7 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->holding->startTime = getTimeSingleton();
 	}
 	
-	if (pl->holdingSuperHammer == 1)
+	if (pl->holdingSuperHammer == -1)
 	{
 		pushParticle(FIRE, (16 * pl->x) + pl->offsetX + ((xrand() % 17) - 8), (16 * pl->y) + pl->offsetY - 8, 2.0f, -2.0f);
 	}
@@ -727,7 +731,7 @@ void update_player(Player* pl, Uint32 currTime)
 	{
 		if (currList[i]->type == SUPERHAMMER && pl->holdingSuperHammer == 0)
 		{
-			pl->holdingSuperHammer = 1;
+			pl->holdingSuperHammer = -1;
 			currList[i]->type = DELETE_ME_PLEASE;
 			
 			playSFX(SFX_GET_HAMMER);
@@ -736,6 +740,21 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				pushNewMessage("Hammertime!"); //obligatory
 			}
+
+			break;
+		}
+		
+		if (currList[i]->type == SHIRUKEN)
+		{
+			if (pl->holdingSuperHammer < 0)
+			{
+				pl->holdingSuperHammer = 0;
+			}
+				
+			pl->holdingSuperHammer += 5;
+			currList[i]->type = DELETE_ME_PLEASE;
+			
+			playSFX(SFX_GET_HAMMER);
 
 			break;
 		}
@@ -752,6 +771,45 @@ void update_player(Player* pl, Uint32 currTime)
 		{
 			playSFX(SFX_SWORD);
 		}
+		else if (pl->holdingSuperHammer > 0)
+		{
+			pl->thrustHit = 0;
+			
+			Laser* sk;
+
+			switch (pl->direction)
+			{
+				case 0:
+				sk = (Laser*)pushEntity(LASER, pl->x, pl->y - 1);
+				sk->direction = 0;
+				sk->offsetX = pl->offsetX;
+				sk->offsetY = 15;
+				break;
+				case 1:
+				sk = (Laser*)pushEntity(LASER, pl->x + 1, pl->y);
+				sk->direction = 1;
+				sk->offsetX = 1;
+				sk->offsetY = pl->offsetY;
+				break;
+				case 2:
+				sk = (Laser*)pushEntity(LASER, pl->x, pl->y + 1);
+				sk->direction = 2;
+				sk->offsetX = pl->offsetX;
+				sk->offsetY = 1;
+				break;
+				case 3:
+				sk = (Laser*)pushEntity(LASER, pl->x - 1, pl->y);
+				sk->direction = 3;
+				sk->offsetX = 15;
+				sk->offsetY = pl->offsetY;
+				break;
+				default:
+				fprintf(stderr, "Player facing odd direction for throwing\n");
+				break;
+			}
+			
+			pl->holdingSuperHammer--;
+		}
 		else
 		{
 			playSFX(SFX_EXPLOSION);
@@ -764,7 +822,7 @@ void update_player(Player* pl, Uint32 currTime)
 
 	if (pl->isThrusting && pl->knockBackDirection == 255)
 	{
-		if (pl->holdingSuperHammer == 1)
+		if (pl->holdingSuperHammer == -1)
 		{
 			pl->thrustHit = 0;
 
@@ -779,7 +837,11 @@ void update_player(Player* pl, Uint32 currTime)
 
 		if (currTime - pl->swordTimer > 150)
 		{
-			pl->holdingSuperHammer = 0;
+			if(pl->holdingSuperHammer == -1)
+			{
+				pl->holdingSuperHammer = 0;
+			}
+
 			pl->isThrusting = 0;
 			pl->thrustHit = 0;
 		}
@@ -809,7 +871,7 @@ void update_player(Player* pl, Uint32 currTime)
 
 						pl->thrustHit = 0;
 					}
-					
+
 					if (pl->thrustHit == 1 && (northList[i]->type == ICEBLOCK))
 					{
 						northList[i]->iBlock.moving = 1;
@@ -3169,7 +3231,7 @@ void update_laser(Laser* block, Uint32 currTime)
 			return;
 		}
 		
-		if ((currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_SHOOTER))
+		if ((currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_BOXERGREG))
 		{
 			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, -2.0f, -2.0f);
 			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, 2.0f, -2.0f);
@@ -3183,7 +3245,7 @@ void update_laser(Laser* block, Uint32 currTime)
 		}
 	}
 	
-	if (getTimeSingleton() - block->lastFrameUpdate > 250)
+	if (getTimeSingleton() - block->lastFrameUpdate > 100)
 	{
 		block->frame = (block->frame + 1) % 2;
 		
@@ -3424,7 +3486,7 @@ void update_poof(Poof* pf)
 		switch (pf->colour)
 		{
 			case 1:
-			pushEntity(SUPERHAMMER, pf->x, pf->y);
+			pushEntity(SHIRUKEN, pf->x, pf->y);
 			break;
 			case 2:
 			pushEntity(ICEBLOCK, pf->x, pf->y);
@@ -3505,6 +3567,8 @@ void update_entity(Entity* entity, Uint32 currTime)
 		{
 			pushParticle(FIRE, (16 * entity->base.x) + (xrand() % 17), (16 * entity->base.y), 2.0f, -1.2f);
 		}
+		break;
+		case SHIRUKEN:
 		break;
 		case GLUE:
 		update_glue( (FloorGlue*)entity);

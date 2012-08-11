@@ -455,10 +455,10 @@ int clearResetGame(int playerCount)
 
 	gameState = 0;
 
-	player1Health = 0;
+	player1Health = 10;
 	player2Health = 10;
 
-	gameScore = 30;
+	gameScore = 0;
 	gameEnding = 0;
 	
 	waveNumber = 0;
@@ -495,11 +495,14 @@ int clearResetGame(int playerCount)
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
 	}
-	
+
+	Entity* p1Toto;
+
 	switch (playerCount)
 	{
 		case 1:
-		pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
+		p1Toto = pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
+		p1Toto->player.holdingSuperHammer = 5;
 		is2PlayerGame = 0;
 		break;
 		case 2:
