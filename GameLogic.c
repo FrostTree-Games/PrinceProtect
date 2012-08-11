@@ -505,6 +505,7 @@ int clearResetGame(int playerCount)
 		case 2:
 		pushEntity(PLAYER1, BOARD_WIDTH/2, 9);
                 pushEntity(PLAYER2, BOARD_WIDTH/2 + 1, 9);
+
                 is2PlayerGame = 1;
                 break;
                 default:

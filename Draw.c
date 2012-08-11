@@ -254,13 +254,16 @@ void drawLatestPushDown(SDL_Surface* buffer)
 
 void drawHealthScores(SDL_Surface* buffer)
 {
+	int i;
+	Entity** entList = getEntityList();
+
 	SDL_Color cl = {255, 255, 255, 0};
 
 	char p1HealthText[50];
-	sprintf(p1HealthText, "P1 HP: %.2d/%.2d", getPlayerHealth(1), getPlayerMaxHealth(1));
+	sprintf(p1HealthText, "   HP: %.2d/%.2d", getPlayerHealth(1), getPlayerMaxHealth(1));
 	
 	char p2HealthText[50];
-	sprintf(p2HealthText, "P2 HP: %.2d/%.2d", getPlayerHealth(2), getPlayerMaxHealth(2));
+	sprintf(p2HealthText, "   HP: %.2d/%.2d", getPlayerHealth(2), getPlayerMaxHealth(2));
 
 	SDL_Surface* health_surface;
 	health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
@@ -270,12 +273,86 @@ void drawHealthScores(SDL_Surface* buffer)
 	SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 	SDL_FreeSurface(health_surface);
 	
+	p1HpPos.y += 3;
+	SDL_Rect p1IconRect = {0, 0, 16, 16};
+	SDL_BlitSurface(tileSheet, &p1IconRect, buffer, &p1HpPos);
+	if (entList != NULL)
+	{
+		int playerItem = 0;
+		SDL_Rect objectIconRect = {208, 16, 16, 16};
+		SDL_Rect objectPositionRect = {p1HpPos.x + 32, p1HpPos.y + 4, 0, 0};
+
+		for (i = 0; i < getEntityListSize(); i++)
+		{
+			if (entList[i]->type == PLAYER1)
+			{
+				playerItem = entList[i]->player.holdingSuperHammer;
+			}
+		}
+		
+		if (playerItem > 0)
+		{
+			SDL_BlitSurface(tileSheet, &objectIconRect, buffer, &objectPositionRect);
+
+			sprintf(p1HealthText, " ^%d", playerItem);
+			health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+			objectPositionRect.x += 8;
+			objectPositionRect.y += 5;
+			SDL_BlitSurface(health_surface, NULL, buffer, &objectPositionRect);
+			SDL_FreeSurface(health_surface);
+		}
+		else if (playerItem < 0)
+		{
+			objectIconRect.x += 16;
+
+			SDL_BlitSurface(tileSheet, &objectIconRect, buffer, &objectPositionRect);
+		}
+	}
+	
+	p1HpPos.y -= 3;
+
 	if (getPlayerCount() > 1)
 	{
 		health_surface = TTF_RenderText_Solid(pushNotificationFont, p2HealthText, cl);
 		p1HpPos.x += 220;
 		SDL_BlitSurface(health_surface, NULL, buffer, &p1HpPos);
 		SDL_FreeSurface(health_surface);
+		
+		p1HpPos.y += 3;
+		SDL_Rect p1IconRect = {64, 0, 16, 16};
+		SDL_BlitSurface(tileSheet, &p1IconRect, buffer, &p1HpPos);
+		if (entList != NULL)
+		{
+			int playerItem = 0;
+			SDL_Rect objectIconRect = {208, 16, 16, 16};
+			SDL_Rect objectPositionRect = {p1HpPos.x + 32, p1HpPos.y + 4, 0, 0};
+	
+			for (i = 0; i < getEntityListSize(); i++)
+			{
+				if (entList[i]->type == PLAYER2)
+				{
+					playerItem = entList[i]->player.holdingSuperHammer;
+				}
+			}
+			
+			if (playerItem > 0)
+			{
+				SDL_BlitSurface(tileSheet, &objectIconRect, buffer, &objectPositionRect);
+	
+				sprintf(p1HealthText, " ^%d", playerItem);
+				health_surface = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
+				objectPositionRect.x += 8;
+				objectPositionRect.y += 5;
+				SDL_BlitSurface(health_surface, NULL, buffer, &objectPositionRect);
+				SDL_FreeSurface(health_surface);
+			}
+			else if (playerItem < 0)
+			{
+				objectIconRect.x += 16;
+	
+				SDL_BlitSurface(tileSheet, &objectIconRect, buffer, &objectPositionRect);
+			}
+		}
 	}
 
 	sprintf(p1HealthText, "PRINCES: %.2d", getIceCreamCount());
