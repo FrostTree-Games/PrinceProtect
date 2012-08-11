@@ -808,6 +808,8 @@ void update_player(Player* pl, Uint32 currTime)
 				break;
 			}
 			
+			playSFX(SFX_SWORD);
+			
 			pl->holdingSuperHammer--;
 		}
 		else
@@ -889,7 +891,7 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 					
-					if (northList[i]->type == LASER)
+					if (northList[i]->type == LASER && pl->holdingSuperHammer <= 0)
 					{
 						playSFX(SFX_LASER_1);
 
@@ -941,7 +943,7 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 					
-					if (eastList[i]->type == LASER)
+					if (eastList[i]->type == LASER && pl->holdingSuperHammer <= 0)
 					{
 						playSFX(SFX_LASER_1);
 						
@@ -993,7 +995,7 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 					
-					if (southList[i]->type == LASER)
+					if (southList[i]->type == LASER && pl->holdingSuperHammer <= 0)
 					{
 						playSFX(SFX_LASER_1);
 						
@@ -1045,7 +1047,7 @@ void update_player(Player* pl, Uint32 currTime)
 						pl->thrustHit = 0;
 					}
 					
-					if (westList[i]->type == LASER)
+					if (westList[i]->type == LASER && pl->holdingSuperHammer <= 0)
 					{
 						playSFX(SFX_LASER_1);
 						
