@@ -1526,7 +1526,7 @@ void drawPlayer2(SDL_Surface* buffer, Player* pl)
 
 void drawIceCream (SDL_Surface* buffer, IceCream* cream, int x, int y, int carry)
 {
-	SDL_Rect tileRect = {160, 192, 16, 16};
+	SDL_Rect tileRect = {176, 64, 16, 16};
 	SDL_Rect entRect = {x, y, 0, 0};
 
 	if (cream->frame == 1)
@@ -1780,23 +1780,6 @@ void drawLaser(SDL_Surface* buffer, Laser* ls)
 	{
 		tileRect.y += 16;
 	}
-	
-	switch(ls->direction)
-	{
-		case 0:
-		tileRect.x += 48;
-		break;
-		case 1:
-		break;
-		case 2:
-		tileRect.x += 16;
-		break;
-		case 3:
-		tileRect.x += 32;
-		break;
-		default:
-		break;
-	}
 
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
@@ -2029,8 +2012,8 @@ void testDraw(SDL_Surface* buffer)
 
 	entRect.x = 0;
 	entRect.y = (BOARD_TOP_WALL + 1) * 16;
-	tileRect.x = 192;
-	tileRect.y = 128;
+	tileRect.x = 224;
+	tileRect.y = 112;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	entRect.x = 0;
 	entRect.y = (BOARD_BOTTOM_WALL - 1) * 16;
@@ -2039,8 +2022,8 @@ void testDraw(SDL_Surface* buffer)
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	entRect.x = (BOARD_WIDTH*16) - 16;
 	entRect.y = (BOARD_TOP_WALL + 1) * 16;
-	tileRect.x = 176;
-	tileRect.y = 128;
+	tileRect.x = 208;
+	tileRect.y = 112;
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 	entRect.x = (BOARD_WIDTH*16) - 16;
 	entRect.y = (BOARD_BOTTOM_WALL - 1) * 16;
