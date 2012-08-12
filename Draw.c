@@ -1542,7 +1542,7 @@ void drawIceCream (SDL_Surface* buffer, IceCream* cream, int x, int y, int carry
 	if (cream->decoy == 1)
 	{
 		tileRect.x = 208;
-	}	
+	}
 
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
@@ -1854,17 +1854,17 @@ void drawParticles(SDL_Surface* buffer)
 			px2Offset[2] = 200;
 			break;
 			case TELESPARK:
-			pxOffset[0] = 47;
-			pxOffset[1] = 250;
-			pxOffset[2] = 54;
-			px2Offset[0] = 128;
-			px2Offset[1] = 255;
-			px2Offset[2] = 232;
+			pxOffset[0] = 92;
+			pxOffset[1] = 57;
+			pxOffset[2] = 15;
+			px2Offset[0] = 182;
+			px2Offset[1] = 113;
+			px2Offset[2] = 31;
 			break;
 			case MUD:
 			pxOffset[0] = 0;
 			pxOffset[1] = 200;
-			pxOffset[2] = 200;
+			pxOffset[2] = 0;
 			break;
 			case BLOOD:
 			pxOffset[0] = 4;
