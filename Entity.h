@@ -147,6 +147,7 @@ typedef struct
 	int y;
 	int frame; //0 or 1
 	Uint32 lastFrameUpdateTime;
+	int decoy; //0 -> real, 1 -> decoy
 } IceCream;
 
 typedef struct

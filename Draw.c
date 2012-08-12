@@ -1538,6 +1538,11 @@ void drawIceCream (SDL_Surface* buffer, IceCream* cream, int x, int y, int carry
 	{
 		tileRect.y += 16;
 	}	
+	
+	if (cream->decoy == 1)
+	{
+		tileRect.x = 208;
+	}	
 
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }

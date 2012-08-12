@@ -145,6 +145,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->iceCream.x = newX;
 		newEntity->iceCream.y = newY;
 		newEntity->iceCream.frame = 0;
+		newEntity->iceCream.decoy = 0;
 		newEntity->iceCream.lastFrameUpdateTime = getTimeSingleton();
 		break;
 		case SUPERHAMMER:
@@ -2142,10 +2143,14 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	{
 		if (enemy->cream != NULL)
 		{
+			if (enemy->cream->decoy == 0)
+			{
+				enemy->type = DELETE_ME_PLEASE;
+			}
+			
 			enemy->cream->type = DELETE_ME_PLEASE;
 			enemy->cream = NULL;
 
-			enemy->type = DELETE_ME_PLEASE;
 			return;
 		}
 	}
@@ -2153,10 +2158,14 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	{
 		if (enemy->cream != NULL)
 		{
+			if (enemy->cream->decoy == 0)
+			{
+				enemy->type = DELETE_ME_PLEASE;
+			}
+
 			enemy->cream->type = DELETE_ME_PLEASE;
 			enemy->cream = NULL;
 
-			enemy->type = DELETE_ME_PLEASE;
 			return;
 		}
 	}
@@ -2336,10 +2345,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (en->cream != NULL)
 			{
+				if (enemy->cream->decoy == 0)
+				{
+					enemy->type = DELETE_ME_PLEASE;
+				}
+
 				en->cream->type = DELETE_ME_PLEASE;
 				en->cream = NULL;
-				
-				en->type = DELETE_ME_PLEASE;
+
 				return 3;
 			}
 			else
@@ -2351,10 +2364,13 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		{
 			if (en->cream != NULL)
 			{
+				if (enemy->cream->decoy == 0)
+				{
+					enemy->type = DELETE_ME_PLEASE;
+				}
+
 				en->cream->type = DELETE_ME_PLEASE;
 				en->cream = NULL;
-				
-				en->type = DELETE_ME_PLEASE;
 
 				return 1;
 			}
@@ -2753,10 +2769,14 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 		{
 			if (en->cream != NULL)
 			{
+				if (enemy->cream->decoy == 0)
+				{
+					enemy->type = DELETE_ME_PLEASE;
+				}
+
 				en->cream->type = DELETE_ME_PLEASE;
 				en->cream = NULL;
-				
-				en->type = DELETE_ME_PLEASE;
+
 				return 3;
 			}
 			return 1;
@@ -2765,10 +2785,14 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 		{
 			if (en->cream != NULL)
 			{
+				if (enemy->cream->decoy == 0)
+				{
+					enemy->type = DELETE_ME_PLEASE;
+				}
+
 				en->cream->type = DELETE_ME_PLEASE;
 				en->cream = NULL;
 				
-				en->type = DELETE_ME_PLEASE;
 				return 1;
 			}
 			return 3;

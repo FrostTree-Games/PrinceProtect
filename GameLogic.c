@@ -152,7 +152,7 @@ void updateWave()
 			onScreenEnemies[enemyCount] = (Enemy*)(entList[i]);
 			enemyCount++;
 		}
-		if (iceCreamCount < MAX_ONSCREEN_ICECREAM && entList[i]->type == ICECREAM)
+		if (iceCreamCount < MAX_ONSCREEN_ICECREAM && entList[i]->type == ICECREAM && entList[i]->iceCream.decoy == 0)
 		{
 			onScreenIceCream[iceCreamCount] = (IceCream*)(entList[i]);
 			iceCreamCount++;
@@ -456,7 +456,7 @@ int clearResetGame(int playerCount)
 	gameState = 0;
 
 	player1Health = 10;
-	player2Health = 10;
+	player2Health = 0;
 
 	gameScore = 0;
 	gameEnding = 0;
@@ -494,6 +494,12 @@ int clearResetGame(int playerCount)
 
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
+	}
+	
+	for (i = 0; i < 4; i++)
+	{
+		Entity* decoyPrince = pushEntity(ICECREAM, 7, 7 + i);
+		decoyPrince->iceCream.decoy = 1;
 	}
 
 	switch (playerCount)
