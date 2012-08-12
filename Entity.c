@@ -3711,19 +3711,25 @@ void update_poof(Poof* pf)
 {
 	if (pf->birthed == 1 && getTimeSingleton() - pf->startTime > 125)
 	{
+		Entity* decoyPrincePointer; 
+
 		switch (pf->colour)
 		{
 			case 1:
 			pushEntity(SHIRUKEN, pf->x, pf->y);
 			break;
 			case 2:
-			pushEntity(ICEBLOCK, pf->x, pf->y);
-			break;
-			case 3:
 			pushEntity(TELEBLOCK, pf->x, pf->y);
 			break;
-			case 4:
+			case 3:
 			pushEntity(GLUE, pf->x, pf->y);
+			break;
+			case 4:
+			decoyPrincePointer = pushEntity(ICECREAM, pf->x, pf->y);
+			if (decoyPrincePointer != NULL)
+			{
+				decoyPrincePointer->iceCream.decoy = 1;
+			}	
 			break;
 			default:
 			break;

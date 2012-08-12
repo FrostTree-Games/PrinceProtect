@@ -495,12 +495,6 @@ int clearResetGame(int playerCount)
 		pushEntity(ICECREAM, 9 + i, 11);
 		pushEntity(ICECREAM, 9 + i, 12);
 	}
-	
-	for (i = 0; i < 4; i++)
-	{
-		Entity* decoyPrince = pushEntity(ICECREAM, 7, 7 + i);
-		decoyPrince->iceCream.decoy = 1;
-	}
 
 	switch (playerCount)
 	{
