@@ -174,74 +174,45 @@ void updateWave()
 			{
 				Enemy* en;
 
-				if (waveNumber >= 5)
-				{
-					int enemyMod = 0;
-					
-					int val = xrand() % 100;
-					
-					if (val < 50)
-					{
-						enemyMod = 0;
-					}
-					else if (val < 75)
-					{
-						enemyMod = 1;
-					}
-					else
-					{
-						enemyMod = 2;
-					}
+				int enemyMod = 0;
 
-					switch (enemyMod)
-					{
-						case 2:
-						en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
-						break;
-						case 1:
-						en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
-						break;
-						case 0:
-						default:
-						en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
-						break;
-					}
+				int val = xrand() % 100;
+				
+				if (val < 50)
+				{
+					enemyMod = 0;
+				}
+				else if (val < 65)
+				{
+					enemyMod = 1;
+				}
+				else if (val < 85)
+				{
+					enemyMod = 2;
 				}
 				else
 				{
-					switch (waveNumber)
-					{
-						case 1:
-						en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
-						break;
-						case 2:
-						if (xrand() % 5 == 0)
-						{
-							en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
-						}
-						else
-						{
-							en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
-						}
-						break;
-						case 3:
-						if (xrand() % 3 == 0)
-						{
-							en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
-						}
-						else
-						{
-							en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
-						}
-						break;
-						case 4:
-						en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
-						break;
-						default:
-						break;
-					}
+					enemyMod = 3;
 				}
-				
+
+				switch (enemyMod)
+				{
+					case 3:
+					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
+					en->AISlot3 = 1;
+					break;
+					case 2:
+					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
+					break;
+					case 1:
+					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
+					break;
+					case 0:
+					default:
+					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+					break;
+				}
+
 				en->direction = 1;
 				
 				if (xrand() % 2 == 0)
@@ -251,16 +222,12 @@ void updateWave()
 				}
 
 				sinceLastEnemyOutput = getTimeSingleton();
-				if (waveNumber == 4)
-				{
-					sinceLastEnemyOutput -= 1500;
-				}
 
 				enemiesLeftToPush--;
 			}
 		}
 
-		if (gameBlockCount < 20 && waveNumber > 1)
+		if (gameBlockCount < 20)
 		{
 			if(val / 20 < 4)
 			{
@@ -279,55 +246,27 @@ void updateWave()
 					if (checkResultSize == 0)
 					{
 						Entity* newBlock;
-						
-						if (waveNumber >= 5)
+
+						switch (xrand() % 4)
 						{
-							switch (xrand() % 4)
-							{
-								case 0:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-						                newBlock->gBlock.bType = RED_BLOCK;
-						                break;
-								case 1:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-						                newBlock->gBlock.bType = BLUE_BLOCK;
-						                break;
-								case 2:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-						                newBlock->gBlock.bType = GREEN_BLOCK;
-						                break;
-								case 3:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-						                newBlock->gBlock.bType = YELLOW_BLOCK;
-						                break;
-								default:
-								break;
-							}
-						}
-						else
-						{
-							switch (waveNumber)
-							{
-								case 2:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-						                newBlock->gBlock.bType = GREEN_BLOCK;
-								break;
-								case 3:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-						                newBlock->gBlock.bType = RED_BLOCK;
-								break;
-								case 4:
-								newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-								if (xrand() % 2 == 0)
-								{
-									newBlock->gBlock.bType = YELLOW_BLOCK;
-								}
-								else
-								{
-									newBlock->gBlock.bType = BLUE_BLOCK;
-								}
-								break;
-							}
+							case 0:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = RED_BLOCK;
+					                break;
+							case 1:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = BLUE_BLOCK;
+					                break;
+							case 2:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = GREEN_BLOCK;
+					                break;
+							case 3:
+							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
+					                newBlock->gBlock.bType = YELLOW_BLOCK;
+					                break;
+							default:
+							break;
 						}
 
 						break;
@@ -362,10 +301,10 @@ void updateWave()
 			pushNewMessage("WAVE COMPLETE! MOMS LOVE YOU!");
 			break;
                         case 5:
-			pushNewMessage("WAVE IS COMPLETE AND PRINCES STILL EXIST!");
+			pushNewMessage("HARDCORE WAVE COMPLETE!");
 			break;
 			case 6:
-			pushNewMessage("YOU JUST COMPLETED THAT WAVE! NO WAY!");
+			pushNewMessage("YOU JUST COMPLETED THAT WAVE!");
 			break;
 			case 7:
 			pushNewMessage("WAVE OF BADDIES BUSTED!");
@@ -406,7 +345,7 @@ void updateGameLogic()
 		return;
 	}
 	
-	if (player1Health < 1)
+	if ( (player1Health < 1 && is2PlayerGame == 0) || (player1Health < 1 && player2Health < 1 && is2PlayerGame == 1) )
 	{
 		if (gameEnding == 0)
 		{
@@ -456,7 +395,7 @@ int clearResetGame(int playerCount)
 	gameState = 0;
 
 	player1Health = 10;
-	player2Health = 0;
+	player2Health = 10;
 
 	gameScore = 0;
 	gameEnding = 0;
