@@ -1,4 +1,4 @@
-/* Whimsy Block Go
+/* PRINCE PROTECT
  * ---------------
  * A game for Windows written by Daniel Savage.
  *
@@ -68,7 +68,9 @@ int init()
 		perror("Error initalizing screen");
 		return 1;
 	}
-	
+
+	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
+
 	if (TTF_Init() != 0)
 	{
 		perror("Error initalizing SDL_ttf.");
@@ -89,8 +91,6 @@ int init()
 	
 	buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	
-	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
-
 	return 0;
 }
 
@@ -598,7 +598,7 @@ int main(int argc, char* argv[])
 	int i;
 
 	srand(time(NULL));
-	currentState = TITLE; //should start at NONE
+	currentState = INIT; //should start at NONE
 
 	if (init() != 0)
 	{
