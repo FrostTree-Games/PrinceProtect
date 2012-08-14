@@ -2463,8 +2463,13 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	}
 
 	int i;
-	int moveSpeed = 4;
+	int moveSpeed = 2;
 	Uint32 delta = currTime - enemy->lastMovementUpdate;
+	
+	if (enemy->AISlot3 == 1)
+	{
+		moveSpeed = 4;
+	}
 
 	Entity* northList[5];
 	Entity* southList[5];
@@ -2716,7 +2721,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		
 		if (enemy->direction == 4 && enemy->knockBackDirection == 255)
 		{
-			if (rand() % 10 == 0)
+			if (enemy->AISlot3 == 1)
+			{
+				if (xrand() % 4 == 0)
+				{
+					enemy->direction = newDir(enemy);
+				}
+			}
+			else if (rand() % 10 == 0)
 			{
 				enemy->direction = newDir(enemy);
 				

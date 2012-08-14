@@ -1721,25 +1721,40 @@ void drawShooter(SDL_Surface* buffer, Enemy* en)
 {
 	SDL_Rect entRect = {0, 0, 16, 16};
 	SDL_Rect tileRect = {0, 0, 16, 16};
-
-	tileRect.x = 96;
-	tileRect.y = 128;
 	
+	if (en->AISlot3 == 0)
+	{
+		tileRect.x = 96;
+		tileRect.y = 128;
+	}
+	else
+	{
+		tileRect.x = 160;
+		tileRect.y = 128;
+	}
+
 	entRect.x = (en->x * 16) + en->offsetX - 8;
 	entRect.y = (en->y * 16) + en->offsetY - 8;
-	
+
 	if (en->knockBackDirection == 255)
 	{
 		if (en->cream != NULL)
 		{
-			tileRect.x += 32;
+			if (en->AISlot3 == 0)
+			{
+				tileRect.x += 32;
+			}
+			else
+			{
+				tileRect.y += 64;
+			}
 		}
-		
+
 		if (en->frame == 1)
 		{
 			tileRect.x += 16;
 		}
-		
+
 		switch (en->direction)
 		{
 			case 0:

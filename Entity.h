@@ -214,7 +214,7 @@ typedef struct
 	IceCream* cream;
 	int AISlot1; //boxerGreg: 0 -> not punching, 1 -> punching, 2 -> blocking
 	int AISlot2; //boxerGreg: direction currently standing when direction is 4
-	int AISlot3;
+	int AISlot3; //last-minute hack: differentiates between shooter and quickie (0 = shooter, 1 = quickie)
 	Uint32 timer;
 	Uint32 lastFrameUpdate;
 	int frame; //0 -> first frame ; 1 -> second frame
