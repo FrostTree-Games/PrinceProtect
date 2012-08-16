@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "Audio.h"
 #include "HighScore.h"
+#include "Keyboard.h"
 
 #define MAX_ONSCREEN_GAMEBLOCKS 300
 #define MAX_ONSCREEN_ENEMIES 300
@@ -110,7 +111,7 @@ void updateRestPeriod()
 		return;
 	}
 	
-	if (getTimeSingleton() - restPeriodStart > REST_PERIOD_LENGTH)
+	if ((getTimeSingleton() - restPeriodStart > REST_PERIOD_LENGTH && waveNumber > 0) || (getTimeSingleton() - restPeriodStart > 2 * REST_PERIOD_LENGTH && waveNumber == 0))
 	{
 		waveNumber++;
 		restPeriod = 0;
@@ -459,6 +460,8 @@ int clearResetGame(int playerCount)
 
 int beginGame()
 {
+	char playerControlsMessage[50];
+
 	if (gameState != 0)
 	{
 		return 1;
@@ -474,6 +477,14 @@ int beginGame()
 	pushNewMessage("NINJAS WANT YOUR BOYFRIENDS!");
 	pushNewMessage("YOU MUST PROTECT THEM!");
 	
+	sprintf(playerControlsMessage, "P1 Keys: %s=Strike, %s=grab block", SDL_GetKeyName(getSDLKeyValue(P1_B)), SDL_GetKeyName(getSDLKeyValue(P1_A)));
+	pushNewMessage(playerControlsMessage);
+	if (is2PlayerGame)
+	{
+		sprintf(playerControlsMessage, "P2 Keys: %s=Strike, %s=grab block", SDL_GetKeyName(getSDLKeyValue(P1_B)), SDL_GetKeyName(getSDLKeyValue(P1_A)));
+		pushNewMessage(playerControlsMessage);
+	}
+
 	currentBGM = BGM_1;
 	playBGM(currentBGM);
 

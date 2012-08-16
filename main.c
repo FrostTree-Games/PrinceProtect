@@ -598,7 +598,7 @@ int main(int argc, char* argv[])
 	int i;
 
 	srand(time(NULL));
-	currentState = INIT; //should start at NONE
+	currentState = TITLE; //should start at NONE
 
 	if (init() != 0)
 	{
