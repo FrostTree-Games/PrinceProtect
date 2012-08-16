@@ -213,7 +213,7 @@ typedef struct
 	Uint32 lastMovementUpdate;
 	unsigned char knockBackDirection; // 255->no knock back, 0->N, 1->E, 2->S, 3->W
 	IceCream* cream;
-	int AISlot1; //boxerGreg: 0 -> not punching, 1 -> punching, 2 -> blocking
+	int AISlot1; //boxerGreg: 0 -> not punching, 1 -> punching
 	int AISlot2; //boxerGreg: direction currently standing when direction is 4
 	int AISlot3; //last-minute hack: differentiates between shooter and quickie (0 = shooter, 1 = quickie)
 	Uint32 timer;

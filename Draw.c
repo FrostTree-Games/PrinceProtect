@@ -1641,7 +1641,7 @@ void drawBoxerGreg(SDL_Surface* buffer, Enemy* en)
 			tileRect.y += 48;
 			break;
 			case 4:
-			if (en->cream == NULL)
+			if (en->cream == NULL && en->AISlot1 == 1)
 			{
 				tileRect.x += 64;
 			}
