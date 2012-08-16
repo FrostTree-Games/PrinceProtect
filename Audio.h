@@ -18,7 +18,8 @@ typedef enum
 	BGM_1,
 	BGM_2,
 	BGM_3,
-	BGM_TITLE
+	BGM_TITLE,
+	BGM_KEYCONFIG
 } BGMType;
 
 typedef enum

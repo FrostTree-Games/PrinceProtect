@@ -36,6 +36,7 @@ Mix_Music* bgm1;
 Mix_Music* bgm2;
 Mix_Music* bgm3;
 Mix_Music* titleSong;
+Mix_Music* keyConfig;
 
 //disgusting implementation? perhaps.
 int loadSFXFiles()
@@ -142,6 +143,10 @@ int loadBGMFiles()
 	{
 		fprintf(stderr, "Error loading title screen music! Oh no! Check for aud/sfx/title.ogg\n");
 	}
+	if ( (keyConfig = Mix_LoadMUS("aud/bgm/keyConfig.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading key config music. Check for aud/sfx/keyConfig.wav\n");
+	}
 
 	return 0;
 }
@@ -204,6 +209,7 @@ void clearAudio()
 	Mix_FreeMusic(bgm2);
 	Mix_FreeMusic(bgm3);
 	Mix_FreeMusic(titleSong);
+	Mix_FreeMusic(keyConfig);
 
 	Mix_CloseAudio();
 	
@@ -332,6 +338,9 @@ void playBGM(BGMType bg)
 		break;
 		case BGM_TITLE:
 		Mix_PlayMusic(titleSong, 0);
+		break;
+		case BGM_KEYCONFIG:
+		Mix_PlayMusic(keyConfig, -1);
 		break;
 		default:
 		break;

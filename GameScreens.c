@@ -155,6 +155,8 @@ int keyConfigScreen(SDL_Surface* screen)
 
 	SDL_Event ev;
 	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+	
+	playBGM(BGM_KEYCONFIG);
 
 	while(quit == 0 && hardCoreQuit == 0)
 	{
@@ -342,6 +344,9 @@ int keyConfigScreen(SDL_Surface* screen)
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}
+	
+	stopAllSFX();
+	stopBGM();
 	
 	SDL_FreeSurface(buffer);
 	
