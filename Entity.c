@@ -195,6 +195,22 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.lastFrameUpdate = getTimeSingleton();
 		newEntity->enemy.frame = 0;
 		break;
+		case ENEMY_FAST:
+		newEntity->enemy.x = newX;
+		newEntity->enemy.y = newY;
+		newEntity->enemy.direction = rand() % 5;
+		newEntity->enemy.offsetX = 8;
+		newEntity->enemy.offsetY = 8;
+		newEntity->enemy.lastMovementUpdate = 0;
+		newEntity->enemy.knockBackDirection = -1;
+		newEntity->enemy.cream = NULL;
+		newEntity->enemy.health = 5;
+		newEntity->enemy.AISlot1 = 0;
+		newEntity->enemy.AISlot2 = 0;
+		newEntity->enemy.AISlot3 = 1;
+		newEntity->enemy.lastFrameUpdate = getTimeSingleton();
+		newEntity->enemy.frame = 0;
+		break;
 		case ENEMY_BOXERGREG:
 		newEntity->enemy.x = newX;
 		newEntity->enemy.y = newY;
@@ -451,7 +467,7 @@ int filterOccupyWalls(int x, int y, Entity** list, int listMaxSize, int* returne
 
 		if (en->base.x == x && en->base.y == y)
 		{
-			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER || en->type == PLAYER1 || en->type == PLAYER2))
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER || en->type == ENEMY_FAST || en->type == PLAYER1 || en->type == PLAYER2))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -491,7 +507,7 @@ int filterOccupyWallsAndIceCream(int x, int y, Entity** list, int listMaxSize, i
 
 		if (en->base.x == x && en->base.y == y)
 		{
-			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER || en->type == PLAYER1 || en->type == PLAYER2 || en->type == ICECREAM))
+			if ((*returnedSize) < listMaxSize && (en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ENEMY_SHOOTER || en->type == ENEMY_FAST || en->type == PLAYER1 || en->type == PLAYER2 || en->type == ICECREAM))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -533,7 +549,7 @@ int filterOccupyWallsForPlayer(int x, int y, Entity** list, int listMaxSize, int
 		if (en->base.x == x && en->base.y == y)
 		{
 
-			if ((en->type == LASER || en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER))
+			if ((en->type == LASER || en->type == PERMABLOCK || en->type == GAMEBLOCK || en->type == ICEBLOCK || en->type == ICECREAM || en->type == ENEMY_CRAWLER || en->type == ENEMY_BOXERGREG || en->type == ENEMY_SHOOTER || en->type == ENEMY_FAST))
 			{
 				list[(*returnedSize)] = en;
 				(*returnedSize)++;
@@ -857,7 +873,7 @@ void update_player(Player* pl, Uint32 currTime)
 
 				for (i = 0; i < northResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER ||northList[i]->type == ENEMY_FAST || northList[i]->type == ENEMY_BOXERGREG))
 					{
 						northList[i]->enemy.knockBackDirection = pl->direction;
 						northList[i]->enemy.offsetX = 8;
@@ -908,7 +924,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < eastResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_FAST || eastList[i]->type == ENEMY_BOXERGREG))
 					{
 						eastList[i]->enemy.knockBackDirection = pl->direction;
 						eastList[i]->enemy.offsetX = 9;
@@ -959,7 +975,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < southResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER|| southList[i]->type == ENEMY_FAST || southList[i]->type == ENEMY_BOXERGREG))
 					{
 						southList[i]->enemy.knockBackDirection = pl->direction;
 						southList[i]->enemy.offsetX = 8;
@@ -1010,7 +1026,7 @@ void update_player(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < westResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_FAST || westList[i]->type == ENEMY_BOXERGREG))
 					{
 						westList[i]->enemy.knockBackDirection = pl->direction;
 						westList[i]->enemy.offsetX = 7;
@@ -1597,7 +1613,7 @@ void update_player2(Player* pl, Uint32 currTime)
 
 				for (i = 0; i < northResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (northList[i]->type == ENEMY_CRAWLER || northList[i]->type == ENEMY_SHOOTER || northList[i]->type == ENEMY_FAST || northList[i]->type == ENEMY_BOXERGREG))
 					{
 						northList[i]->enemy.knockBackDirection = pl->direction;
 						northList[i]->enemy.offsetX = 8;
@@ -1648,7 +1664,7 @@ void update_player2(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < eastResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (eastList[i]->type == ENEMY_CRAWLER || eastList[i]->type == ENEMY_SHOOTER || eastList[i]->type == ENEMY_FAST || eastList[i]->type == ENEMY_BOXERGREG))
 					{
 						eastList[i]->enemy.knockBackDirection = pl->direction;
 						eastList[i]->enemy.offsetX = 9;
@@ -1699,7 +1715,7 @@ void update_player2(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < southResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (southList[i]->type == ENEMY_CRAWLER || southList[i]->type == ENEMY_SHOOTER || southList[i]->type == ENEMY_FAST || southList[i]->type == ENEMY_BOXERGREG))
 					{
 						southList[i]->enemy.knockBackDirection = pl->direction;
 						southList[i]->enemy.offsetX = 8;
@@ -1750,7 +1766,7 @@ void update_player2(Player* pl, Uint32 currTime)
 			{
 				for (i = 0; i < westResultSize; i++)
 				{
-					if (pl->thrustHit == 1 && (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_BOXERGREG))
+					if (pl->thrustHit == 1 && (westList[i]->type == ENEMY_CRAWLER || westList[i]->type == ENEMY_SHOOTER || westList[i]->type == ENEMY_FAST || westList[i]->type == ENEMY_BOXERGREG))
 					{
 						westList[i]->enemy.knockBackDirection = pl->direction;
 						westList[i]->enemy.offsetX = 7;
@@ -3471,7 +3487,7 @@ void update_laser(Laser* block, Uint32 currTime)
 			return;
 		}
 		
-		if ((currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_BOXERGREG))
+		if ((currList[i]->type == ENEMY_CRAWLER || currList[i]->type == ENEMY_SHOOTER || currList[i]->type == ENEMY_FAST || currList[i]->type == ENEMY_BOXERGREG))
 		{
 			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, -2.0f, -2.0f);
 			pushParticle(BLOOD, (currList[i]->enemy.x * 16) + currList[i]->enemy.offsetX, (currList[i]->enemy.y * 16) + currList[i]->enemy.offsetY, 2.0f, -2.0f);
@@ -3553,6 +3569,7 @@ void update_explosion(Explosion* exp)
 		{
 			case ENEMY_CRAWLER:
 			case ENEMY_SHOOTER:
+			case ENEMY_FAST:
 			case ENEMY_BOXERGREG:
 			blastList[i]->enemy.health -= 5;
 			break;
@@ -3802,6 +3819,7 @@ void update_entity(Entity* entity, Uint32 currTime)
 		case ENEMY_CRAWLER:
 		update_enemy( (Enemy*)entity, currTime);
 		break;
+		case ENEMY_FAST:
 		case ENEMY_SHOOTER:
 		update_shooter( (Enemy*)entity, currTime);
 		break;

@@ -17,6 +17,7 @@
 #define INITAL_SECONDS_BETWEEN_ROBOTS 3000
 #define REST_PERIOD_LENGTH 5500
 #define INITAL_ROBOT_LIMIT_AMOUNT 5
+#define ROBOTS_PER_WAVE 10
 
 #define XRAND_MAX (RAND_MAX*(RAND_MAX + 2))
 
@@ -44,6 +45,15 @@ int enemiesLeftToPush = 0;
 int maxOnScreenRobots = INITAL_ROBOT_LIMIT_AMOUNT;
 Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 
+// Each wave randomly picks two random block types and two random enemy types
+BlockType initalBlockList[] = {RED_BLOCK, GREEN_BLOCK, BLUE_BLOCK, YELLOW_BLOCK};
+BlockType waveTypeBlock1 = RED_BLOCK;
+BlockType waveTypeBlock2 = GREEN_BLOCK;
+
+EntityType initalEnemyList[] = {ENEMY_CRAWLER, ENEMY_SHOOTER, ENEMY_BOXERGREG, ENEMY_FAST};
+EntityType waveTypeEnemy1 = ENEMY_CRAWLER;
+EntityType waveTypeEnemy2 = ENEMY_SHOOTER;
+
 int gameEnding = 0; //0 false, 1 true
 Uint32 endGameDelta;
 
@@ -56,6 +66,29 @@ unsigned int xrand(void)
 	return rand () * (RAND_MAX + 1) + rand ();
 }
 
+//randomizes blocks and enemies per wave
+void randomizeWaveTypes()
+{
+	int val = xrand() % 4;
+	waveTypeBlock1 = initalBlockList[val];
+	BlockType holdType = initalBlockList[3];
+	initalBlockList[3] = waveTypeBlock1;
+	initalBlockList[val] = holdType;
+	val = xrand() % 3;
+	waveTypeBlock2 = initalBlockList[val];
+	printf("randomized block types: %d, %d\n", waveTypeBlock1, waveTypeBlock2);
+
+	val = xrand() % 4;
+	waveTypeEnemy1 = initalEnemyList[val];
+	EntityType holdType2 = initalEnemyList[3];
+	initalEnemyList[3] = waveTypeEnemy1;
+	initalEnemyList[val] = holdType2;
+	val = xrand() % 3;
+	waveTypeEnemy2 = initalEnemyList[val];
+	printf("randomized block types: %d, %d\n", waveTypeEnemy1, waveTypeEnemy2);
+}
+
+// picks new background music
 BGMType randomizeBGM(BGMType bg)
 {
 	if (bg != BGM_1 && bg != BGM_2 && bg != BGM_3)
@@ -115,7 +148,7 @@ void updateRestPeriod()
 	{
 		waveNumber++;
 		restPeriod = 0;
-		enemiesLeftToPush = 20;
+		enemiesLeftToPush = ROBOTS_PER_WAVE;
 		if (waveNumber == 4)
 		{
 			enemiesLeftToPush = 40;
@@ -124,6 +157,8 @@ void updateRestPeriod()
 		char msg[49];
 		sprintf(msg, "WAVE %.2d", waveNumber);
 		pushNewMessage(msg);
+		
+		randomizeWaveTypes();
 		
 		if (waveNumber > 1)
 		{
@@ -148,7 +183,7 @@ void updateWave()
 	
 	for (i = 0; i < getEntityListSize(); i++)
 	{
-		if (enemyCount < MAX_ONSCREEN_ENEMIES && (entList[i]->type == ENEMY_SHOOTER || entList[i]->type == ENEMY_CRAWLER || entList[i]->type == ENEMY_BOXERGREG))
+		if (enemyCount < MAX_ONSCREEN_ENEMIES && (entList[i]->type == ENEMY_FAST || entList[i]->type == ENEMY_SHOOTER || entList[i]->type == ENEMY_CRAWLER || entList[i]->type == ENEMY_BOXERGREG))
 		{
 			onScreenEnemies[enemyCount] = (Enemy*)(entList[i]);
 			enemyCount++;
@@ -175,42 +210,15 @@ void updateWave()
 			{
 				Enemy* en;
 
-				int enemyMod = 0;
+				switch (xrand() % 2)
+				{
 
-				int val = xrand() % 100;
-				
-				if (val < 50)
-				{
-					enemyMod = 0;
-				}
-				else if (val < 65)
-				{
-					enemyMod = 1;
-				}
-				else if (val < 85)
-				{
-					enemyMod = 2;
-				}
-				else
-				{
-					enemyMod = 3;
-				}
-
-				switch (enemyMod)
-				{
-					case 3:
-					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
-					en->AISlot3 = 1;
-					break;
-					case 2:
-					en = (Enemy*)pushEntity(ENEMY_SHOOTER, -1, (xrand() % 8) + 6);
-					break;
 					case 1:
-					en = (Enemy*)pushEntity(ENEMY_BOXERGREG, -1, (xrand() % 8) + 6);
+					en = (Enemy*)pushEntity(waveTypeEnemy1, -1, (xrand() % 8) + 6);
 					break;
 					case 0:
 					default:
-					en = (Enemy*)pushEntity(ENEMY_CRAWLER, -1, (xrand() % 8) + 6);
+					en = (Enemy*)pushEntity(waveTypeEnemy2, -1, (xrand() % 8) + 6);
 					break;
 				}
 
@@ -248,23 +256,15 @@ void updateWave()
 					{
 						Entity* newBlock;
 
-						switch (xrand() % 4)
+						switch (xrand() % 2)
 						{
 							case 0:
 							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = RED_BLOCK;
+					                newBlock->gBlock.bType = waveTypeBlock1;
 					                break;
 							case 1:
 							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = BLUE_BLOCK;
-					                break;
-							case 2:
-							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = GREEN_BLOCK;
-					                break;
-							case 3:
-							newBlock = pushEntity(GAMEBLOCK, xSpot, ySpot);
-					                newBlock->gBlock.bType = YELLOW_BLOCK;
+					                newBlock->gBlock.bType = waveTypeBlock2;
 					                break;
 							default:
 							break;

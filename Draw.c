@@ -2137,6 +2137,7 @@ void testDraw(SDL_Surface* buffer)
 			case ENEMY_CRAWLER:
 			drawCrawler(buffer, (Enemy*)entList[i]);
 			break;
+			case ENEMY_FAST:
 			case ENEMY_SHOOTER:
 			drawShooter(buffer, (Enemy*)entList[i]);
 			break;
