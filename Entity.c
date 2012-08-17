@@ -13,6 +13,7 @@
 #define MAX_GAME_ENTITY_POPULATION 552
 
 #define PLAYER_WALK_SPEED 3
+#define HEALTH_UPGRADE_VALUE 3
 
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
@@ -147,6 +148,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->iceCream.frame = 0;
 		newEntity->iceCream.decoy = 0;
 		newEntity->iceCream.lastFrameUpdateTime = getTimeSingleton();
+		newEntity->iceCream.decoyTime = getTimeSingleton();
 		break;
 		case SUPERHAMMER:
 		newEntity->hammer.x = newX;
@@ -235,6 +237,10 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->poof.offsetY = 8;
 		newEntity->poof.colour = 0;
 		newEntity->poof.birthed = 0;
+		break;
+		case HEART:
+		newEntity->base.x = newX;
+		newEntity->base.y = newY;
 		break;
 		default:
 		free(newEntity);
@@ -658,6 +664,22 @@ void update_player(Player* pl, Uint32 currTime)
 		}
 		
 		pl->lastFrameUpdate = currTime;
+	}
+	
+	for (i = 0; i < currResultSize; i++)
+	{
+		if (currList[i]->base.type == HEART)
+		{
+			modPlayerHealth(1, HEALTH_UPGRADE_VALUE);
+
+			pushParticle(LIFETEXT, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 0.0f, -1.8f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, -2.0f, -2.0f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, -2.0f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, 2.0f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, -2.0f, 2.0f);
+
+			currList[i]->base.type = DELETE_ME_PLEASE;
+		}
 	}
 
 	if (pl->dead > 0)
@@ -1399,6 +1421,24 @@ void update_player2(Player* pl, Uint32 currTime)
 		
 		pl->lastFrameUpdate = currTime;
 	}
+	
+
+	for (i = 0; i < currResultSize; i++)
+	{
+		if (currList[i]->base.type == HEART)
+		{
+			modPlayerHealth(2, HEALTH_UPGRADE_VALUE);
+			
+			pushParticle(LIFETEXT, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 0.0f, -1.8f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, -2.0f, -2.0f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, -2.0f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, 2.0f);
+			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, -2.0f, 2.0f);
+
+			currList[i]->base.type = DELETE_ME_PLEASE;
+		}
+	}
+
 
 	if (pl->dead > 0)
 	{
@@ -1484,7 +1524,7 @@ void update_player2(Player* pl, Uint32 currTime)
 		}
 	}
 	
-	for (i = 0; i < currResultSize; i++)
+	for (i = 0; i < currResultSize; i++)    
 	{
 		if (currList[i]->type == SUPERHAMMER && pl->holdingSuperHammer == 0)
 		{
@@ -2140,6 +2180,10 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	{
 		enemy->type = POOF;
 		((Entity*)enemy)->poof.colour = 0;
+		if (enemy->cream == NULL)
+		{
+			((Entity*)enemy)->poof.birthed = 1;
+		}
 		((Entity*)enemy)->poof.startTime = currTime;
 
 		if (enemy->cream != NULL)
@@ -2517,6 +2561,10 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	if(enemy->health < 1 && enemy->knockBackDirection == 255)
 	{
 		enemy->type = POOF;
+		if (enemy->cream == NULL)
+		{
+			((Entity*)enemy)->poof.birthed = 1;
+		}
 		((Entity*)enemy)->poof.colour = 0;
 		((Entity*)enemy)->poof.startTime = currTime;
 		
@@ -2949,6 +2997,10 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 	{
 		enemy->type = POOF;
 		((Entity*)enemy)->poof.colour = 0;
+		if (enemy->cream == NULL)
+		{
+			((Entity*)enemy)->poof.birthed = 1;
+		}
 		((Entity*)enemy)->poof.startTime = currTime;
 
 		if (enemy->cream != NULL)
@@ -3758,6 +3810,12 @@ void update_poof(Poof* pf)
 
 		switch (pf->colour)
 		{
+			case 0:
+			if (xrand() % 15 == 0)
+			{
+				pushEntity(HEART, pf->x, pf->y);
+			}
+			break;
 			case 1:
 			pushEntity(SHIRUKEN, pf->x, pf->y);
 			break;
@@ -3794,6 +3852,11 @@ void update_iceCream(IceCream* cream)
 		cream->frame = (cream->frame + 1) % 2;
 		
 		cream->lastFrameUpdateTime = getTimeSingleton();
+	}
+	
+	if (cream->decoy == 1 && getTimeSingleton() - cream->decoyTime > 45 * 1000)
+	{
+		cream->type = DELETE_ME_PLEASE;
 	}
 }
 
@@ -3858,6 +3921,8 @@ void update_entity(Entity* entity, Uint32 currTime)
 		update_poof( (Poof*)entity);
 		break;
 		case DELETE_ME_PLEASE:
+		break;
+		case HEART:
 		break;
 		default:
 		printf("unregognized entity type updated: %d\n", entity->type);

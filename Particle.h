@@ -21,10 +21,11 @@ typedef enum
 	ICE,
 	MUD,
 	BLOOD,
-	SWEAT,
-	TEARS, //not used, but funny
+	SWEAT, //no tears though
+	HEALTHSPARK,
 	TELESPARK,
-	FIRE
+	FIRE,
+	LIFETEXT
 } ParticleType;
 
 typedef struct

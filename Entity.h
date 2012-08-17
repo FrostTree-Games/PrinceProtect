@@ -38,6 +38,7 @@ typedef enum
 	SHIRUKEN,
 	GLUE,
 	POOF,
+	HEART,
 	DELETE_ME_PLEASE
 } EntityType;
 
@@ -149,6 +150,7 @@ typedef struct
 	int frame; //0 or 1
 	Uint32 lastFrameUpdateTime;
 	int decoy; //0 -> real, 1 -> decoy
+	Uint32 decoyTime;
 } IceCream;
 
 typedef struct

@@ -15,6 +15,7 @@
 
 int pushNotificationFontSize = 7; //this font should be 7x7 pixels
 TTF_Font* pushNotificationFont = NULL;
+TTF_Font* tinyFont = NULL;
 
 SDL_Surface* tileSheet;
 SDL_Surface* pubLogo;
@@ -59,13 +60,19 @@ int setupAssets()
 
 	if ((pushNotificationFont = TTF_OpenFont("ttf/slkscr.ttf", pushNotificationFontSize)) == NULL)
 	{
-		fprintf(stderr, "Error opening font. Check assets.\n");
+		fprintf(stderr, "Error opening font. Check assets for 'ttf/slkscr.ttf'.\n");
+		return 1;
+	}
+	
+	if ((tinyFont = TTF_OpenFont("ttf/supaTiny.ttf", 7)) == NULL)
+	{
+		fprintf(stderr, "Error opening font. Check assets for 'ttf/supaTiny.ttf'.\n");
 		return 1;
 	}
 
 	if ((tileSheet = IMG_Load("gfx/sheet.png")) == NULL)
 	{
-		fprintf(stderr, "Error loading tilesheet. Check assets.\n");
+		fprintf(stderr, "Error loading tilesheet. Check assets for 'gfx/sheet.png'.\n");
 		return 1;
 	}
 	
@@ -105,6 +112,7 @@ int setupAssets()
 void clearAssets()
 {
 	TTF_CloseFont(pushNotificationFont);
+	TTF_CloseFont(tinyFont);
 
 	SDL_FreeSurface(tileSheet);
 	
@@ -1567,6 +1575,11 @@ void drawIceCream (SDL_Surface* buffer, IceCream* cream, int x, int y, int carry
 	{
 		tileRect.x = 208;
 	}
+	
+	if (cream->decoy == 1 && getTimeSingleton() -  cream->decoyTime > 40 * 1000 && (getTimeSingleton() / 100) % 2 == 0)
+	{
+		return;
+	}	
 
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }
@@ -1861,6 +1874,8 @@ void drawPoof(SDL_Surface* buffer, Poof* pf)
 void drawParticles(SDL_Surface* buffer)
 {
 	int i;
+	SDL_Surface* textSurface;
+	SDL_Color textCol = {187, 18, 18, 0};
 
 	Uint32 px = 0;
 	Uint8* pxOffset = (Uint8*)&px;
@@ -1884,6 +1899,14 @@ void drawParticles(SDL_Surface* buffer)
 
 		switch (pList[i].type)
 		{
+			case HEALTHSPARK:
+			pxOffset[0] = 18;
+			pxOffset[1] = 18;
+			pxOffset[2] = 187;
+			px2Offset[0] = 48;
+			px2Offset[1] = 48;
+			px2Offset[2] = 232;
+			break;
 			case ICE:
 			pxOffset[0] = 255;
 			pxOffset[1] = 240;
@@ -1929,6 +1952,7 @@ void drawParticles(SDL_Surface* buffer)
 		
 		switch (pList[i].type)
 		{
+			case HEALTHSPARK:
 			case ICE:
 			put_pixel32(buffer, (int)pList[i].x, (int)pList[i].y, px2);
 			put_pixel32(buffer, (int)pList[i].x + 1, (int)pList[i].y, px);
@@ -1981,6 +2005,14 @@ void drawParticles(SDL_Surface* buffer)
 			else
 			{
 				put_pixel32(buffer, (int)pList[i].x - 1, (int)pList[i].y + 1, px);
+			}
+			break;
+			case LIFETEXT:
+			textSurface = TTF_RenderText_Solid(tinyFont, "+3 LIFE", textCol);
+			if (textSurface != NULL)
+			{
+				SDL_Rect textPos = {(int)(pList[i].x) - textSurface->w/2, (int)(pList[i].y) - textSurface->h/2, 0, 0};
+				SDL_BlitSurface(textSurface, NULL, buffer, &textPos);
 			}
 			break;
 			default:
@@ -2138,6 +2170,13 @@ void testDraw(SDL_Surface* buffer)
 			entRect.y = entList[i]->hammer.y * 16;
 			tileRect.x = 208;
 			tileRect.y = 16;
+			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
+			break;
+			case HEART:
+			entRect.x = entList[i]->base.x * 16;
+			entRect.y = entList[i]->base.y * 16;
+			tileRect.x = 224;
+			tileRect.y = 64;
 			SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 			break;
 			case GLUE:

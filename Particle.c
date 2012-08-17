@@ -89,9 +89,15 @@ void updateParticles()
 				particleList[i].type = NONE;
 			}
 			break;
-			case TEARS:
+			case HEALTHSPARK:
 			case MUD:
 			if (getTimeSingleton() - particleList[i].startTime > 100)
+			{
+				particleList[i].type = NONE;
+			}
+			break;
+			case LIFETEXT:
+			if (getTimeSingleton() - particleList[i].startTime > 175)
 			{
 				particleList[i].type = NONE;
 			}
