@@ -32,6 +32,7 @@ Mix_Chunk* get_hammer;
 Mix_Chunk* readyJingle;
 Mix_Chunk* losePrincess;
 Mix_Chunk* decoyYell;
+Mix_Chunk* heartSound;
 
 Mix_Music* bgm1;
 Mix_Music* bgm2;
@@ -124,7 +125,11 @@ int loadSFXFiles()
 	}
 	if ( (decoyYell = Mix_LoadWAV("aud/sfx/decoy.wav")) == NULL)
 	{
-		fprintf(stderr, "Error loading prince escape effect. Check for aud/sfx/decoy.wav\n");
+		fprintf(stderr, "Error loading decoy prince effect. Check for aud/sfx/decoy.wav\n");
+	}
+	if ( (heartSound = Mix_LoadWAV("aud/sfx/heart.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading heart sound effect. Check for aud/sfx/heart.wav\n");
 	}
 
 	return 0;
@@ -210,6 +215,7 @@ void clearAudio()
 	Mix_FreeChunk(readyJingle);
 	Mix_FreeChunk(losePrincess);
 	Mix_FreeChunk(decoyYell);
+	Mix_FreeChunk(heartSound);
 	
 	Mix_FreeMusic(bgm1);
 	Mix_FreeMusic(bgm2);
@@ -318,6 +324,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_DECOY_YELL)
 	{
 		Mix_PlayChannel(-1, decoyYell, 0);
+	}
+	if (fx == SFX_LIFEUP)
+	{
+		Mix_PlayChannel(-1, heartSound, 0);
 	}
 }
 

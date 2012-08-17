@@ -680,6 +680,8 @@ void update_player(Player* pl, Uint32 currTime)
 			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, -2.0f);
 			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, 2.0f);
 			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, -2.0f, 2.0f);
+			
+			playSFX(SFX_LIFEUP);
 
 			currList[i]->base.type = DELETE_ME_PLEASE;
 		}
@@ -1437,6 +1439,8 @@ void update_player2(Player* pl, Uint32 currTime)
 			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, -2.0f);
 			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, 2.0f, 2.0f);
 			pushParticle(HEALTHSPARK, currList[i]->base.x * 16 + 8, currList[i]->base.y * 16 + 8, -2.0f, 2.0f);
+			
+			playSFX(SFX_LIFEUP);
 
 			currList[i]->base.type = DELETE_ME_PLEASE;
 		}

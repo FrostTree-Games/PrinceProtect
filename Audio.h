@@ -45,7 +45,8 @@ typedef enum
 	SFX_ENEMY_HURT,
 	SFX_GET_HAMMER,
 	SFX_READY_JINGLE,
-	SFX_LOSE_PRINCESS
+	SFX_LOSE_PRINCESS,
+	SFX_LIFEUP
 } SFXType;
 /* setupAudio()
  * Purpose: Loads the necessary OGG BGM music and WAV SFX; do this on startup
