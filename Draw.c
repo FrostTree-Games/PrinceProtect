@@ -1579,7 +1579,7 @@ void drawIceCream (SDL_Surface* buffer, IceCream* cream, int x, int y, int carry
 	if (cream->decoy == 1 && getTimeSingleton() -  cream->decoyTime > 40 * 1000 && (getTimeSingleton() / 100) % 2 == 0)
 	{
 		return;
-	}	
+	}
 
 	SDL_BlitSurface(tileSheet, &tileRect, buffer, &entRect);
 }

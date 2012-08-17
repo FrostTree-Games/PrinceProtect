@@ -46,6 +46,7 @@ typedef enum
 
 // 1 of the (X) is clicked, game should then entirely exit
 int hardCoreQuit = 0;
+SDL_Surface* iconSurface = NULL;
 
 SDL_Surface* screen;
 SDL_Surface* buffer;
@@ -90,7 +91,7 @@ int init()
 	}
 	
 	buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
-	
+
 	return 0;
 }
 

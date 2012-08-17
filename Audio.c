@@ -31,6 +31,7 @@ Mix_Chunk* enemy_hurt;
 Mix_Chunk* get_hammer;
 Mix_Chunk* readyJingle;
 Mix_Chunk* losePrincess;
+Mix_Chunk* decoyYell;
 
 Mix_Music* bgm1;
 Mix_Music* bgm2;
@@ -121,6 +122,10 @@ int loadSFXFiles()
 	{
 		fprintf(stderr, "Error loading prince escape effect. Check for aud/sfx/losePrincess.wav\n");
 	}
+	if ( (decoyYell = Mix_LoadWAV("aud/sfx/decoy.wav")) == NULL)
+	{
+		fprintf(stderr, "Error loading prince escape effect. Check for aud/sfx/decoy.wav\n");
+	}
 
 	return 0;
 }
@@ -204,6 +209,7 @@ void clearAudio()
 	Mix_FreeChunk(get_hammer);
 	Mix_FreeChunk(readyJingle);
 	Mix_FreeChunk(losePrincess);
+	Mix_FreeChunk(decoyYell);
 	
 	Mix_FreeMusic(bgm1);
 	Mix_FreeMusic(bgm2);
@@ -308,6 +314,10 @@ void playSFX(SFXType fx)
 	if (fx == SFX_LOSE_PRINCESS)
 	{
 		Mix_PlayChannel(-1, losePrincess, 0);
+	}
+	if (fx == SFX_DECOY_YELL)
+	{
+		Mix_PlayChannel(-1, decoyYell, 0);
 	}
 }
 

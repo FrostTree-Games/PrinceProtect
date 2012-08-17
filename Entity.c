@@ -14,6 +14,7 @@
 
 #define PLAYER_WALK_SPEED 3
 #define HEALTH_UPGRADE_VALUE 3
+#define SHURIKEN_BONUS_VALUE 2
 
 // Master list of all entities in play
 Entity** entityList = NULL; // set to NULL when uninitalized
@@ -69,6 +70,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.frame = 0;
                 newEntity->player.holdingSuperHammer = 0;
                 newEntity->player.dead = 0;
+                newEntity->player.direction = 2;
 		break;
 		case PLAYER2:
 		newEntity->player.x = newX;
@@ -89,6 +91,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
                 newEntity->player.frame = 0;
                 newEntity->player.holdingSuperHammer = 0;
                 newEntity->player.dead = 0;
+                newEntity->player.direction = 2;
 		break;
 		case PERMABLOCK:
 		newEntity->permaBlock.x = newX;
@@ -790,7 +793,7 @@ void update_player(Player* pl, Uint32 currTime)
 				pl->holdingSuperHammer = 0;
 			}
 				
-			pl->holdingSuperHammer += 5;
+			pl->holdingSuperHammer += SHURIKEN_BONUS_VALUE;
 			currList[i]->type = DELETE_ME_PLEASE;
 			
 			playSFX(SFX_GET_HAMMER);
@@ -1548,7 +1551,7 @@ void update_player2(Player* pl, Uint32 currTime)
 				pl->holdingSuperHammer = 0;
 			}
 				
-			pl->holdingSuperHammer += 5;
+			pl->holdingSuperHammer += SHURIKEN_BONUS_VALUE;
 			currList[i]->type = DELETE_ME_PLEASE;
 			
 			playSFX(SFX_GET_HAMMER);
@@ -2238,7 +2241,14 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
 			
-			playSFX(SFX_PRINCESS_YELL);
+			if (enemy->cream->decoy == 1)
+			{
+				playSFX(SFX_DECOY_YELL);
+			}
+			else
+			{
+				playSFX(SFX_PRINCESS_YELL);
+			}
 		}
 		
 		if (currList[i]->type == GLUE)
@@ -2589,7 +2599,14 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
 			
-			playSFX(SFX_PRINCESS_YELL);
+			if (enemy->cream->decoy == 1)
+			{
+				playSFX(SFX_DECOY_YELL);
+			}
+			else
+			{
+				playSFX(SFX_PRINCESS_YELL);
+			}
 		}
 		
 		if (currList[i]->type == GLUE)
@@ -3047,7 +3064,14 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 			enemy->cream->x = -5;
 			enemy->cream->y = -5;
 
-			playSFX(SFX_PRINCESS_YELL);
+			if (enemy->cream->decoy == 1)
+			{
+				playSFX(SFX_DECOY_YELL);
+			}
+			else
+			{
+				playSFX(SFX_PRINCESS_YELL);
+			}
 		}
 
 		if (currList[i]->type == GLUE)
