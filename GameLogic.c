@@ -45,6 +45,10 @@ int enemiesLeftToPush = 0;
 int maxOnScreenRobots = INITAL_ROBOT_LIMIT_AMOUNT;
 Uint32 enemyPushInterval = INITAL_SECONDS_BETWEEN_ROBOTS;
 
+// if one player is dead but not both, then revive the dead player during the rest period
+int reloadingHealth = 0; //0 -> not reloading, 1 -> reloading p1, 2 -> reloading p2
+Uint32 reloadingDelayEffectTime = 0; //used to stagger life-giving qualities
+
 // Each wave randomly picks two random block types and two random enemy types
 BlockType initalBlockList[] = {RED_BLOCK, GREEN_BLOCK, BLUE_BLOCK, YELLOW_BLOCK};
 BlockType waveTypeBlock1 = RED_BLOCK;
@@ -138,12 +142,82 @@ BGMType randomizeBGM(BGMType bg)
 
 void updateRestPeriod()
 {
+	int i;
+
 	if (restPeriodStart == 0)
 	{
 		restPeriodStart = getTimeSingleton();
 		return;
 	}
 	
+	if ((player1Health == 0 || player2Health == 0) && gameEnding == 0)
+	{
+
+		Entity** entList = getEntityList();
+		
+		if (entList != NULL)
+		{
+			for (i = 0; i < getEntityListSize(); i++)
+			{
+				if (entList[i]->base.type == PLAYER1)
+				{
+					if (entList[i]->player.dead == 2)
+					{
+						entList[i]->player.dead = 0;
+						reloadingHealth = 1;
+						reloadingDelayEffectTime = getTimeSingleton();
+						
+						player1Health++;
+						playSFX(SFX_LIFEUP);
+					}
+				}
+
+				if (entList[i]->base.type == PLAYER2)
+				{
+					if (entList[i]->player.dead == 2)
+					{
+						entList[i]->player.dead = 0;
+						reloadingHealth = 2;
+						reloadingDelayEffectTime = getTimeSingleton();
+						
+						player2Health++;
+						playSFX(SFX_LIFEUP);
+					}
+				}
+			}
+		}
+	}
+	else if (reloadingHealth == 1)
+	{
+		if (getTimeSingleton() - reloadingDelayEffectTime > 500)
+		{
+			player1Health++;
+			playSFX(SFX_LIFEUP);
+			
+			reloadingDelayEffectTime = getTimeSingleton();
+			
+			if (player1Health == 3)
+			{
+				reloadingHealth = 0;
+			}
+		}
+	}
+	else if (reloadingHealth == 2)
+	{
+		if (getTimeSingleton() - reloadingDelayEffectTime > 500)
+		{
+			player2Health++;
+			playSFX(SFX_LIFEUP);
+			
+			reloadingDelayEffectTime = getTimeSingleton();
+			
+			if (player2Health == 3)
+			{
+				reloadingHealth = 0;
+			}
+		}
+	}
+
 	if ((getTimeSingleton() - restPeriodStart > REST_PERIOD_LENGTH && waveNumber > 0) || (getTimeSingleton() - restPeriodStart > 2 * REST_PERIOD_LENGTH && waveNumber == 0))
 	{
 		waveNumber++;
