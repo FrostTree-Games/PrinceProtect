@@ -223,9 +223,8 @@ void updateRestPeriod()
 		waveNumber++;
 		restPeriod = 0;
 		enemiesLeftToPush = ROBOTS_PER_WAVE;
-		if (waveNumber == 4)
+		if (waveNumber >= 3)
 		{
-			enemiesLeftToPush = 40;
 			maxOnScreenRobots += 3;
 		}
 		char msg[49];
@@ -239,6 +238,8 @@ void updateRestPeriod()
 			currentBGM = randomizeBGM(currentBGM);
 			playBGM(currentBGM);
 		}
+		
+		printf("max onscreen robots: %d\n", maxOnScreenRobots);
 	}
 }
 
@@ -469,7 +470,7 @@ int clearResetGame(int playerCount)
 
 	gameState = 0;
 
-	player1Health = 10;
+	player1Health = 0;
 	player2Health = 10;
 
 	gameScore = 0;

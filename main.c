@@ -428,7 +428,15 @@ int gameOverLoop(SDL_Surface* screen)
 		}
 
 		HighScore h;
-		h.playerCount = 1;
+		if (getPlayerCount() == 2)
+		{
+			h.playerCount = 2;
+		}
+		else
+		{
+			h.playerCount = 1;
+		}
+
 		h.name[0] = playerNameInput[0]; h.name[1] = playerNameInput[1]; h.name[2] = playerNameInput[2];
 		h.score = getScore();
 		pushHighScore(h);

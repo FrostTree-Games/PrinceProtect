@@ -209,7 +209,7 @@ Entity* create_entity(EntityType type, int newX, int newY)
 		newEntity->enemy.lastMovementUpdate = 0;
 		newEntity->enemy.knockBackDirection = -1;
 		newEntity->enemy.cream = NULL;
-		newEntity->enemy.health = 4;
+		newEntity->enemy.health = 2;
 		newEntity->enemy.AISlot1 = 0;
 		newEntity->enemy.AISlot2 = 0;
 		newEntity->enemy.AISlot3 = 1;
@@ -412,6 +412,7 @@ int popEntity(Entity* entity)
 		{
 			free(entity);
 			entityList[i] = entityList[entityListCurrentSize - 1];
+			entityList[entityListCurrentSize - 1] = NULL;
 			entityListCurrentSize--;
 			return 1;
 		}

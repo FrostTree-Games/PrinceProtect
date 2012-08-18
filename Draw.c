@@ -2260,27 +2260,31 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption, int selectedHighSco
 		sprintf(p1HealthText, "YOU COULDN'T TAKE IT!");
 		break;
 		case 3:
-		sprintf(p1HealthText, "THE GOODS GOT AWAY! HOW COULD YOU?");
+		sprintf(p1HealthText, "YOU LOST ALL YOUR BOYFRIENDS!");
 		break;
 	}
-	
-	textPos.y += 50;
+
+	textPos.y += 25;
 	gameOverText = TTF_RenderText_Solid(pushNotificationFont, p1HealthText, cl);
-	SDL_BlitSurface(gameOverText, NULL, buffer, &textPos);
-	SDL_FreeSurface(gameOverText);
+	if (gameOverText != NULL)
+	{
+		textPos.x = buffer->w/2 - gameOverText->w/2;
+		SDL_BlitSurface(gameOverText, NULL, buffer, &textPos);
+		SDL_FreeSurface(gameOverText);
+	}
 
 	for (i = 0; i < 2; i++)
 	{
 		if (i == menuOption)
 		{
-			fillGUIBox(buffer, 1, 8 + 2*i, 6, 2, 1);
+			fillGUIBox(buffer, 2, 8 + 2*i, 6, 2, 1);
 		}
 		else
 		{
-			fillGUIBox(buffer, 1, 8 + 2*i, 6, 2, 0);
+			fillGUIBox(buffer, 2, 8 + 2*i, 6, 2, 0);
 		}
 		
-		SDL_Rect menuTextBoxPos = {23, 138 + 32*i, 0, 0};
+		SDL_Rect menuTextBoxPos = {39, 138 + 32*i, 0, 0};
 		switch(i)
 		{
 			case 0:
@@ -2301,13 +2305,22 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption, int selectedHighSco
 		}
 	}
 	
+	SDL_Surface* highScoreTitleText = TTF_RenderText_Solid(pushNotificationFont, "-HIGH SCORES YO-", cl);
+	if (highScoreTitleText != NULL)
+	{
+		SDL_Rect textPos = {SCREEN_WIDTH/2 - 2, SCREEN_HEIGHT/2, 0, 0};
+		SDL_BlitSurface(highScoreTitleText, NULL, buffer, &textPos);
+		SDL_FreeSurface(highScoreTitleText);
+	}
+	
 	getHighScoreList(highScores);
 	for (i = 0; i < NUMBER_OF_HIGH_SCORE_SLOTS; i++)
 	{
-		SDL_Rect scorePosition = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + i*10, 0, 0};
+		SDL_Rect scorePosition = {SCREEN_WIDTH/2 + 16, SCREEN_HEIGHT/2 + i*16 + 2*i + 16, 0, 0};
+		SDL_Rect playerIconPosition = {0, 0, 16, 16};
 		char scoreTerms[30];
-		sprintf(scoreTerms, "%d: %d %c%c%c %.6d", i + 1, highScores[i].playerCount, highScores[i].name[0], highScores[i].name[1], highScores[i].name[2], highScores[i].score);
-		
+		sprintf(scoreTerms, "%d: %c%c%c %.6d", i + 1, highScores[i].name[0], highScores[i].name[1], highScores[i].name[2], highScores[i].score);
+
 		SDL_Surface* highScoreTextSurface = TTF_RenderText_Solid(pushNotificationFont, scoreTerms, cl);
 		if (highScoreTextSurface != NULL)
 		{
@@ -2315,6 +2328,19 @@ void drawGameOverScreen(SDL_Surface* buffer, int menuOption, int selectedHighSco
 		}
 		
 		SDL_FreeSurface(highScoreTextSurface);
+		
+		scorePosition.x -= 18;
+		scorePosition.y -= 4;
+		
+		SDL_BlitSurface(tileSheet, &playerIconPosition, buffer, &scorePosition);
+		
+		if (highScores[i].playerCount == 2)
+		{
+			scorePosition.x -= 17;
+			playerIconPosition.x += 64;
+			
+			SDL_BlitSurface(tileSheet, &playerIconPosition, buffer, &scorePosition);
+		}
 	}
 	
 	if (selectedHighScoreCharacter != -1)
