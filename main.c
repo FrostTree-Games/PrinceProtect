@@ -55,6 +55,8 @@ screenState currentState;
 
 int init()
 {
+	Uint32 iconColorKey;
+
 	// strangely prints stdout to stdout
 	freopen( "CON", "w", stdout );
 
@@ -62,6 +64,15 @@ int init()
 	{
 		perror("Error initalizing SDL");
 		return 1;
+	}
+
+	iconSurface = SDL_LoadBMP("gfx/icon.bmp");
+	if (iconSurface != NULL)
+	{
+		iconColorKey = SDL_MapRGB(iconSurface->format, 255, 0, 255);
+		SDL_SetColorKey(iconSurface, SDL_SRCCOLORKEY, iconColorKey);  
+
+		SDL_WM_SetIcon(iconSurface, NULL);
 	}
 
 	if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
@@ -98,6 +109,7 @@ int init()
 int deinit()
 {
 	SDL_FreeSurface(buffer);
+	SDL_FreeSurface(iconSurface);
 	
 	clearAssets();
 	clearAudio();
