@@ -10,8 +10,8 @@ SDLKey p1_up = SDLK_UP;
 SDLKey p1_down = SDLK_DOWN;
 SDLKey p1_left = SDLK_LEFT;
 SDLKey p1_right = SDLK_RIGHT;
-SDLKey p1_a = SDLK_n;
-SDLKey p1_b = SDLK_m;
+SDLKey p1_a = SDLK_x;
+SDLKey p1_b = SDLK_c;
 SDLKey p1_select = SDLK_RETURN;
 SDLKey p1_start = SDLK_BACKSPACE;
 
@@ -86,7 +86,7 @@ void setKey(SDLKey input, gameKey key)
 	}
 }
 
-int getKey(gameKey key)
+int isEnterKey()
 {
 	//if they keyboard hasn't been polled, don't bother
 	if (keyList == NULL)
@@ -94,6 +94,17 @@ int getKey(gameKey key)
 		return 0;
 	}
 	
+	return keyList[SDLK_RETURN];
+}
+
+int getKey(gameKey key)
+{
+	//if they keyboard hasn't been polled, don't bother
+	if (keyList == NULL)
+	{
+		return 0;
+	}
+
 	switch (key)
 	{
 		case ESCAPE_KEY:

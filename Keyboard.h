@@ -51,6 +51,12 @@ void setKey(SDLKey input, gameKey key);
  */
 int getKey(gameKey key);
 
+/* isEnterKey()
+ * Purpose: Checks if enter is down
+ * Returns: 0 if no, 1 if yes
+ */
+int isEnterKey();
+
 /* getSDLKeyValue()
  * Purpose: Determines what key is pressed corresponds to what gameKey
  * Returns: SDLKey of specified gameKey

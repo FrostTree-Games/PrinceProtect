@@ -414,11 +414,11 @@ int gameOverLoop(SDL_Surface* screen)
 				playSFX(SFX_MENU);
 			}
 			
-			if (getKey(P1_A) && aKeyDown == 0)
+			if ((getKey(P1_A) || isEnterKey()) && aKeyDown == 0)
 			{
 				aKeyDown = 1;
 			}
-			else if (!getKey(P1_A) && aKeyDown == 1)
+			else if (!(getKey(P1_A) || isEnterKey()) && aKeyDown == 1)
 			{
 				aKeyDown = 0;
 				
@@ -498,11 +498,11 @@ int gameOverLoop(SDL_Surface* screen)
 			playSFX(SFX_MENU);
 		}
 
-		if (getKey(P1_A) && aKeyDown == 0)
+		if ((getKey(P1_A) || isEnterKey()) && aKeyDown == 0)
 		{
 			aKeyDown = 1;
 		}
-		else if (!getKey(P1_A) && aKeyDown == 1)
+		else if (!(getKey(P1_A) || isEnterKey()) && aKeyDown == 1)
 		{
 			aKeyDown = 0;
 			
