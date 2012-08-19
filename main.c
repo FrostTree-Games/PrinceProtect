@@ -338,7 +338,6 @@ int gameOverLoop(SDL_Surface* screen)
 	int hardCoreQuit = 0;
 	SDL_Event ev;
 	
-	int newHighScore = 0;
 	int menuItem = 0;
 	int upKeyDown = 0;
 	int downKeyDown = 0;

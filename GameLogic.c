@@ -238,8 +238,6 @@ void updateRestPeriod()
 			currentBGM = randomizeBGM(currentBGM);
 			playBGM(currentBGM);
 		}
-		
-		printf("max onscreen robots: %d\n", maxOnScreenRobots);
 	}
 }
 
@@ -247,9 +245,6 @@ void updateWave()
 {
 	int i;
 
-	GameBlock* onScreenGameBlocks[MAX_ONSCREEN_GAMEBLOCKS];
-	Enemy* onScreenEnemies[MAX_ONSCREEN_ENEMIES];
-	IceCream* onScreenIceCream[MAX_ONSCREEN_ICECREAM];
 	int gameBlockCount = 0;
 	int enemyCount = 0;
 	int iceCreamCount = 0;
@@ -260,17 +255,14 @@ void updateWave()
 	{
 		if (enemyCount < MAX_ONSCREEN_ENEMIES && (entList[i]->type == ENEMY_FAST || entList[i]->type == ENEMY_SHOOTER || entList[i]->type == ENEMY_CRAWLER || entList[i]->type == ENEMY_BOXERGREG))
 		{
-			onScreenEnemies[enemyCount] = (Enemy*)(entList[i]);
 			enemyCount++;
 		}
 		if (iceCreamCount < MAX_ONSCREEN_ICECREAM && entList[i]->type == ICECREAM && entList[i]->iceCream.decoy == 0)
 		{
-			onScreenIceCream[iceCreamCount] = (IceCream*)(entList[i]);
 			iceCreamCount++;
 		}
 		if (gameBlockCount < MAX_ONSCREEN_GAMEBLOCKS && entList[i]->type == GAMEBLOCK)
 		{
-			onScreenGameBlocks[gameBlockCount] = (GameBlock*)(entList[i]);
 			gameBlockCount++;
 		}
 	}
@@ -470,7 +462,7 @@ int clearResetGame(int playerCount)
 
 	gameState = 0;
 
-	player1Health = 0;
+	player1Health = 10;
 	player2Health = 10;
 
 	gameScore = 0;

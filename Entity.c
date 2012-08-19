@@ -2184,6 +2184,17 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 		enemy->lastFrameUpdate = currTime;
 	}
 	
+	if (enemy->cream != NULL)
+	{
+		if (enemy->cream->decoy == 1)
+		{
+			if (getTimeSingleton() - enemy->cream->decoyTime > 44)
+			{
+				enemy->cream = NULL;
+			}
+		}
+	}
+
 	if(enemy->health < 1 && enemy->knockBackDirection == 255)
 	{
 		enemy->type = POOF;
@@ -2594,6 +2605,17 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 		playSFX(SFX_ENEMY_DIE);
 
 		return;
+	}
+	
+	if (enemy->cream != NULL)
+	{
+		if (enemy->cream->decoy == 1)
+		{
+			if (getTimeSingleton() - enemy->cream->decoyTime > 44)
+			{
+				enemy->cream = NULL;
+			}
+		}
 	}
 
 	for (i = 0; i < currListSize; i++)
@@ -3058,6 +3080,17 @@ void update_boxergreg(Enemy* enemy, Uint32 currTime)
 
 			enemy->type = DELETE_ME_PLEASE;
 			return;
+		}
+	}
+	
+	if (enemy->cream != NULL)
+	{
+		if (enemy->cream->decoy == 1)
+		{
+			if (getTimeSingleton() - enemy->cream->decoyTime > 44 * 1000)
+			{
+				enemy->cream = NULL;
+			}
 		}
 	}
 
