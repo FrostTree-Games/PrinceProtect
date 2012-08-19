@@ -80,7 +80,6 @@ void randomizeWaveTypes()
 	initalBlockList[val] = holdType;
 	val = xrand() % 3;
 	waveTypeBlock2 = initalBlockList[val];
-	printf("randomized block types: %d, %d\n", waveTypeBlock1, waveTypeBlock2);
 
 	val = xrand() % 4;
 	waveTypeEnemy1 = initalEnemyList[val];
@@ -89,7 +88,6 @@ void randomizeWaveTypes()
 	initalEnemyList[val] = holdType2;
 	val = xrand() % 3;
 	waveTypeEnemy2 = initalEnemyList[val];
-	printf("randomized block types: %d, %d\n", waveTypeEnemy1, waveTypeEnemy2);
 }
 
 // picks new background music
@@ -548,7 +546,7 @@ int beginGame()
 	pushNewMessage(playerControlsMessage);
 	if (is2PlayerGame)
 	{
-		sprintf(playerControlsMessage, "P2 Keys: %s=Strike, %s=grab block", SDL_GetKeyName(getSDLKeyValue(P1_B)), SDL_GetKeyName(getSDLKeyValue(P1_A)));
+		sprintf(playerControlsMessage, "P2 Keys: %s=Strike, %s=grab block", SDL_GetKeyName(getSDLKeyValue(P2_B)), SDL_GetKeyName(getSDLKeyValue(P2_A)));
 		pushNewMessage(playerControlsMessage);
 	}
 

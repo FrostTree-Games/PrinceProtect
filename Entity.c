@@ -2188,7 +2188,7 @@ void update_enemy(Enemy* enemy, Uint32 currTime)
 	{
 		if (enemy->cream->decoy == 1)
 		{
-			if (getTimeSingleton() - enemy->cream->decoyTime > 44)
+			if (getTimeSingleton() - enemy->cream->decoyTime > 44 * 1000)
 			{
 				enemy->cream = NULL;
 			}
@@ -2611,7 +2611,7 @@ void update_shooter(Enemy* enemy, Uint32 currTime)
 	{
 		if (enemy->cream->decoy == 1)
 		{
-			if (getTimeSingleton() - enemy->cream->decoyTime > 44)
+			if (getTimeSingleton() - enemy->cream->decoyTime > 44 * 1000)
 			{
 				enemy->cream = NULL;
 			}
