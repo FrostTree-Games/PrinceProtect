@@ -50,11 +50,17 @@ void drawDevScreen(SDL_Surface* buffer, int devScreenNumber);
  */
 void drawToTitleWipe(SDL_Surface* buffer, float curtainLength);
 
-/* drawToexitWipe()
+/* drawToExitWipe()
  * Purpose: draws a to-black screen wipe; also passes a float to indicate how wide the curtains are (0.0 = no curtains, 1.0 = fully closed curtains); draws over any current bitmap on the screen
  * Returns: n/a
  */
 void drawToExitWipe(SDL_Surface* buffer, float curtainLength);
+
+/* drawWideScreenWalls()
+ * Purpose: draws widescreen bars
+ * Returns: n/a
+ */
+void drawWideScreenWalls(SDL_Surface* buffer);
 
 /* drawGetReadyScreen()
  * Purpose: draws the pep talk screen; woot!
@@ -80,6 +86,13 @@ void testDraw(SDL_Surface* buffer);
  */
 void setFullScreen(int state);
 int getFullScreen();
+
+/* get/setWideScreen()
+ * Purpose: Sets widescreen variable; this only works at startup; widescreen can not be changed on the fly
+ * Returns: n/a
+ */
+void setWideScreen(int state);
+int getWideScreen();
 
 
 #endif

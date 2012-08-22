@@ -5,6 +5,8 @@
 #include "GameScreens.h"
 #include "Audio.h"
 
+SDL_Rect wideScreenPosition = {0, 0, 640, 480};
+
 int getReadyScreen(SDL_Surface* screen, int playerCount)
 {
 	int hardCoreQuit = 0;
@@ -15,8 +17,13 @@ int getReadyScreen(SDL_Surface* screen, int playerCount)
 	Uint32 timeStamp = SDL_GetTicks();
 	
 	playSFX(SFX_READY_JINGLE);
-	
+
 	int seed = rand() % 10;
+	
+	if (getWideScreen() == 1)
+	{
+		wideScreenPosition.x = 106;
+	}
 
 	while(hardCoreQuit == 0)
 	{
@@ -45,7 +52,13 @@ int getReadyScreen(SDL_Surface* screen, int playerCount)
 
 		drawGetReadyScreen(buffer, playerCount, seed);
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}
@@ -70,6 +83,11 @@ int titleTransitionScreen(SDL_Surface* screen)
 	Uint32 timeStamp = SDL_GetTicks();
 	
 	playSFX(SFX_WIPE_OPEN);
+	
+	if (getWideScreen() == 1)
+	{
+		wideScreenPosition.x = 106;
+	}
 
 	while(hardCoreQuit == 0)
 	{
@@ -98,7 +116,13 @@ int titleTransitionScreen(SDL_Surface* screen)
 		
 		drawToTitleWipe(buffer, 1.0f - (float)((currTime - timeStamp)/1000.0));
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}
@@ -123,6 +147,11 @@ int exitTransitionScreen(SDL_Surface* screen)
 	Uint32 timeStamp = SDL_GetTicks();
 	
 	playSFX(SFX_WIPE_CLOSE);
+
+	if (getWideScreen() == 1)
+	{
+		wideScreenPosition.x = 106;
+	}
 
 	while(hardCoreQuit == 0)
 	{
@@ -151,7 +180,13 @@ int exitTransitionScreen(SDL_Surface* screen)
 		
 		drawToExitWipe(buffer, 1.0f - (float)((currTime - timeStamp)/1000.0));
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}
@@ -182,6 +217,12 @@ int keyConfigScreen(SDL_Surface* screen)
 	
 	playBGM(BGM_KEYCONFIG);
 
+
+	if (getWideScreen() == 1)
+	{
+		wideScreenPosition.x = 106;
+	}
+	
 	while(quit == 0 && hardCoreQuit == 0)
 	{
 		while(SDL_PollEvent(&ev))
@@ -300,7 +341,13 @@ int keyConfigScreen(SDL_Surface* screen)
 
 					drawKeyConfigScreen(buffer, menuPosition, i);
 
-					SDL_SoftStretch(buffer, NULL, screen, NULL);
+					SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+					if (getWideScreen() == 1)
+					{
+						drawWideScreenWalls(screen);
+					}
+
 					SDL_Flip(screen);
 					SDL_Delay(17);
 				}
@@ -361,7 +408,13 @@ int keyConfigScreen(SDL_Surface* screen)
 
 					drawKeyConfigScreen(buffer, menuPosition, i + 10);
 
-					SDL_SoftStretch(buffer, NULL, screen, NULL);
+					SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+					if (getWideScreen() == 1)
+					{
+						drawWideScreenWalls(screen);
+					}
+
 					SDL_Flip(screen);
 					SDL_Delay(17);
 				}
@@ -372,7 +425,13 @@ int keyConfigScreen(SDL_Surface* screen)
 
 		drawKeyConfigScreen(buffer, menuPosition, -1);
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}
@@ -397,6 +456,11 @@ int preambleSplashScreen(SDL_Surface* screen)
 	SDL_Event ev;
 	SDL_Surface* buffer = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	Uint32 timeStamp = SDL_GetTicks();
+
+	if (getWideScreen() == 1)
+	{
+		wideScreenPosition.x = 106;
+	}
 
 	while(SDL_GetTicks() - timeStamp < 9 * 1000 && hardCoreQuit == 0)
 	{
@@ -437,7 +501,13 @@ int preambleSplashScreen(SDL_Surface* screen)
 			drawDevScreen(buffer, -1);
 		}
 		
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}
@@ -469,6 +539,11 @@ int titleScreen(SDL_Surface* screen)
 	int upKeyDown = 0;
 	int downKeyDown = 0;
 	int aKeyDown = 0;
+
+	if (getWideScreen() == 1)
+	{
+		wideScreenPosition.x = 106;
+	}
 
 	while(hardCoreQuit == 0 && menuSelected == 255)
 	{
@@ -559,7 +634,13 @@ int titleScreen(SDL_Surface* screen)
 		
 		drawTitleScreen(buffer, menuPosition, currTime - timeStamp);
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPosition);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17);
 	}

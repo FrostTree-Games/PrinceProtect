@@ -14,6 +14,7 @@
 #include "HighScore.h"
 
 int isFullScreen = 0;
+int isWideScreen = 0;
 
 int pushNotificationFontSize = 7; //this font should be 7x7 pixels
 TTF_Font* pushNotificationFont = NULL;
@@ -60,6 +61,23 @@ void setFullScreen(int state)
 	else
 	{
 		isFullScreen = 0;
+	}
+}
+
+int getWideScreen()
+{
+	return isWideScreen;
+}
+
+void setWideScreen(int state)
+{
+	if (state == 1)
+	{
+		isWideScreen = 1;
+	}
+	else
+	{
+		isWideScreen = 0;
 	}
 }
 
@@ -2241,6 +2259,15 @@ void testDraw(SDL_Surface* buffer)
 	drawHealthScores(buffer);
 
 	drawLatestPushDown(buffer);
+}
+
+void drawWideScreenWalls(SDL_Surface* buffer)
+{
+	SDL_Rect wall1 = {0, 0, (106), (SCREEN_HEIGHT * 2)};
+	SDL_Rect wall2 = {(SCREEN_WIDTH * 2) + 106, 0, 106, (SCREEN_HEIGHT * 2)};
+
+	SDL_FillRect(buffer, &wall1, SDL_MapRGB(buffer->format, 0, 0, 0));
+	SDL_FillRect(buffer, &wall2, SDL_MapRGB(buffer->format, 0, 0, 0));
 }
 
 void drawGameOverScreen(SDL_Surface* buffer, int menuOption, int selectedHighScoreCharacter, char* characters)

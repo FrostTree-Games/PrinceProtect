@@ -47,6 +47,7 @@ typedef enum
 // 1 of the (X) is clicked, game should then entirely exit
 int hardCoreQuit = 0;
 SDL_Surface* iconSurface = NULL;
+SDL_Rect wideScreenPositionMain = {0, 0, 640, 480};
 
 SDL_Surface* screen;
 SDL_Surface* buffer;
@@ -77,22 +78,46 @@ int init()
 
 	if (getFullScreen() == 1)
 	{
-		if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE | SDL_FULLSCREEN)) == NULL)
+		if (getWideScreen() == 1)
 		{
-			perror("Error initalizing fullscreen mode surface");
-			return 1;
+			if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2 + (213 * getWideScreen()), SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE | SDL_FULLSCREEN)) == NULL)
+			{
+				perror("Error initalizing fullscreen mode surface");
+				return 1;
+			}
 		}
+		else
+		{
+			if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE | SDL_FULLSCREEN)) == NULL)
+			{
+				perror("Error initalizing fullscreen mode surface");
+				return 1;
+			}
+		}
+		
+		SDL_ShowCursor(SDL_DISABLE);
 	}
 	else
 	{
-		if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
+		if (getWideScreen() == 1)
 		{
-			perror("Error initalizing screen surface");
-			return 1;
+			if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2 + (213 * getWideScreen()), SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
+			{
+				perror("Error initalizing fullscreen mode surface");
+				return 1;
+			}
+		}
+		else
+		{
+			if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
+			{
+				perror("Error initalizing screen surface");
+				return 1;
+			}
 		}
 	}
 
-	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
+	SDL_WM_SetCaption( "Prince Protect", NULL );
 
 	if (TTF_Init() != 0)
 	{
@@ -444,7 +469,13 @@ int gameOverLoop(SDL_Surface* screen)
 			
 			drawGameOverScreen(buffer, menuItem, currentlySelected, playerNameInput);
 
-			SDL_SoftStretch(buffer, NULL, screen, NULL);
+			SDL_SoftStretch(buffer, NULL, screen, &wideScreenPositionMain);
+
+			if (getWideScreen() == 1)
+			{
+				drawWideScreenWalls(screen);
+			}
+
 			SDL_Flip(screen);
 			SDL_Delay(17); //crude 60fps
 		}
@@ -524,7 +555,13 @@ int gameOverLoop(SDL_Surface* screen)
 
 		drawGameOverScreen(buffer, menuItem, -1, NULL);
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPositionMain);
+
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17); //crude 60fps
 	}
@@ -574,6 +611,14 @@ int testLoop(int twoPlayerGame)
 			{
 				hardCoreQuit = 1;
 			}
+			
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
+			}
 		}
 		
 		if (getGameState() != 1)
@@ -610,7 +655,13 @@ int testLoop(int twoPlayerGame)
 
 		testDraw(buffer);
 
-		SDL_SoftStretch(buffer, NULL, screen, NULL);
+		SDL_SoftStretch(buffer, NULL, screen, &wideScreenPositionMain);
+		
+		if (getWideScreen() == 1)
+		{
+			drawWideScreenWalls(screen);
+		}
+
 		SDL_Flip(screen);
 		SDL_Delay(17); //crude 60fps
 	}
@@ -649,6 +700,11 @@ int main(int argc, char* argv[])
 		if (strcmp(argv[i], "fullscreen") == 0)
 		{
 			setFullScreen(1);
+		}
+		if (strcmp(argv[i], "widescreen") == 0)
+		{
+			setWideScreen(1);
+			wideScreenPositionMain.x += 106;
 		}
 	}
 
