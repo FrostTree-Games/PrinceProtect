@@ -74,4 +74,12 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta);
  */
 void testDraw(SDL_Surface* buffer);
 
+/* get/setFullScreen()
+ * Purpose: Sets fullscreen variable; this only works at startup; full screen can not be changed on the fly
+ * Returns: n/a
+ */
+void setFullScreen(int state);
+int getFullScreen();
+
+
 #endif

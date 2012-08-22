@@ -75,10 +75,21 @@ int init()
 		SDL_WM_SetIcon(iconSurface, NULL);
 	}
 
-	if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
+	if (getFullScreen() == 1)
 	{
-		perror("Error initalizing screen");
-		return 1;
+		if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE | SDL_FULLSCREEN)) == NULL)
+		{
+			perror("Error initalizing fullscreen mode surface");
+			return 1;
+		}
+	}
+	else
+	{
+		if ((screen = SDL_SetVideoMode(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 32, SDL_SWSURFACE)) == NULL)
+		{
+			perror("Error initalizing screen surface");
+			return 1;
+		}
 	}
 
 	SDL_WM_SetCaption( "Whimsy Block Go", NULL );
@@ -618,15 +629,7 @@ int main(int argc, char* argv[])
 	int i;
 
 	srand(time(NULL));
-	currentState = TITLE; //should start at NONE
-
-	if (init() != 0)
-	{
-		deinit();
-		return 1;
-	}
-
-	//init error handling will go here
+	currentState = NONE; //should start at NONE
 	
 	for (i = 0; i < argc; i++)
 	{
@@ -643,8 +646,20 @@ int main(int argc, char* argv[])
 		{
 			toggleSFX(0);
 		}
+		if (strcmp(argv[i], "fullscreen") == 0)
+		{
+			setFullScreen(1);
+		}
 	}
-	
+
+	if (init() != 0)
+	{
+		deinit();
+		return 1;
+	}
+
+	//init error handling will go here
+
 	loadHighScores();
 
 	while (hardCoreQuit == 0)

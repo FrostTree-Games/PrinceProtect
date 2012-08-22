@@ -13,6 +13,8 @@
 #include "Keyboard.h"
 #include "HighScore.h"
 
+int isFullScreen = 0;
+
 int pushNotificationFontSize = 7; //this font should be 7x7 pixels
 TTF_Font* pushNotificationFont = NULL;
 TTF_Font* tinyFont = NULL;
@@ -42,6 +44,23 @@ void put_pixel32( SDL_Surface *surface, int x, int y, Uint32 pixel )
 	
 	//Set the pixel
 	pixels[ ( y * surface->w ) + x ] = pixel;
+}
+
+int getFullScreen()
+{
+	return isFullScreen;
+}
+
+void setFullScreen(int state)
+{
+	if (state == 1)
+	{
+		isFullScreen = 1;
+	}
+	else
+	{
+		isFullScreen = 0;
+	}
 }
 
 int setupAssets()

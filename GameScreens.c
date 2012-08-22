@@ -26,6 +26,14 @@ int getReadyScreen(SDL_Surface* screen, int playerCount)
 			{
 				hardCoreQuit = 1;
 			}
+			
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
+			}
 		}
 		
 		Uint32 currTime = SDL_GetTicks();
@@ -71,6 +79,14 @@ int titleTransitionScreen(SDL_Surface* screen)
 			{
 				hardCoreQuit = 1;
 			}
+			
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
+			}
 		}
 		
 		Uint32 currTime = SDL_GetTicks();
@@ -115,6 +131,14 @@ int exitTransitionScreen(SDL_Surface* screen)
 			if (ev.type == SDL_QUIT)
 			{
 				hardCoreQuit = 1;
+			}
+			
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
 			}
 		}
 		
@@ -165,6 +189,14 @@ int keyConfigScreen(SDL_Surface* screen)
 			if (ev.type == SDL_QUIT)
 			{
 				hardCoreQuit = 1;
+			}
+
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
 			}
 		}
 		
@@ -374,6 +406,14 @@ int preambleSplashScreen(SDL_Surface* screen)
 			{
 				hardCoreQuit = 1;
 			}
+			
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
+			}
 		}
 
 		if (SDL_GetTicks() - timeStamp < 1000)
@@ -437,6 +477,14 @@ int titleScreen(SDL_Surface* screen)
 			if (ev.type == SDL_QUIT)
 			{
 				hardCoreQuit = 1;
+			}
+			
+			if (ev.type == SDL_KEYUP)
+			{
+				if (ev.key.keysym.sym == SDLK_F4 && (ev.key.keysym.mod == KMOD_LALT || ev.key.keysym.mod == KMOD_RALT))
+				{
+					hardCoreQuit = 1;
+				}
 			}
 		}
 
