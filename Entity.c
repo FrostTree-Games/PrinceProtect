@@ -1277,7 +1277,7 @@ void update_player(Player* pl, Uint32 currTime)
 		pl->offsetY += PLAYER_WALK_SPEED;
 		pl->direction = 2;
 		
-		if (pl->offsetY > 8 && pl->y == 0)
+		if (pl->offsetY > 8 && pl->y == BOARD_BOTTOM_WALL - 1)
 		{
 			pl->offsetY = 8;
 		}
@@ -1967,7 +1967,7 @@ void update_player2(Player* pl, Uint32 currTime)
 				}
 				break;
 				case 1:
-				if (eastResultFullSize == 0)
+				if (eastResultFullSize == 0 && pl->x != BOARD_WIDTH - 1)
 				{
 					(pl->holding)->y = pl->y;
 					(pl->holding)->x = pl->x + 1;
@@ -1983,7 +1983,7 @@ void update_player2(Player* pl, Uint32 currTime)
 				}
 				break;
 				case 3:
-				if (westResultFullSize == 0)
+				if (westResultFullSize == 0 && pl->x != 0)
 				{
 					(pl->holding)->y = pl->y;
 					(pl->holding)->x = pl->x - 1;
@@ -2029,6 +2029,11 @@ void update_player2(Player* pl, Uint32 currTime)
 			pl->offsetX -= PLAYER_WALK_SPEED/2;
 			pl->offsetY -= PLAYER_WALK_SPEED/2;
 		}
+		
+		if (pl->offsetX > 8 && pl->x == BOARD_WIDTH - 1)
+		{
+			pl->offsetX = 8;
+		}
 	}
 	
 	if (getKey(P2_DOWN) && pl->knockBackDirection == 255)
@@ -2046,6 +2051,11 @@ void update_player2(Player* pl, Uint32 currTime)
 		}
 		pl->offsetY += PLAYER_WALK_SPEED;
 		pl->direction = 2;
+		
+		if (pl->offsetY > 8 && pl->y == BOARD_BOTTOM_WALL - 1)
+		{
+			pl->offsetY = 8;
+		}
 	}
 	
 	if (getKey(P2_LEFT) && pl->knockBackDirection == 255)
@@ -2073,6 +2083,11 @@ void update_player2(Player* pl, Uint32 currTime)
 		{
 			pl->offsetX += PLAYER_WALK_SPEED/2;
 			pl->offsetY -= PLAYER_WALK_SPEED/2;
+		}
+		
+		if (pl->offsetX < 8 && pl->x == 0)
+		{
+			pl->offsetX = 8;
 		}
 	}
 	
