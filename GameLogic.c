@@ -460,8 +460,20 @@ int clearResetGame(int playerCount)
 
 	gameState = 0;
 
-	player1Health = 10;
-	player2Health = 10;
+	if (playerCount == 2)
+	{
+		player1Health = 5;
+		player2Health = 5;
+		player1MaxHealth = 5;
+		player2MaxHealth = 5;
+	}
+	else
+	{
+		player1Health = 10;
+		player2Health = 10;
+		player1MaxHealth = 5;
+		player2MaxHealth = 5;
+	}
 
 	gameScore = 0;
 	gameEnding = 0;

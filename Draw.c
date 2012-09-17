@@ -895,6 +895,9 @@ void drawGetReadyScreen(SDL_Surface* buffer, int playerCount, int seed)
 void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 {
 	int i,j;
+	
+	SDL_Rect copyrightPos = {SCREEN_WIDTH/4, SCREEN_HEIGHT - 8, 0, 0};
+	SDL_Surface* copyrightSurface = NULL;
 
 	SDL_Rect textPos = {0, 0, 0 ,0};
 	SDL_Surface* menuItemTextSurface = NULL;
@@ -975,6 +978,13 @@ void drawTitleScreen(SDL_Surface* buffer, int mSelected, Uint32 delta)
 			SDL_BlitSurface(menuItemTextSurface, NULL, buffer, &textPos);
 			SDL_FreeSurface(menuItemTextSurface);
 		}
+	}
+	
+	copyrightSurface = TTF_RenderText_Solid(pushNotificationFont, "COPYRIGHT FROSTTREE GAMES 2012", textCol);
+	if (copyrightSurface != NULL)
+	{
+		SDL_BlitSurface(copyrightSurface, NULL, buffer, &copyrightPos);
+		SDL_FreeSurface(copyrightSurface);
 	}
 }
 
