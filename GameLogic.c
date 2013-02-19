@@ -471,7 +471,7 @@ int clearResetGame(int playerCount)
 	{
 		player1Health = 10;
 		player2Health = 10;
-		player1MaxHealth = 5;
+		player1MaxHealth = 10;
 		player2MaxHealth = 5;
 	}
 
